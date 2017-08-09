@@ -1,8 +1,15 @@
 # -*- coding: UTF-8 -*-
+import os 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings") 
 
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import Permission, User #,BaseUserManager, AbstractBaseUser
 
+# from django.contrib import admin
+# admin.site.register(BlogPost)
+
+if django.VERSION >= (1, 7):#自动判断版本
+    django.setup()
 
 class PermissionList(models.Model):
     name = models.CharField(max_length=64)
@@ -59,3 +66,7 @@ class User(AbstractBaseUser):
     def has_perm(self,perm,obj=None):
         if self.is_active and self.is_superuser:
             return True
+
+# uer = UserManager.create_user('123','hello','123456')
+# print user
+Permission.objects.create(name=u'权限管理',content_type_id=2,codename=u'权限管理描述')
