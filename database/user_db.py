@@ -52,7 +52,7 @@ class User(Base):
 
     def __repr__(self):
         return "<User '{}'>".format('姓名：'+self.name +'\t性别：'+ self.sex +'\t组织：'+self.organization+'\t邮箱：'+\
-            self.email   +'\t电话号码：'+ self.phone + '\t创建时间：'+str(self.create_time))
+            self.email+'\t电话号码：'+ self.phone+'\t卡号：'+self.card_number + '\t创建时间：'+str(self.create_time))
 
 # 初始化数据库连接:
 engine = create_engine('mysql+pymysql://root:tomcat@127.0.0.1:3306/acs')
@@ -71,7 +71,7 @@ print time
 # my_user.add_roles('admin', 'superadmin')
 # db.session.add(my_user)
 # db.session.commit()
-new_user = User(name='Bob',sex='男',pwd=hash('123456'),phone='13243434434',organization=str('如家酒店').encode('utf-8'), email='13142341@qq.com',card_number='102312',is_activated='True',is_admin='True',create_time=time,create_by='SuperUser',status='开启')
+new_user = User(name='timy',sex='女',pwd=hash('1223243456'),phone='1762434223',organization=str('如家酒店').encode('utf-8'), email='13142341@qq.com',card_number='1032432',is_activated='True',is_admin='True',create_time=time,create_by='SuperUser',status='open')
 
 # 添加到session:
 session.add(new_user)
@@ -80,7 +80,7 @@ session.add(new_user)
 session.commit()
 
 # users = User.query.all()
-user = session.query(User).filter(User.id=='2').one()
+user = session.query(User).filter(User.id=='5').one()
 print user
 
 # 关闭session:
