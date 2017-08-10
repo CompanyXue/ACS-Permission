@@ -2,7 +2,9 @@
 import time, sys, hashlib
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, String, Integer, Date, create_engine
+from sqlalchemy import Column, String, Integer, Date
+
+# from service.user_service import UserService
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:tomcat@127.0.0.1:3306/acs'
@@ -73,7 +75,8 @@ class Role(db.Model):
     create_time = Column(db.Date(),nullable=False)
     is_activated = Column(db.String(10),nullable=False)
     tags = db.relationship('User', secondary=tags, lazy='subquery',
-        backref=db.backref('roles', lazy=True))
+        # backref=db.backref('roles', lazy=True))
+        backref=db.backref('roles', lazy='dynamic'))
 
     #数据表属性 初始化
     
@@ -135,6 +138,8 @@ new_role = Role(name='SSS',role_type='1',create_time=time,is_activated='true')
 # 添加到session:
 # db.session.add(new_user)
 
+# x = User.query.with_parent(r_user_role) 
+# print x
 # 提交即保存到数据库:
 # db.session.commit()
 
@@ -145,6 +150,7 @@ role = db.session.query(Role).filter(Role.id=='5').one()
 print 'type:', type(role)
 print 'role——name:', role.name
 print role
+
 
 # users = db.session.query(User).all()
 user = db.session.query(User).filter(User.id=='2').one()
