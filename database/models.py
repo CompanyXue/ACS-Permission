@@ -1,11 +1,14 @@
 # -*- coding: UTF-8 -*-
-import time, sys, hashlib
+
+import hashlib
+import time
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, String, Integer, Date
 
-# from service.user_service import UserService
 
+# from service.user_service import UserService
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:tomcat@127.0.0.1:3306/acs'
 db = SQLAlchemy(app)
@@ -119,47 +122,6 @@ class Log(db.Model):
 
 
 
-# 根据定义的表结构一键构建实体表
-db.create_all()
-
-time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-print time 
-
-# 加密用户密码
-m = hashlib.md5()
-m.update('1223243456')
-
-new_user = User(name='Brank',sex='男',pwd=m.hexdigest(),phone='1762884223',organization=str('如家酒店').encode('utf-8'), email='13142344@qq.com',card_number='1039732',is_activated='True',is_admin='True',create_time=time,create_by='SuperUser',status='close')
-
-new_role = Role(name='SSS',role_type='1',create_time=time,is_activated='true')
-# 添加到session:
-# db.session.add(new_role)
-
-# 添加到session:
-# db.session.add(new_user)
-
-# x = User.query.with_parent(r_user_role) 
-# print x
-# 提交即保存到数据库:
-# db.session.commit()
-
-# 测试用法 
-# 创建Query查询，filter是where条件，最后调用one()返回唯一行，如果调用all()则返回所有行:
-role = db.session.query(Role).filter(Role.id=='5').one()
-# 打印类型和对象的name属性:
-print 'type:', type(role)
-print 'role——name:', role.name
-print role
-
-
-# users = db.session.query(User).all()
-user = db.session.query(User).filter(User.id=='2').one()
-print user
-
-# 关闭session:
-db.session.close()
-
-
 # class PermissionList(models.Model):
 #     name = models.CharField(max_length=64)
 #     url = models.CharField(max_length=255)
@@ -173,6 +135,45 @@ db.session.close()
 
 #     def __unicode__(self):
 #         return self.name
+# 根据定义的表结构一键构建实体表
+db.create_all()
+
+time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+print time 
+
+# 加密用户密码
+m = hashlib.md5()
+m.update('1223243456')
+
+new_user = User(name='Branky',sex='男',pwd=m.hexdigest(),phone='12342884223',organization=str('如家酒店').encode('utf-8'), email='13142344@qq.com',card_number='10397342',is_activated='True',is_admin='True',create_time=time,create_by='SuperUser',status='close')
+
+new_role = Role(name='SAB',role_type='1',create_time=time,is_activated='true')
+# 添加到session:
+db.session.add(new_role)
+
+# 添加到session:
+db.session.add(new_user)
+
+# x = User.query.with_parent(r_user_role) 
+# print x
+# 提交即保存到数据库:
+db.session.commit()
+
+# 测试用法 
+# 创建Query查询，filter是where条件，最后调用one()返回唯一行，如果调用all()则返回所有行:
+role = db.session.query(Role).filter(Role.id=='5').one()
+# 打印类型和对象的name属性:
+print 'type:', type(role)
+print 'role—name:', role.name
+print role
+
+
+# users = db.session.query(User).all()
+user = db.session.query(User).filter(User.id=='2').one()
+print user
+
+# 关闭session:
+db.session.close()
 
 
 # uer = UserManager.create_user('123','hello','123456')
