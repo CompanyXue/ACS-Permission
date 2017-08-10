@@ -27,3 +27,33 @@ RBAC几乎无关语言、框架，主要是数据库结构上面设计；通常�
 用户可对应N个角色（不一定非一成不变），每个角色可授权N个节点，节点权限验证的时候，使用用户的所有角色去取得已授权的节点列表，然后判断，就这么简单。开发中可能会根据实际情况有一些变动，灵活处理即可。
 
 另外说一句，Flask有RBAC的实现方案，不过没用过，github上面关注度也不高，给传送门吧 https://github.com/shonenada/flask-rbac
+
+
+
+按照下面几个措施，保证MySQL的输入输出没有乱码：
+1 Python文件设置编码 utf-8 （文件前面加上 #encoding=utf-8)
+2 MySQL数据库charset=utf-8
+3 Python连接MySQL是加上参数 charset=utf8
+4 设置Python的默认编码为 utf-8 (sys.setdefaultencoding(utf-8)
+Python代码：
+
+#encoding=utf-8
+import sys
+import MySQLdb
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+db=MySQLdb.connect(user='root',charset='utf8')
+cur=db.cursor()
+cur.execute('use mydb')
+cur.execute('select * from mytb limit 100')
+
+f=file("/home/user/work/tem.txt",'w')
+
+for i in cur.fetchall():
+    f.write(str(i))
+    f.write(" ")
+
+f.close()
+cur.close()

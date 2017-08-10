@@ -6,17 +6,20 @@ class UserService:
 	 */
 	def find_all_users():
 
+
     /**
 	 * 根据用户名或者电话号码、组织来查询用户信息
 	 * @return 
 	 */
     def find_user(username, phone,organization):
-
+    	sql = "select * from t_user where name==username||phone==phone||organization==organization"
+    	
 	/**
 	 * 根据用户id 查询用户信息
 	 * @return User
 	 */
     def find_user_by_id(userid):
+    	
 
     /**
 	 * 更新用户信息

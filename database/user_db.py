@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-import time,sys
+import time,sys,hashlib
 from sqlalchemy import Column, String, Integer, Date, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -66,12 +66,17 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-print time
+print time 
+
+# 加密用户密码
+m = hashlib.md5()
+m.update('1223243456')
+
 # my_user = User()
 # my_user.add_roles('admin', 'superadmin')
 # db.session.add(my_user)
 # db.session.commit()
-new_user = User(name='timy',sex='女',pwd=hash('1223243456'),phone='1762434223',organization=str('如家酒店').encode('utf-8'), email='13142341@qq.com',card_number='1032432',is_activated='True',is_admin='True',create_time=time,create_by='SuperUser',status='open')
+new_user = User(name='timy',sex='女',pwd=m.hexdigest(),phone='1762434223',organization=str('如家酒店').encode('utf-8'), email='13142341@qq.com',card_number='1032432',is_activated='True',is_admin='True',create_time=time,create_by='SuperUser',status='open')
 
 # 添加到session:
 session.add(new_user)

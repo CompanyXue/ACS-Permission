@@ -35,7 +35,7 @@ class Role(Base):
         self.is_activated = is_activated
 
 	def __repr__(self):
-        return "<Role '{}'>".format(self.name + self.role_type +self.create_time)
+        return "<Role '{}'>".format('角色名'+self.name + self.role_type +self.create_time)
 
 # 初始化数据库连接:
 engine = create_engine('mysql+pymysql://root:tomcat@127.0.0.1:3306/acs')
