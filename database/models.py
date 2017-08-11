@@ -13,9 +13,9 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:tomcat@127.0.0.1:3306/acs'
 db = SQLAlchemy(app)
 
-tags = db.Table('r_user_role',
-    db.Column('user_id', db.Integer, db.ForeignKey('t_user.id'), primary_key=True),
-    db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'), primary_key=True)
+user2role = db.Table('r_user_role',
+    db.Column('user_id', db.Integer, db.ForeignKey('t_user.id')),
+    db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'))
 )
 
 # 定义User对象:
@@ -40,7 +40,6 @@ class User(db.Model):
     is_admin = Column(db.String(10),nullable=True)
     status = Column(db.String(10),nullable=False)
     
-
     #数据表属性 初始化
     def __init__(self, name, phone, sex, pwd, organization, email, card_number, create_time,create_by,is_activated, is_admin,status, _id=None):
         self.id = _id
@@ -62,6 +61,17 @@ class User(db.Model):
     def __repr__(self):
         return "<User '{}'>".format('姓名：'+self.name +'\t性别：'+ self.sex +'\t组织：'+self.organization+'\t邮箱：'+\
             self.email+'\t电话号码：'+ self.phone+'\t卡号：'+self.card_number + '\t创建时间：'+str(self.create_time))
+    
+    def add_role(self, role):
+        self.roles.append(role)
+
+    def add_roles(self, roles):
+        for role in roles:
+            self.add_role(role)
+
+    def get_roles(self):
+        for role in self.roles:
+            yield role
 
 # 定义Role对象
 class Role(db.Model):
@@ -77,7 +87,7 @@ class Role(db.Model):
     role_type = Column(db.String(20),nullable=False)
     create_time = Column(db.Date(),nullable=False)
     is_activated = Column(db.String(10),nullable=False)
-    users = db.relationship('User', secondary=tags,                     
+    users = db.relationship('User', secondary=user2role,                     
         #lazy='subquery', backref=db.backref('roles', lazy=True))
         backref=db.backref('roles', lazy='dynamic'))
 
@@ -145,15 +155,24 @@ print time
 m = hashlib.md5()
 m.update('1223243456')
 
-new_user = User(name='Branky',sex='男',pwd=m.hexdigest(),phone='12342884223',organization=str('如家酒店').encode('utf-8'), email='13142344@qq.com',card_number='10397342',is_activated='True',is_admin='True',create_time=time,create_by='SuperUser',status='close')
+new_user = User(name='Rose',sex='女',pwd=m.hexdigest(),phone='1234123527',organization=str('如家酒店').encode('utf-8'), email='1334942354@qq.com',card_number='103978034',is_activated='True',is_admin='True',create_time=time,create_by='SuperUser',status='close')
 
-new_role = Role(name='SAB',role_type='1',create_time=time,is_activated='true')
-# 添加到session:
+new_role = Role(name='SDE',role_type='2',create_time=time,is_activated='true')
+# 添加新角色到session:
 db.session.add(new_role)
 
-# 添加到session:
+# 添加新用户到session:
 db.session.add(new_user)
+n = db.session.query(User).filter(User.name=='Branky').one()
 
+#举例说明
+ro1 = db.session.query(Role).filter(Role.name=='SSE').one()
+ro2 = db.session.query(Role).filter(Role.name=='SSS').one()
+ro1.users.append(n)
+n.roles = [ro1,ro2]
+# new_role.users = [n,new_user]
+
+# new_user.add_role(ro1)
 # x = User.query.with_parent(r_user_role) 
 # print x
 # 提交即保存到数据库:
@@ -162,7 +181,7 @@ db.session.commit()
     
 # 测试用法 
 # 创建Query查询，filter是where条件，最后调用one()返回唯一行，如果调用all()则返回所有行:
-role = db.session.query(Role).filter(Role.id=='5').one()
+role = db.session.query(Role).filter(Role.id=='1').one()
 # 打印类型和对象的name属性:
 print 'type:', type(role)
 print 'role—name:', role.name
@@ -170,7 +189,7 @@ print role
 
 
 # users = db.session.query(User).all()
-user = db.session.query(User).filter(User.id=='2').one()
+user = db.session.query(User).filter(User.id=='5').one()
 print user
 
 # 关闭session:

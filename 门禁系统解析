@@ -57,3 +57,8 @@ for i in cur.fetchall():
 
 f.close()
 cur.close()
+
+
+
+在Many2Many 关系的设计时，从关联表转换为关联对象，定义新标签，在查询修改上提高效率、。
+但是在写入数据库的同时，会只保留一份user-role的关系。

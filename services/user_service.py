@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
-    
+
+from database.models import  User, Role, db
 
 class UserService(object):
     
@@ -49,7 +50,7 @@ def update_pwd(username,pwd):
  # 根据角色名查询用户数量
  # @return
  #/
-def find_count_by_rolename(String description):
+def find_count_by_rolename(description):
     pass
 ##
  # 根据组织id查询全部用户信息

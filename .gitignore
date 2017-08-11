@@ -3,7 +3,9 @@
 *.pyc
 *.project
 *.pydevproject
+*.MyProject.komodoproject
 
 ./database/*.pyc
 ./service/*.pyc
-./setting
+./.setting/
+./.komodotools
