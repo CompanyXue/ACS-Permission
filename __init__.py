@@ -3,7 +3,7 @@ import hashlib
 import time
 
 from database.models import  User, Role, db
-from service.user_service import UserService
+# from service.user_service import UserService
 
 
 # 根据定义的表结构一键构建实体表
@@ -22,7 +22,6 @@ new_role = Role(name='SSS',role_type='1',create_time=time,is_activated='true')
 # 添加到session:
 # db.session.add(new_role)
 
-us = UserService.new()
 
 # 添加到session:
 # db.session.add(new_user)

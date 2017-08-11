@@ -77,8 +77,8 @@ class Role(db.Model):
     role_type = Column(db.String(20),nullable=False)
     create_time = Column(db.Date(),nullable=False)
     is_activated = Column(db.String(10),nullable=False)
-    tags = db.relationship('User', secondary=tags, lazy='subquery',
-        # backref=db.backref('roles', lazy=True))
+    users = db.relationship('User', secondary=tags,                     
+        #lazy='subquery', backref=db.backref('roles', lazy=True))
         backref=db.backref('roles', lazy='dynamic'))
 
     #数据表属性 初始化
@@ -159,6 +159,7 @@ db.session.add(new_user)
 # 提交即保存到数据库:
 db.session.commit()
 
+    
 # 测试用法 
 # 创建Query查询，filter是where条件，最后调用one()返回唯一行，如果调用all()则返回所有行:
 role = db.session.query(Role).filter(Role.id=='5').one()
