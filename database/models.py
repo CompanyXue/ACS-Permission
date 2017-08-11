@@ -9,7 +9,7 @@ from sqlalchemy import Column, String, Integer, Date
 
 # 调用Flask App和 SQLAlchemy 组件，创建与数据库的连接
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:tomcat@127.0.0.1:3306/acs'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:tomcat@127.0.0.1:3306/ACS-Permission'
 db = SQLAlchemy(app)
 
 
@@ -17,35 +17,35 @@ db = SQLAlchemy(app)
 # 定义：所有的关系表---规范为 r 开头，而实体属性表则用 t 开头
 
 user2role = db.Table('user_role_mapping',
-    db.Column('user_id', db.Integer, db.ForeignKey('t_user.id'),primary_key=True),
-    db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'),primary_key=True)
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'),primary_key=True),
+    db.Column('role_id', db.Integer, db.ForeignKey('role.id'),primary_key=True)
 )
 
 user2group = db.Table('user_group_mapping',
-    db.Column('user_id', db.Integer, db.ForeignKey('t_user.id'),primary_key=True),
-    db.Column('group_id', db.Integer, db.ForeignKey('t_user_group.id'),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'),primary_key=True),
+    db.Column('group_id', db.Integer, db.ForeignKey('user_group.id'),
               primary_key=True)
 )
 
 role2group = db.Table('group_role_mapping',
-    db.Column('group_id', db.Integer, db.ForeignKey('t_user_group.id'),primary_key=True),
-    db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'),primary_key=True)
+    db.Column('group_id', db.Integer, db.ForeignKey('user_group.id'),primary_key=True),
+    db.Column('role_id', db.Integer, db.ForeignKey('role.id'),primary_key=True)
 )
 
 role2perm = db.Table('role_permission_mapping',
-    db.Column('perm_id', db.Integer, db.ForeignKey('t_permission.id'),primary_key=True),
-    db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'),primary_key=True)
+    db.Column('perm_id', db.Integer, db.ForeignKey('permission.id'),primary_key=True),
+    db.Column('role_id', db.Integer, db.ForeignKey('role.id'),primary_key=True)
 )
 
 perm2resource = db.Table('resource_permission_mapping',
-    db.Column('perm_id', db.Integer, db.ForeignKey('t_permission.id'),primary_key=True),
-    db.Column('resource_id', db.Integer, db.ForeignKey('t_resource.id'),primary_key=True)
+    db.Column('perm_id', db.Integer, db.ForeignKey('permission.id'),primary_key=True),
+    db.Column('resource_id', db.Integer, db.ForeignKey('resource.id'),primary_key=True)
 )
 
 # 定义User对象:
 class User(db.Model):
     # 表的名字:
-    __tablename__ = 't_user'
+    __tablename__ = 'user'
 
     id = Column(db.Integer, primary_key=True,autoincrement=True)
     name = Column(db.String(20), nullable=False,unique=True)
@@ -103,7 +103,7 @@ class User(db.Model):
 # 定义UserGroup对象
 class Usergroup(db.Model):
     # 表的名字:
-    __tablename__ = 't_user_group'
+    __tablename__ = 'user_group'
 
     id = Column(db.Integer, primary_key=True,autoincrement=True)
     name = Column(db.String(20), nullable=False,unique=True)
@@ -128,7 +128,7 @@ class Usergroup(db.Model):
 # 定义Role对象
 class Role(db.Model):
     # 表的名字:
-    __tablename__ = 't_role'
+    __tablename__ = 'role'
 
     id = Column(db.Integer, primary_key=True,autoincrement=True)
     name = Column(db.String(20), nullable=False,unique=True)
@@ -152,32 +152,31 @@ class Role(db.Model):
         return "<Role '{}'>".format('角色名：'+self.name +'\t角色类型：'+ self.role_type \
                                     + "\t创建时间："+str(self.create_time))
 
-class Log(db.Model):
-    
-    __tablename__ = 't_log'
-
-    # 表的结构:
-    id = Column(db.Integer, primary_key=True,autoincrement=True)
-    op_type = Column(db.String(20),nullable=False)
-    op_time = Column(db.String(20),nullable=False)
-    user_id = Column(db.Integer, db.ForeignKey('t_user.id'))
-    # user = db.relationship('User',
-    #     backref=db.backref('posts', lazy='dynamic'))
-    create_time = Column(db.Date(),nullable=False)
-    content = Column(db.String(200))
-
-    def __init__(self, name, role_type, create_time, _id=None):
-        pass
+# class Log(db.Model):
+#     __tablename__ = 'log'
+# 
+#     # 表的结构:
+#     id = Column(db.Integer, primary_key=True,autoincrement=True)
+#     op_type = Column(db.String(20),nullable=False)
+#     op_time = Column(db.String(20),nullable=False)
+#     user_id = Column(db.Integer, db.ForeignKey('user.id'))
+#     # user = db.relationship('User',
+#     #     backref=db.backref('posts', lazy='dynamic'))
+#     create_time = Column(db.Date(),nullable=False)
+#     content = Column(db.String(200))
+# 
+#     def __init__(self, name, role_type, create_time, _id=None):
+#         pass
 
 class Resource(db.Model):
-    __tablename__ = 't_resource'
+    __tablename__ = 'resource'
 
     # 表的结构:
     #primary_key等于主键
     id = Column(db.Integer, primary_key=True,autoincrement=True)
     name = Column(db.String(20), nullable=False,unique=True)
     res_type = Column(db.String(10),nullable=False)  
-    owner = Column(db.Integer, db.ForeignKey('t_user.id'))
+    # owner = Column(db.Integer, db.ForeignKey('user.id'))
     # user = db.relationship('User',
     #     backref=db.backref('posts', lazy='dynamic'))
     create_time = Column(db.Date(),nullable=False)
@@ -197,17 +196,17 @@ class Resource(db.Model):
                                     + "创建时间："+str(self.create_time))
     
 class Permission(db.Model):
-    __tablename__ = 't_permission'
+    __tablename__ = 'permission'
     
     id = Column(db.Integer, primary_key=True,autoincrement=True)
     name = Column(db.Integer, nullable=False)
     type = Column(db.String(10),nullable=False)  
-    opter = Column(db.Integer, db.ForeignKey('t_role.id'))
-    user = Column(db.Integer, db.ForeignKey('t_user.id'))
+    opter = Column(db.Integer, db.ForeignKey('role.id'))
+    user = Column(db.Integer, db.ForeignKey('user.id'))
     # user = db.relationship('User',
     #     backref=db.backref('posts', lazy='dynamic'))
     create_time = Column(db.Date(),nullable=False)
-    resource = Column(db.Integer, db.ForeignKey('t_resource.id'))
+    resource = Column(db.Integer, db.ForeignKey('resource.id'))
     content = Column(db.String(200))
     
     def __init__(self, name, type, create_time, content, _id=None):
@@ -256,11 +255,11 @@ new_role = Role(name='SDE',role_type='2',create_time=time,is_activated='true')
 
 # 添加新用户到session:
 # db.session.add(new_user)
-n = db.session.query(User).filter(User.name=='Branky').one()
+# n = db.session.query(User).filter(User.name=='Branky').one()
 
 #举例说明
-ro1 = db.session.query(Role).filter(Role.name=='SSE').one()
-ro2 = db.session.query(Role).filter(Role.name=='SSS').one()
+# ro1 = db.session.query(Role).filter(Role.name=='SSE').one()
+# ro2 = db.session.query(Role).filter(Role.name=='SSS').one()
 # ro1.users.append(n)
 # n.roles = [ro1,ro2]
 # new_role.users = [n,new_user]
@@ -274,16 +273,16 @@ ro2 = db.session.query(Role).filter(Role.name=='SSS').one()
     
 # 测试用法 
 # 创建Query查询，filter是where条件，最后调用one()返回唯一行，如果调用all()则返回所有行:
-role = db.session.query(Role).filter(Role.id=='1').one()
+# role = db.session.query(Role).filter(Role.id=='1').one()
 # 打印类型和对象的name属性:
-print 'type:', type(role)
-print 'role—name:', role.name
-print role
+# print 'type:', type(role)
+# print 'role—name:', role.name
+# print role
 
 
 # users = db.session.query(User).all()
-user = db.session.query(User).filter(User.id=='5').one()
-print user
+# user = db.session.query(User).filter(User.id=='5').one()
+# print user
 
 # 关闭session:
 # db.session.close()

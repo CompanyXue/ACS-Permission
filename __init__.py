@@ -15,17 +15,21 @@ print time
 m = hashlib.md5()
 m.update('1223243456')
 
-new_user = User(name='Branky',sex='男',pwd=m.hexdigest(),phone='1762884223',organization=str('如家酒店').encode('utf-8'), email='13142344@qq.com',card_number='1039732',is_activated='True',is_admin='True',create_time=time,create_by='SuperUser',status='close')
+new_user = User(name='Branky',sex='男', pwd=m.hexdigest(), phone='1762888223',\
+                organization=u'如家酒店', email='13142344@qq.com',card_number=\
+                '1039032', is_activated='True', is_admin='True',
+                create_time=time, create_by='SuperUser', status='close')
 
-new_role = Role(name='SAAA',role_type='1',create_time=time,is_activated='true')
+# 添加新用户到session:
+db.session.add(new_user)
 
-# 添加角色到session:
-# db.session.add(new_role)
-nenber = db.session.query(User).filter(User.name=='Branky').one()
+# 添加新角色到 session:
+new_role = Role(name='SYS',role_type='2',create_time=time,is_activated='true')
+db.session.add(new_role)
 
-# 添加用户到session:
-# db.session.add(new_user)
-# nenber.add_role(new_role)
+nenber = db.session.query(User).filter(User.name=='Brand').one()
+
+nenber.add_role(new_role)
 roles = nenber.get_roles()
 print "用户-多角色显示："
 for role in roles:
@@ -33,7 +37,7 @@ for role in roles:
 # x = User.query.with_parent(r_user_role) 
 # print x
 
-group = Usergroup(name=u'科技部',create_time=time,is_activated=True)
+group = Usergroup(name=u'测试',create_time=time,is_activated=True)
 db.session.add(group)
 print group
 nenber.group.append(group)
@@ -44,7 +48,7 @@ for user in users:
     print user
 
 #输出根据id 去查询用户信息
-user5 = user_service.find_user_by_id(5)
+user5 = user_service.find_user_by_id(1)
 print 'user - id ==5:'
 print user5
 
