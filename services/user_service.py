@@ -12,26 +12,24 @@ class UserService(object):
 def find_all_users():
     users = db.session.query(User).all()
     for user in users:
-        print user
-#         db.session.commit()
+        yield user
     pass
 # 根据用户名或者电话号码、组织来查询用户信息
 # @return 
 def search_user_by_info(name, phone, organization):
-#       sql = "select * from t_user where name==name||phone==phone||organization==organization"
-#       return sql
+
     pass
 # 根据用户id 查询用户信息
 # @return User
 
 def find_user_by_id(userid):
     user = db.session.query(User).filter(User.id==userid).one()
-    print user
+    yield user
+    #return user
     pass
 
-##
 # 更新用户信息
-#
+
 def update_user(_id, data):
     pass
 ##

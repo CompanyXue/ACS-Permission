@@ -7,30 +7,39 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, String, Integer, Date
 
-
-# from service.user_service import UserService
+# 调用Flask App和 SQLAlchemy 组件，创建与数据库的连接
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:tomcat@127.0.0.1:3306/acs'
 db = SQLAlchemy(app)
 
-user2role = db.Table('r_user_role',
-    db.Column('user_id', db.Integer, db.ForeignKey('t_user.id')),
-    db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'))
+
+# 关系最好不用 Model 创建，而是直接用定义的形式加入外键链接即可,
+# 定义：所有的关系表---规范为 r 开头，而实体属性表则用 t 开头
+
+user2role = db.Table('user_role_mapping',
+    db.Column('user_id', db.Integer, db.ForeignKey('t_user.id'),primary_key=True),
+    db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'),primary_key=True)
 )
 
-user2group = db.Table('r_user_group',
-    db.Column('user_id', db.Integer, db.ForeignKey('t_user.id')),
-    db.Column('group_id', db.Integer, db.ForeignKey('t_user_group.id'))
+user2group = db.Table('user_group_mapping',
+    db.Column('user_id', db.Integer, db.ForeignKey('t_user.id'),primary_key=True),
+    db.Column('group_id', db.Integer, db.ForeignKey('t_user_group.id'),
+              primary_key=True)
 )
 
-role2group = db.Table('r_group_role',
-    db.Column('group_id', db.Integer, db.ForeignKey('t_user_group.id')),
-    db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'))
+role2group = db.Table('group_role_mapping',
+    db.Column('group_id', db.Integer, db.ForeignKey('t_user_group.id'),primary_key=True),
+    db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'),primary_key=True)
 )
 
-role2perm = db.Table('r_role_permission',
-    db.Column('perm_id', db.Integer, db.ForeignKey('t_permission.id')),
-    db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'))
+role2perm = db.Table('role_permission_mapping',
+    db.Column('perm_id', db.Integer, db.ForeignKey('t_permission.id'),primary_key=True),
+    db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'),primary_key=True)
+)
+
+perm2resource = db.Table('resource_permission_mapping',
+    db.Column('perm_id', db.Integer, db.ForeignKey('t_permission.id'),primary_key=True),
+    db.Column('resource_id', db.Integer, db.ForeignKey('t_resource.id'),primary_key=True)
 )
 
 # 定义User对象:
@@ -74,8 +83,11 @@ class User(db.Model):
         self.status = status
 
     def __repr__(self):
-        return "<User '{}'>".format('姓名：'+self.name +'\t性别：'+ self.sex +'\t组织：'+self.organization+'\t邮箱：'+\
-            self.email+'\t电话号码：'+ self.phone+'\t卡号：'+self.card_number + '\t创建时间：'+str(self.create_time))
+        return "<User '{}'>".format('姓名：'+self.name +'\t性别：'+ self.sex +\
+                                    '\t组织：'+self.organization+'\t邮箱：'+\
+                                    self.email+'\t电话号码：'+self.phone+'\t卡号：'\
+                                    + self.card_number + '\t创建时间：'\
+                                    + str(self.create_time))
     
     def add_role(self, role):
         self.roles.append(role)
@@ -87,9 +99,9 @@ class User(db.Model):
     def get_roles(self):
         for role in self.roles:
             yield role
-
+        
 # 定义UserGroup对象
-class UserGroup(db.Model):
+class Usergroup(db.Model):
     # 表的名字:
     __tablename__ = 't_user_group'
 
@@ -103,25 +115,21 @@ class UserGroup(db.Model):
         backref=db.backref('group', lazy='dynamic'))
     
     #数据表属性 初始化
-    def __init__(self, name, role_type, is_activated, create_time, _id=None):
+    def __init__(self, name, is_activated, create_time, _id=None):
         self.id = _id
         # self.role_group_id = role_group_id  
         self.name = name
         self.create_time = create_time
-        self.is_activated = is_activated # 0-关闭 1-活动
+        self.is_activated = is_activated  # 0-关闭 1-活动
 
     def __repr__(self):
-        return "<UserGroup'{}'>".format('用户组名'+self.name + self.role_type + "创建时间："+str(self.create_time))
+        return "<UserGroup'{}'>".format('用户组名'+self.name + "\t创建时间："+str(self.create_time))
 
 # 定义Role对象
 class Role(db.Model):
     # 表的名字:
     __tablename__ = 't_role'
 
-    # 表的结构:
-    #primary_key等于主键
-    #unique唯一
-    #nullable非空
     id = Column(db.Integer, primary_key=True,autoincrement=True)
     name = Column(db.String(20), nullable=False,unique=True)
     role_type = Column(db.String(20),nullable=False)
@@ -132,7 +140,6 @@ class Role(db.Model):
         backref=db.backref('roles', lazy='dynamic'))
 
     #数据表属性 初始化
-    
     def __init__(self, name, role_type, is_activated, create_time, _id=None):
         self.id = _id
         # self.role_group_id = role_group_id  
@@ -142,15 +149,14 @@ class Role(db.Model):
         self.is_activated = is_activated
 
     def __repr__(self):
-        return "<Role '{}'>".format('角色名'+self.name + self.role_type + "创建时间："+str(self.create_time))
+        return "<Role '{}'>".format('角色名：'+self.name +'\t角色类型：'+ self.role_type \
+                                    + "\t创建时间："+str(self.create_time))
 
 class Log(db.Model):
+    
     __tablename__ = 't_log'
 
     # 表的结构:
-    #primary_key等于主键
-    #unique唯一
-    #nullable非空
     id = Column(db.Integer, primary_key=True,autoincrement=True)
     op_type = Column(db.String(20),nullable=False)
     op_time = Column(db.String(20),nullable=False)
@@ -169,14 +175,26 @@ class Resource(db.Model):
     # 表的结构:
     #primary_key等于主键
     id = Column(db.Integer, primary_key=True,autoincrement=True)
-    name = Column(db.Integer, nullable=False)
-    resource_type = Column(db.String(10),nullable=False)  
+    name = Column(db.String(20), nullable=False,unique=True)
+    res_type = Column(db.String(10),nullable=False)  
     owner = Column(db.Integer, db.ForeignKey('t_user.id'))
     # user = db.relationship('User',
     #     backref=db.backref('posts', lazy='dynamic'))
     create_time = Column(db.Date(),nullable=False)
     location = Column(db.String(100),nullable=True)
     content = Column(db.String(200))
+
+    def __init__(self, name, resource_type, is_activated, create_time, _id=None):
+        self.id = _id
+        # self.role_group_id = role_group_id  
+        self.name = name
+        self.resource_type = role_type   # 文件 1 , 门禁 2, 设备 3 
+        self.create_time = create_time
+        self.is_activated = is_activated
+
+    def __repr__(self):
+        return "<Role '{}'>".format('资源名称'+self.name + '\t资源类型'+ self.resource_type\
+                                    + "创建时间："+str(self.create_time))
     
 class Permission(db.Model):
     __tablename__ = 't_permission'
@@ -192,14 +210,17 @@ class Permission(db.Model):
     resource = Column(db.Integer, db.ForeignKey('t_resource.id'))
     content = Column(db.String(200))
     
-# class UserRole(db.Model):
-#     __tablename__ = 'r_user_role'
-#     关系最好不用Model创建，而是直接用定义的形式加入外键链接即可
-#     id = Column(db.Integer, primary_key=True,autoincrement=True)
-#     user_id = Column(db.Integer, db.ForeignKey('t_user.id'))
-#     role_id = Column(db.Integer, db.ForeignKey('t_role.id'))
+    def __init__(self, name, type, create_time, content, _id=None):
+        self.id = _id
+        # self.role_group_id = role_group_id  
+        self.name = name
+        self.type = type  
+        self.create_time = create_time
+        self.content = content
 
-
+    def __repr__(self):
+        return "<Permission '{}'>".format('权限名称'+self.name + content + "创建时间："\
+                                          + str(self.create_time))
 
 # class PermissionList(models.Model):
 #     name = models.CharField(max_length=64)
@@ -224,7 +245,10 @@ print time
 m = hashlib.md5()
 m.update('1223243456')
 
-new_user = User(name='Rose',sex='女',pwd=m.hexdigest(),phone='1234123527',organization=str('如家酒店').encode('utf-8'), email='1334942354@qq.com',card_number='103978034',is_activated='True',is_admin='True',create_time=time,create_by='SuperUser',status='close')
+new_user = User(name='Rose',sex='女',pwd=m.hexdigest(),phone='1234123527',organization\
+                = str('如家酒店').encode('utf-8'), email='1334942354@qq.com',\
+                card_number='103978034',is_activated='True',is_admin='True',\
+                create_time=time,create_by='SuperUser',status='close')
 
 new_role = Role(name='SDE',role_type='2',create_time=time,is_activated='true')
 # 添加新角色到session:
