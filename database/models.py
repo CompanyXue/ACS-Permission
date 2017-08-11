@@ -18,6 +18,21 @@ user2role = db.Table('r_user_role',
     db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'))
 )
 
+user2group = db.Table('r_user_group',
+    db.Column('user_id', db.Integer, db.ForeignKey('t_user.id')),
+    db.Column('group_id', db.Integer, db.ForeignKey('t_user_group.id'))
+)
+
+role2group = db.Table('r_group_role',
+    db.Column('group_id', db.Integer, db.ForeignKey('t_user_group.id')),
+    db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'))
+)
+
+role2perm = db.Table('r_role_permission',
+    db.Column('perm_id', db.Integer, db.ForeignKey('t_permission.id')),
+    db.Column('role_id', db.Integer, db.ForeignKey('t_role.id'))
+)
+
 # 定义User对象:
 class User(db.Model):
     # 表的名字:
@@ -36,7 +51,7 @@ class User(db.Model):
     create_time = Column(db.Date(),nullable=False)
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(20),default=create_by)
-    is_activated = Column(db.String(10),nullable=False)
+    is_activated = Column(db.String(5),nullable=False)
     is_admin = Column(db.String(10),nullable=True)
     status = Column(db.String(10),nullable=False)
     
@@ -73,6 +88,31 @@ class User(db.Model):
         for role in self.roles:
             yield role
 
+# 定义UserGroup对象
+class UserGroup(db.Model):
+    # 表的名字:
+    __tablename__ = 't_user_group'
+
+    id = Column(db.Integer, primary_key=True,autoincrement=True)
+    name = Column(db.String(20), nullable=False,unique=True)
+    create_time = Column(db.Date(),nullable=False)
+    is_activated = Column(db.String(5),nullable=False)
+    users = db.relationship('User', secondary=user2group,                     
+        backref=db.backref('group', lazy='dynamic'))
+    roles = db.relationship('Role', secondary=role2group,                     
+        backref=db.backref('group', lazy='dynamic'))
+    
+    #数据表属性 初始化
+    def __init__(self, name, role_type, is_activated, create_time, _id=None):
+        self.id = _id
+        # self.role_group_id = role_group_id  
+        self.name = name
+        self.create_time = create_time
+        self.is_activated = is_activated # 0-关闭 1-活动
+
+    def __repr__(self):
+        return "<UserGroup'{}'>".format('用户组名'+self.name + self.role_type + "创建时间："+str(self.create_time))
+
 # 定义Role对象
 class Role(db.Model):
     # 表的名字:
@@ -86,7 +126,7 @@ class Role(db.Model):
     name = Column(db.String(20), nullable=False,unique=True)
     role_type = Column(db.String(20),nullable=False)
     create_time = Column(db.Date(),nullable=False)
-    is_activated = Column(db.String(10),nullable=False)
+    is_activated = Column(db.String(5),nullable=False)
     users = db.relationship('User', secondary=user2role,                     
         #lazy='subquery', backref=db.backref('roles', lazy=True))
         backref=db.backref('roles', lazy='dynamic'))
@@ -123,6 +163,35 @@ class Log(db.Model):
     def __init__(self, name, role_type, create_time, _id=None):
         pass
 
+class Resource(db.Model):
+    __tablename__ = 't_resource'
+
+    # 表的结构:
+    #primary_key等于主键
+    id = Column(db.Integer, primary_key=True,autoincrement=True)
+    name = Column(db.Integer, nullable=False)
+    resource_type = Column(db.String(10),nullable=False)  
+    owner = Column(db.Integer, db.ForeignKey('t_user.id'))
+    # user = db.relationship('User',
+    #     backref=db.backref('posts', lazy='dynamic'))
+    create_time = Column(db.Date(),nullable=False)
+    location = Column(db.String(100),nullable=True)
+    content = Column(db.String(200))
+    
+class Permission(db.Model):
+    __tablename__ = 't_permission'
+    
+    id = Column(db.Integer, primary_key=True,autoincrement=True)
+    name = Column(db.Integer, nullable=False)
+    type = Column(db.String(10),nullable=False)  
+    opter = Column(db.Integer, db.ForeignKey('t_role.id'))
+    user = Column(db.Integer, db.ForeignKey('t_user.id'))
+    # user = db.relationship('User',
+    #     backref=db.backref('posts', lazy='dynamic'))
+    create_time = Column(db.Date(),nullable=False)
+    resource = Column(db.Integer, db.ForeignKey('t_resource.id'))
+    content = Column(db.String(200))
+    
 # class UserRole(db.Model):
 #     __tablename__ = 'r_user_role'
 #     关系最好不用Model创建，而是直接用定义的形式加入外键链接即可
@@ -159,24 +228,24 @@ new_user = User(name='Rose',sex='女',pwd=m.hexdigest(),phone='1234123527',organ
 
 new_role = Role(name='SDE',role_type='2',create_time=time,is_activated='true')
 # 添加新角色到session:
-db.session.add(new_role)
+# db.session.add(new_role)
 
 # 添加新用户到session:
-db.session.add(new_user)
+# db.session.add(new_user)
 n = db.session.query(User).filter(User.name=='Branky').one()
 
 #举例说明
 ro1 = db.session.query(Role).filter(Role.name=='SSE').one()
 ro2 = db.session.query(Role).filter(Role.name=='SSS').one()
-ro1.users.append(n)
-n.roles = [ro1,ro2]
+# ro1.users.append(n)
+# n.roles = [ro1,ro2]
 # new_role.users = [n,new_user]
 
 # new_user.add_role(ro1)
 # x = User.query.with_parent(r_user_role) 
 # print x
 # 提交即保存到数据库:
-db.session.commit()
+# db.session.commit()
 
     
 # 测试用法 
@@ -193,7 +262,7 @@ user = db.session.query(User).filter(User.id=='5').one()
 print user
 
 # 关闭session:
-db.session.close()
+# db.session.close()
 
 
 # uer = UserManager.create_user('123','hello','123456')

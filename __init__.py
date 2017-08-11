@@ -19,6 +19,7 @@ m.update('1223243456')
 new_user = User(name='Brank',sex='男',pwd=m.hexdigest(),phone='1762884223',organization=str('如家酒店').encode('utf-8'), email='13142344@qq.com',card_number='1039732',is_activated='True',is_admin='True',create_time=time,create_by='SuperUser',status='close')
 
 new_role = Role(name='SSS',role_type='1',create_time=time,is_activated='true')
+
 # 添加到session:
 # db.session.add(new_role)
 
@@ -29,7 +30,7 @@ new_role = Role(name='SSS',role_type='1',create_time=time,is_activated='true')
 # x = User.query.with_parent(r_user_role) 
 # print x
 # 提交即保存到数据库:
-# db.session.commit()
+db.session.commit()
 
 # 测试用法 
 # 创建Query查询，filter是where条件，最后调用one()返回唯一行，如果调用all()则返回所有行:
