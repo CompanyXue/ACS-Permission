@@ -99,6 +99,16 @@ class User(db.Model):
     def get_roles(self):
         for role in self.roles:
             yield role
+    def add_user_group(group):
+        self.group.append(group)
+    
+    def reset_password(self, pwd):
+        self.pwd = pwd
+        pass
+    def update(data):
+        self.phone = data.phone
+        self.email = data.email
+        self.card_number = card_number
         
 # 定义UserGroup对象
 class Usergroup(db.Model):
@@ -201,8 +211,8 @@ class Permission(db.Model):
     id = Column(db.Integer, primary_key=True,autoincrement=True)
     name = Column(db.Integer, nullable=False)
     type = Column(db.String(10),nullable=False)  
-    opter = Column(db.Integer, db.ForeignKey('role.id'))
-    user = Column(db.Integer, db.ForeignKey('user.id'))
+    # opter = Column(db.Integer, db.ForeignKey('role.id'))
+    # user = Column(db.Integer, db.ForeignKey('user.id'))
     # user = db.relationship('User',
     #     backref=db.backref('posts', lazy='dynamic'))
     create_time = Column(db.Date(),nullable=False)
@@ -286,8 +296,3 @@ new_role = Role(name='SDE',role_type='2',create_time=time,is_activated='true')
 
 # 关闭session:
 # db.session.close()
-
-
-# uer = UserManager.create_user('123','hello','123456')
-# print user
-# Permission.objects.create(name=u'权限管理',content_type_id=2,codename=u'权限管理描述')

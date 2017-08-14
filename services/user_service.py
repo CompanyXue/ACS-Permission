@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
-
-from database.models import  User, Role, db
+import hashlib
+from database.models import  User, Role, db, Usergroup
 
 class UserService(object):
     
@@ -16,56 +16,82 @@ def find_all_users():
     pass
 # 根据用户名或者电话号码、组织来查询用户信息
 # @return 
-def search_user_by_info(name, phone, organization):
-
+def search_user_by_info(name, phone):
+    users = db.session.query(User).filter(User.name==name|User.phone==phone).all()
+    for user in users:
+        if user:
+            yield user
     pass
 # 根据用户id 查询用户信息
 # @return User
 
 def find_user_by_id(userid):
     user = db.session.query(User).filter(User.id==userid).one()
-    yield user
+    if user:
+        yield user
     #return user
     pass
 
 # 更新用户信息
 
 def update_user(_id, data):
-    pass
-##
-# （管理员）重置用户密码信息
-# @return
 
+    pass
+
+# （管理员）重置用户密码信息
 def reset_password(username):
+    m = hashlib.md5()
+    pwd = m.update('123456')
+    user = db.session.query(User).filter(User.name==username).one()
+    if user is not None:
+        user.pwd = pwd
     pass
 ##
  # 修改用户密码
  # @return
  #/
 def update_pwd(username,pwd):
+    user = db.session.query(User).filter(User.name==username).one()
+    if user is not None:
+        user.pwd = pwd
     pass
-##
+
  # 根据角色名查询用户数量
  # @return
  #/
-def find_count_by_rolename(description):
+def find_count_by_rolename(role_name):
+    
     pass
 ##
  # 根据组织id查询全部用户信息
  # @return
  #/
 def get_all_by_organization(id):
+    users = db.session.query(User).filter(User.organization==id).all()
+    for user in users:
+        if user:
+            yield user
     pass
-##
- # 设置用户所属权限组
- # @return
- #/
-def set_user_group(user_group_id):
+
+def delete_user_by_id(id):
+    user = db.session.query(User).filter(User.id==id).one()
+    if user is not None:
+        yield user
+        db.session.delete(user)
+
+def delete_user_by_name(name):
+    user = db.session.query(User).filter(User.name==name).one()
+    if user is not None:
+        yield user
+        db.session.delete(user)
+        
+# 设置用户所属权限组
+def add_users_into_group(users, user_group):
+    for  user in users:
+        if user is not None:
+            user.add_user_group(user_group)
     pass
-def add_users_from_group(users, user_group_id):
-    pass
-def remove_user_from_group(user_group_id, users):
-    pass
+
 
 # us = UserService.new()
 # us.find_all_users()

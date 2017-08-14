@@ -15,9 +15,9 @@ print time
 m = hashlib.md5()
 m.update('1223243456')
 
-new_user = User(name='Branky',sex='男', pwd=m.hexdigest(), phone='1762888223',\
-                organization=u'如家酒店', email='13142344@qq.com',card_number=\
-                '1039032', is_activated='True', is_admin='True',
+new_user = User(name='Tom',sex='男', pwd=m.hexdigest(), phone='1762088223',\
+                organization=u'如家酒店2', email='13142944@qq.com',card_number=\
+                '10308732', is_activated='True', is_admin='True',
                 create_time=time, create_by='SuperUser', status='close')
 
 # 添加新用户到session:
@@ -25,19 +25,22 @@ db.session.add(new_user)
 
 # 添加新角色到 session:
 new_role = Role(name='SYS',role_type='2',create_time=time,is_activated='true')
-db.session.add(new_role)
+# db.session.add(new_role)
 
-nenber = db.session.query(User).filter(User.name=='Brand').one()
+nenber = db.session.query(User).filter(User.name=='Branky').one()
 
+user_service.delete_user_by_id('7')
+user_service.reset_password('Brand')
 nenber.add_role(new_role)
 roles = nenber.get_roles()
 print "用户-多角色显示："
 for role in roles:
-    print role
+    if role is not None:
+        print role
 # x = User.query.with_parent(r_user_role) 
 # print x
 
-group = Usergroup(name=u'测试',create_time=time,is_activated=True)
+group = Usergroup(name=u'Test',create_time=time,is_activated=True)
 db.session.add(group)
 print group
 nenber.group.append(group)
