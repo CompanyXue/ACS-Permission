@@ -22,6 +22,8 @@ new_user = User(name='Tom',sex='男', pwd=m.hexdigest(), phone='1762088223',\
 
 # 添加新用户到session:
 db.session.add(new_user)
+# 进行数据库交互, 但是事务并没有提交. 
+session.flush()
 
 # 添加新角色到 session:
 new_role = Role(name='SYS',role_type='2',create_time=time,is_activated='true')

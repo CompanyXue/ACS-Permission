@@ -99,12 +99,18 @@ class User(db.Model):
     def get_roles(self):
         for role in self.roles:
             yield role
+            
     def add_user_group(group):
         self.group.append(group)
+        
+    def get_user_group(self):
+        for group in self.group:
+            yield group
     
     def reset_password(self, pwd):
         self.pwd = pwd
         pass
+    
     def update(data):
         self.phone = data.phone
         self.email = data.email

@@ -27,9 +27,9 @@ def search_user_by_info(name, phone):
 
 def find_user_by_id(userid):
     user = db.session.query(User).filter(User.id==userid).one()
-    if user:
-        yield user
-    #return user
+    if user is not None:
+        # yield user
+        return user
     pass
 
 # 更新用户信息
@@ -56,16 +56,9 @@ def update_pwd(username,pwd):
         user.pwd = pwd
     pass
 
- # 根据角色名查询用户数量
- # @return
- #/
-def find_count_by_rolename(role_name):
-    
-    pass
-##
- # 根据组织id查询全部用户信息
- # @return
- #/
+# 根据组织id查询全部用户信息
+# @return
+#/
 def get_all_by_organization(id):
     users = db.session.query(User).filter(User.organization==id).all()
     for user in users:
@@ -76,9 +69,11 @@ def get_all_by_organization(id):
 def delete_user_by_id(id):
     user = db.session.query(User).filter(User.id==id).one()
     if user is not None:
-        yield user
+        print user
         db.session.delete(user)
-
+        # yield user
+    pass
+        
 def delete_user_by_name(name):
     user = db.session.query(User).filter(User.name==name).one()
     if user is not None:
@@ -91,8 +86,4 @@ def add_users_into_group(users, user_group):
         if user is not None:
             user.add_user_group(user_group)
     pass
-
-
-# us = UserService.new()
-# us.find_all_users()
-# us.find_user_by_id(2)      
+ 
