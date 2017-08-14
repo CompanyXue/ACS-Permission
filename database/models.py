@@ -14,7 +14,7 @@ db = SQLAlchemy(app)
 
 
 # 关系最好不用 Model 创建，而是直接用定义的形式加入外键链接即可,
-# 定义：所有的关系表---规范为 r 开头，而实体属性表则用 t 开头
+# 定义：所有的关系表---规范为 mapping结尾，而实体属性表则用 英文名称 表示
 
 user2role = db.Table('user_role_mapping',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'),primary_key=True),
@@ -65,7 +65,8 @@ class User(db.Model):
     status = Column(db.String(10),nullable=False)
     
     #数据表属性 初始化
-    def __init__(self, name, phone, sex, pwd, organization, email, card_number, create_time,create_by,is_activated, is_admin,status, _id=None):
+    def __init__(self, name, phone, sex, pwd, organization, email, card_number,\
+                 create_time,create_by,is_activated, is_admin,status, _id=None):
         self.id = _id
         self.name = name
         self.sex = sex
@@ -111,7 +112,9 @@ class User(db.Model):
         self.pwd = pwd
         pass
     
+    # 传入参数更新用户可更改内容
     def update(data):
+        self.name = data.name
         self.phone = data.phone
         self.email = data.email
         self.card_number = card_number
@@ -139,7 +142,8 @@ class Usergroup(db.Model):
         self.is_activated = is_activated  # 0-关闭 1-活动
 
     def __repr__(self):
-        return "<UserGroup'{}'>".format('用户组名'+self.name + "\t创建时间："+str(self.create_time))
+        return "<UserGroup'{}'>".format('用户组名'+self.name + "\t创建时间："+\
+                                        str(self.create_time))
 
 # 定义Role对象
 class Role(db.Model):
@@ -215,8 +219,8 @@ class Permission(db.Model):
     __tablename__ = 'permission'
     
     id = Column(db.Integer, primary_key=True,autoincrement=True)
-    name = Column(db.Integer, nullable=False)
-    type = Column(db.String(10),nullable=False)  
+    name = Column(db.String(20), nullable=False)
+    o_type = Column(db.String(10),nullable=False)  
     # opter = Column(db.Integer, db.ForeignKey('role.id'))
     # user = Column(db.Integer, db.ForeignKey('user.id'))
     # user = db.relationship('User',
@@ -225,11 +229,11 @@ class Permission(db.Model):
     resource = Column(db.Integer, db.ForeignKey('resource.id'))
     content = Column(db.String(200))
     
-    def __init__(self, name, type, create_time, content, _id=None):
+    def __init__(self, name, o_type, create_time, content, _id=None):
         self.id = _id
         # self.role_group_id = role_group_id  
         self.name = name
-        self.type = type  
+        self.o_type = o_type  
         self.create_time = create_time
         self.content = content
 
@@ -248,9 +252,7 @@ class Permission(db.Model):
 #     name = models.CharField(max_length=64)
 #     permission = models.ManyToManyField(PermissionList,null=True,blank=True)
 
-#     def __unicode__(self):
-#         return self.name
-# 根据定义的表结构一键构建实体表
+# 根据定义的表结构一键构建实体关系表
 db.create_all()
 
 time = time.strftime('%Y-%m-%d',time.localtime(time.time()))

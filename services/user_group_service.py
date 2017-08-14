@@ -2,12 +2,17 @@
 
 class UserGroupService(object):
 	
+	def __init__(self):
+		'''
+		Constructor
+		'''
+		
 	'''
 	 * 根据用户组名查找有哪些用户
 	 * @param role_name
 	 * @return 
 	'''
-	def find_users_by_group_name(group_name):
+	def find_users_by_group_name(self, group_name):
 		group = db.session.query(Group).filter(Group.name==group_name).one()
 		for user in group.users:
 			if user is not None :
@@ -30,14 +35,14 @@ class UserGroupService(object):
 	 * @param username
 	 * @return Set<Role>
 	'''
-	def find_group_by_user_name(username):
+	def find_group_by_user_name(self,username):
 		user = db.session.query(User).filter(User.name==username).one()
 		for group in user.group:
 			if group is not None:
 				yield group
 		pass
 
-	def remove_users_from_group(group_name, users):
+	def remove_users_from_group(self, group_name, users):
 		group = db.session.query(Group).filter(Group.name==group_name).one()
 		if group is not None:
 			for user in users:
