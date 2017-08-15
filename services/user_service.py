@@ -1,7 +1,10 @@
 # -*- coding: UTF-8 -*-
 
 import hashlib
-from database.models import  User, Role, db, Usergroup
+import sys
+# sys.path.append("..")
+sys.path.insert(0,"..")
+from database.models import db, Role, User, Usergroup
 
 class UserService(object):
 
@@ -71,16 +74,18 @@ class UserService(object):
             if user:
                 yield user
         pass
-
+    
+    @classmethod
     def delete_user_by_id(self,id):
-        user = db.session.query(User).filter(User.id==id).first()
+        user = db.session.query(User).filter(User.id==id).one()
         if user is not None:
-            print user
+            # print user
+            yield user
             db.session.delete(user)
             print ' 已删除！！'
-            # yield user
         pass
-
+    
+    @classmethod
     def delete_user_by_name(self,name):
         user = db.session.query(User).filter(User.name==name).one()
         if user is not None:
@@ -95,3 +100,7 @@ class UserService(object):
             if user is not None:
                 user.add_user_group(user_group)
         pass
+    
+    
+xxx = UserService()
+xxx.delete_user_by_id(40)

@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+from database.models import Permission,Role,db
 
 class PermissionService(object):
 	
@@ -9,9 +10,10 @@ class PermissionService(object):
 	
 	# 查询出所有的权限列表
 	def find_all_permission(self):
-		perm = db.session.query(Permission).all()
-		for re in perm:
-			yield re
+		perms = db.session.query(Permission).all()
+		for re in perms:
+			if re is not None:
+				yield re
 		pass
 
 	'''
@@ -21,13 +23,13 @@ class PermissionService(object):
 	'''
 	def find_perm_by_role(self,role_name):
 		role = db.session.query(Role).filter(Role.name==role_name).one()
-		for perm in role.permission:
+		for perm in role.perms:
 			if perm is not None:
 				yield perm
 		pass
 	
 	'''
-	* 根据用户角色获取该用户的权限
+	* 根据权限名称获取用户角色
 	* @param perm_name
 	* @return role set
 	'''
@@ -39,12 +41,27 @@ class PermissionService(object):
 		pass
 	
 	'''
-	* 根据名稱刪除用户的权限
+	* 根据权限名字刪除用户的权限
 	* @param perm_name
 	* @return perm
 	'''
-	def delete_permission_by_name(self,name):
-		perm = db.session.query(Permission).filter(Permission.name==name).one()
+	def add_permission_by_name(self,perm_name):
+		perm = Permission(name=perm_name, create_time=utc.now,\
+						  o_type='2',content='')
+		print '添加用户组'
+		db.session.add(perm)
+		db.session.commit()
+		print '添加成功'
+		pass
+	
+
+	'''
+	* 根据权限名字刪除用户的权限
+	* @param perm_name
+	* @return perm
+	'''
+	def delete_permission_by_name(self,perm_name):
+		perm = db.session.query(Permission).filter(Permission.name==perm_name).one()
 		if perm is not None:
 			yield perm
 			db.session.delete(perm)

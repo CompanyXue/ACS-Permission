@@ -152,7 +152,8 @@ class Role(db.Model):
 
     id = Column(db.Integer, primary_key=True,autoincrement=True)
     name = Column(db.String(20), nullable=False,unique=True)
-    role_type = Column(db.String(20),nullable=False)
+    role_code = Column(db.String(30), nullable=True)
+    role_type = Column(db.String(10),nullable=False)
     create_time = Column(db.Date(),nullable=False)
     is_activated = Column(db.String(5),nullable=False)
     users = db.relationship('User', secondary=user2role,                     
@@ -160,17 +161,18 @@ class Role(db.Model):
         backref=db.backref('roles', lazy='dynamic'))
 
     #数据表属性 初始化
-    def __init__(self, name, role_type, is_activated, create_time, _id=None):
+    def __init__(self, name, role_code, role_type, is_activated, create_time, _id=None):
         self.id = _id
-        # self.role_group_id = role_group_id  
         self.name = name
+        self.role_code = role_code
         self.role_type = role_type   #管理员与普通身份    readonly 1 , modify 3, owner 4 
         self.create_time = create_time
         self.is_activated = is_activated
 
     def __repr__(self):
-        return "<Role '{}'>".format('角色名：'+self.name +'\t角色类型：'+ self.role_type \
-                                    + "\t创建时间："+str(self.create_time))
+        if self.is_activated is not None:
+             return "<Role '{}'>".format('角色名：'+self.name +'\t角色类型：'+ self. \
+                                         role_type + "\t创建时间："+str(self.create_time))
 
 # class Log(db.Model):
 #     __tablename__ = 'log'
@@ -197,8 +199,6 @@ class Resource(db.Model):
     name = Column(db.String(20), nullable=False,unique=True)
     res_type = Column(db.String(10),nullable=False)  
     # owner = Column(db.Integer, db.ForeignKey('user.id'))
-    # user = db.relationship('User',
-    #     backref=db.backref('posts', lazy='dynamic'))
     create_time = Column(db.Date(),nullable=False)
     location = Column(db.String(100),nullable=True)
     content = Column(db.String(200))
@@ -220,25 +220,26 @@ class Permission(db.Model):
     
     id = Column(db.Integer, primary_key=True,autoincrement=True)
     name = Column(db.String(20), nullable=False)
+    pri_code = Column(db.String(20), nullable=True)
     o_type = Column(db.String(10),nullable=False)  
     # opter = Column(db.Integer, db.ForeignKey('role.id'))
     # user = Column(db.Integer, db.ForeignKey('user.id'))
-    # user = db.relationship('User',
-    #     backref=db.backref('posts', lazy='dynamic'))
     create_time = Column(db.Date(),nullable=False)
     resource = Column(db.Integer, db.ForeignKey('resource.id'))
     content = Column(db.String(200))
+    roles = db.relationship('Role', secondary=role2perm,
+                            backref=db.backref('perms', lazy='dynamic'))
     
-    def __init__(self, name, o_type, create_time, content, _id=None):
+    def __init__(self, name, o_type, create_time, content,_pri_code=None, _id=None):
         self.id = _id
-        # self.role_group_id = role_group_id  
         self.name = name
         self.o_type = o_type  
         self.create_time = create_time
         self.content = content
 
     def __repr__(self):
-        return "<Permission '{}'>".format('权限名称'+self.name + content + "创建时间："\
+        return "<Permission '{}'>".format('权限名称 :'+self.name + "\t类型："+self.o_type\
+                                          + '\t权限内容：'+ self.content+"\t创建时间："\
                                           + str(self.create_time))
 
 # class PermissionList(models.Model):
@@ -267,7 +268,7 @@ new_user = User(name='Rose',sex='女',pwd=m.hexdigest(),phone='1234123527',organ
                 card_number='103978034',is_activated='True',is_admin='True',\
                 create_time=time,create_by='SuperUser',status='close')
 
-new_role = Role(name='SDE',role_type='2',create_time=time,is_activated='true')
+new_role = Role(name='SBE',role_code='ADministartor',role_type='2',create_time=time,is_activated='true')
 # 添加新角色到session:
 # db.session.add(new_role)
 

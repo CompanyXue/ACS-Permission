@@ -16,9 +16,9 @@ print time
 m = hashlib.md5()
 m.update('987654321')
 
-new_user = User(name='LeeB',sex='男', pwd=m.hexdigest(), phone='124234321323',\
-                organization=u'如家酒店2', email='13142002124@qq.com',card_number=\
-                '12145735622', is_activated='True', is_admin='True',
+new_user = User(name='LeeNew',sex='男', pwd=m.hexdigest(), phone='1235221323',\
+                organization=u'如家酒店1', email='13112002124@qq.com',card_number=\
+                '12145735600', is_activated='True', is_admin='True',
                 create_time=time, create_by='SuperUser', status='close')
 
 # 添加新用户到session:
@@ -27,11 +27,11 @@ db.session.add(new_user)
 db.session.flush()
 
 # 添加新角色到 session:
-new_role = Role(name='S3admin',role_type='1',create_time=time,is_activated='true')
+new_role = Role(name='S4admin',role_code='ADministartor',role_type='4',create_time=time,is_activated='true')
 db.session.add(new_role)
 db.session.flush()
 
-nenber = db.session.query(User).filter(User.name=='Brand').one()
+nenber = db.session.query(User).filter(User.name=='Rosee').one()
 
 nenber.add_role(new_role)
 roles = nenber.get_roles()
@@ -42,7 +42,7 @@ for role in roles:
 # x = User.query.with_parent(r_user_role) 
 # print x
 
-group = Usergroup(name=u'MEETING',create_time=time,is_activated=True)
+group = Usergroup(name=u'随机组',create_time=time,is_activated=True)
 db.session.add(group)
 print group
 nenber.group.append(group)
@@ -55,7 +55,8 @@ for user in users:
     print user
 
 # 通过用户id 来进行删除 (√)
-user_service.delete_user_by_id(18)
+user = xxx.delete_user_by_id(18)
+print user
 
 #密码的更新，总提示参数不对。
 # xxx.update_pwd(name='Brand',pwd=m.update('123'))
