@@ -41,7 +41,12 @@ class UserGroupService(object):
 			if group is not None:
 				yield group
 		pass
-
+	
+	'''
+	*从用户组中移除用户
+	* @param group_name, users
+	* @return 
+	'''
 	def remove_users_from_group(self, group_name, users):
 		group = db.session.query(Group).filter(Group.name==group_name).one()
 		if group is not None:
@@ -52,3 +57,16 @@ class UserGroupService(object):
 			if users in group.users:
 				group.users.remove(users)
 		pass
+	
+	'''
+	* 删除用户组
+	* @param group_name
+	* @return 
+	'''
+	def delete_user_group(self, group_name):
+		group = db.session.query(Group).filter(Group.name==group_name).one()
+		if group is not None:
+			print '删除用户组：', group
+			db.session.delete(group)
+		pass
+	

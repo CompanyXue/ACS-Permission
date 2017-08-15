@@ -28,6 +28,7 @@ class RoleService(object):
 		for role in user.role:
 			if role is not None:
 				yield role
+		pass
 	
 	''' 
 	 * 根据用户名查找用户拥有的角色信息
@@ -39,4 +40,16 @@ class RoleService(object):
 		for role in user.role:
 			if role is not None:
 				yield role
+		pass
+	
+	'''
+	* 根据名稱刪除用户的角色
+	* @param role_name
+	* @return role
+	'''
+	def delete_permission_by_name(self,role_name):
+		role = db.session.query(Role).filter(Role.name==role_name).one()
+		if role is not None:
+			yield role
+			db.session.delete(role)
 		pass

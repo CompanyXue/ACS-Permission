@@ -38,7 +38,14 @@ class PermissionService(object):
 				yield role
 		pass
 	
-
-
-
-
+	'''
+	* 根据名稱刪除用户的权限
+	* @param perm_name
+	* @return perm
+	'''
+	def delete_permission_by_name(self,name):
+		perm = db.session.query(Permission).filter(Permission.name==name).one()
+		if perm is not None:
+			yield perm
+			db.session.delete(perm)
+		pass
