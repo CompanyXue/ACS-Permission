@@ -101,7 +101,7 @@ class User(db.Model):
         for role in self.roles:
             yield role
             
-    def add_user_group(group):
+    def add_user_group(self,group):
         self.group.append(group)
         
     def get_user_group(self):
@@ -118,6 +118,10 @@ class User(db.Model):
         self.phone = data.phone
         self.email = data.email
         self.card_number = card_number
+    #判断权限 是否有：role存在并且角色的权限要包含传入的权限  
+    def can(self,permissions):
+        return self.role is not None and \
+            (self.roles.perms & permissions) == permissions
         
 # 定义UserGroup对象
 class Usergroup(db.Model):
@@ -144,7 +148,25 @@ class Usergroup(db.Model):
     def __repr__(self):
         return "<UserGroup'{}'>".format('用户组名'+self.name + "\t创建时间："+\
                                         str(self.create_time))
+    def add_user(self, user):
+        self.users.append(user)
 
+    def remove_user(self, user):
+        self.users.remove(user)
+    
+    def add_users(self, users):
+        for user in users:
+            self.add_user(user)
+
+    def get_users(self):
+        for user in self.users:
+            yield user
+    
+    def get_roles(self ):
+        for role in self.roles:
+            yield role
+        
+    
 # 定义Role对象
 class Role(db.Model):
     # 表的名字:
@@ -156,9 +178,8 @@ class Role(db.Model):
     role_type = Column(db.String(10),nullable=False)
     create_time = Column(db.Date(),nullable=False)
     is_activated = Column(db.String(5),nullable=False)
-    users = db.relationship('User', secondary=user2role,                     
-        #lazy='subquery', backref=db.backref('roles', lazy=True))
-        backref=db.backref('roles', lazy='dynamic'))
+    users = db.relationship('User', secondary=user2role, \
+                            backref=db.backref('roles', lazy='dynamic'))
 
     #数据表属性 初始化
     def __init__(self, name, role_code, role_type, is_activated, create_time, _id=None):
@@ -173,7 +194,36 @@ class Role(db.Model):
         if self.is_activated is not None:
              return "<Role '{}'>".format('角色名：'+self.name +'\t角色类型：'+ self. \
                                          role_type + "\t创建时间："+str(self.create_time))
+    
+    def add_user(self, user):
+        self.users.append(user)
 
+    def remove_user(self, user):
+        self.users.remove(user)
+        pass
+    
+    def add_users(self, users):
+        for user in users:
+            self.add_user(user)
+
+    def get_users(self):
+        for user in self.users:
+            yield user
+            
+    def add_role_group(self,group):
+        self.group.append(group)
+        
+    def get_role_group(self):
+        for group in self.group:
+            yield group
+
+    def add_role_permission(self,perm):
+        self.perms.append(perm)
+        
+    def get_role_permission(self):
+        for perm in self.perms:
+           yield perm
+            
 # class Log(db.Model):
 #     __tablename__ = 'log'
 # 
