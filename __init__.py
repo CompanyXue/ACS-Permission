@@ -24,12 +24,12 @@ new_user = User(name='LeeNew',sex='男', pwd=m.hexdigest(), phone='1235221323',\
 # 添加新用户到session:
 db.session.add(new_user)
 # 进行数据库交互, 但是事务并没有提交. 
-db.session.flush()
+# db.session.flush()
 
 # 添加新角色到 session:
 new_role = Role(name='S4admin',role_code='ADministartor',role_type='4',create_time=time,is_activated='true')
 db.session.add(new_role)
-db.session.flush()
+# db.session.flush()
 
 nenber = db.session.query(User).filter(User.name=='Rosee').one()
 
@@ -71,7 +71,7 @@ users = xxx.search_user_by_info('Brank','1762388223')
 for user in users:
     print user
 # 提交即保存到数据库:
-db.session.commit()
+# db.session.commit()
 
 # 测试用法 
 # 创建Query查询，filter是where条件，最后调用one()返回唯一行，如果调用all()则返回所有行:

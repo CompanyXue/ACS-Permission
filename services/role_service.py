@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-from database.models import  User, Role, db, Usergroup
+from database.models import  User, Role, db, Usergroup, Permission
 
 class RoleService(object):
 	
@@ -43,6 +43,18 @@ class RoleService(object):
 		pass
 	
 	'''
+	* 根据角色id 刪除角色
+	* @param role_id
+	* @return role
+	'''
+	def add_role_by_name(self,role_id):
+		role = db.session.query(Role).filter(Role.id==role_id).one()
+		if role is not None:
+			db.session.delete(role)
+			yield role
+		pass
+	
+	'''
 	* 根据名稱刪除角色
 	* @param role_name
 	* @return role
@@ -59,12 +71,11 @@ class RoleService(object):
 	* @param role_name
 	* @return role
 	'''
-	def add_permission_by_name(self, perm , role_name):
+	def add_permission_by_name(self, perm_name, role_name):
+		perm = db.session.query(Permission).filter(Permission.name==perm_name).one()
 		role = db.session.query(Role).filter(Role.name==role_name).one()
-		
-		if role is not None:
-			yield role
-			db.session.delete(role)
+		if role is not None and perm is not None:
+			role.perms.append(perm)
 		pass
 	
 	'''
@@ -74,8 +85,8 @@ class RoleService(object):
 	'''
 	def remove_permission_by_name(self, perm, role_name):
 		role = db.session.query(Role).filter(Role.name==role_name).one()
-		if role is not None:
-			yield role
-			db.session.delete(role)
+		if role is not None :
+			if perm in role.perms:
+				role.perms.remove(perm)
 		pass
 	

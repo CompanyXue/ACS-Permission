@@ -1,5 +1,8 @@
 # -*- coding: UTF-8 -*-
+import time
 from database.models import Permission,Role,db
+
+time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 
 class PermissionService(object):
 	
@@ -33,7 +36,7 @@ class PermissionService(object):
 	* @param perm_name
 	* @return role set
 	'''
-	def find_roles_by_perm(perm_name):
+	def find_roles_by_perm(self, perm_name):
 		perm = db.session.query(Permission).filter(Permission.name==perm_name).one()
 		for role in perm.roles:
 			if role is not None:
@@ -46,13 +49,12 @@ class PermissionService(object):
 	* @return perm
 	'''
 	def add_permission_by_name(self,perm_name):
-		perm = Permission(name=perm_name, create_time=utc.now,\
-						  o_type='2',content='')
-		print '添加用户组'
-		db.session.add(perm)
-		db.session.commit()
+		print (u'类中的时间: ',time)
+		perms = Permission(name=str(perm_name), o_type='2', create_time=time,\
+						  content='TODO ')
+		print '添加权限XXX'
+		db.session.add(perms)
 		print '添加成功'
-		pass
 	
 
 	'''
@@ -63,6 +65,6 @@ class PermissionService(object):
 	def delete_permission_by_name(self,perm_name):
 		perm = db.session.query(Permission).filter(Permission.name==perm_name).one()
 		if perm is not None:
-			yield perm
+			print perm
 			db.session.delete(perm)
 		pass
