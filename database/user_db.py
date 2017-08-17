@@ -23,7 +23,7 @@ class User(db.Model):
     phone = Column(db.String(20),nullable=False,unique=True)
     sex = Column(db.String(2),nullable=False)
     birthday = Column(db.Date(),nullable=True)
-    pwd = Column(db.String(64),nullable=False)
+    pwd = Column(db.String(256),nullable=False)
     organization = Column(db.String(100),nullable=False)
     email = Column(db.String(50),nullable=False)
     card_number = Column(db.String(20),nullable=False,unique=True)
@@ -130,7 +130,7 @@ new_user = User(name='timy',sex='女',pwd='1234',phone='1762434223',organization
 db.session.add(new_user)
 
 # 提交即保存到数据库:
-# db.session.commit()
+db.session.commit()
 
 # 关闭session:
 # db.session.close()
