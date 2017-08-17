@@ -3,8 +3,9 @@
 import hashlib
 import time
 
-import config_setting
-import role_db
+import config_setting 
+from role_db import Role
+from user_db import User
 
 # 关系最好不用 Model 创建，而是直接用定义的形式加入外键链接即可,
 # 定义：所有的关系表---规范为 mapping结尾，而实体属性表则用 英文名称 表示
@@ -35,88 +36,6 @@ perm2resource = db.Table('resource_permission_mapping',
     db.Column('resource_id', db.Integer, db.ForeignKey('resource.id'),primary_key=True)
 )
 
-# 定义User对象:
-class User(db.Model):
-    # 表的名字:
-    __tablename__ = 'user'
-
-    id = Column(db.Integer(32), primary_key=True,autoincrement=True)
-    name = Column(db.String(100), nullable=False,unique=True)
-    phone = Column(db.String(20),nullable=False,unique=True)
-    sex = Column(db.Integer(2),nullable=False)
-    birthday = Column(db.Date(),nullable=True)
-    pwd = Column(db.String(32),nullable=False)
-    organization = Column(db.String(100),nullable=False)
-    email = Column(db.String(50),nullable=False)
-    card_number = Column(db.String(20),nullable=False,unique=True)
-    create_by = Column(db.String(32),nullable=False)
-    create_time = Column(db.Date(),nullable=False)
-    modified_date = Column(db.Date(),default=create_time)
-    modified_by = Column(db.String(32),default=create_by)
-    is_activated = Column(db.String(5),nullable=False)
-    is_admin = Column(db.String(10),nullable=True)
-    status = Column(db.String(10),nullable=False)
-    is_deleted = Column(db.Boolean,nullable=False,default=False)
-    
-    #数据表属性 初始化
-    def __init__(self, name, phone, sex, pwd, organization, email, card_number,\
-                 create_time,create_by,is_activated, is_admin,status, _id=None):
-        self.id = _id
-        self.name = name
-        self.sex = sex
-        self.pwd = pwd
-        self.phone = phone
-        self.organization = organization
-        self.email = email
-        self.card_number = card_number
-        self.is_activated = is_activated
-        self.is_admin = is_admin
-        self.create_time = create_time
-        self.create_by = create_by
-        # self.modified_date = modified_date
-        # self.modified_by = modified_by
-        self.status = status
-
-    def __repr__(self):
-        return "<User '{}'>".format('姓名：'+self.name +'\t性别：'+ self.sex +\
-                                    '\t组织：'+self.organization+'\t邮箱：'+\
-                                    self.email+'\t电话号码：'+self.phone+'\t卡号：'\
-                                    + self.card_number + '\t创建时间：'\
-                                    + str(self.create_time))
-    
-    def add_role(self, role):
-        self.roles.append(role)
-
-    def add_roles(self, roles):
-        for role in roles:
-            self.add_role(role)
-
-    def get_roles(self):
-        for role in self.roles:
-            yield role
-            
-    def add_user_group(self,group):
-        self.group.append(group)
-        
-    def get_user_group(self):
-        for group in self.group:
-            yield group
-    
-    def reset_password(self, pwd):
-        self.pwd = pwd
-        pass
-    
-    # 传入参数更新用户可更改内容
-    def update(data):
-        self.name = data.name
-        self.phone = data.phone
-        self.email = data.email
-        self.card_number = card_number
-    #判断权限 是否有：role存在并且角色的权限要包含传入的权限  
-    def can(self,permissions):
-        return self.role is not None and \
-            (self.roles.perms & permissions) == permissions
-        
 # 定义UserGroup对象
 class Usergroup(db.Model):
     # 表的名字:

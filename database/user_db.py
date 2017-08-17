@@ -1,43 +1,45 @@
 # -*- coding: UTF-8 -*-
 
-# import database.config
-import time,sys,hashlib
-from sqlalchemy import Column, String, Integer, Date, create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-import config_setting
+import time
+from passlib.hash import sha256_crypt
+# from sqlalchemy import Column, String, Integer, Date, create_engine
+# from sqlalchemy.orm import sessionmaker
+# from sqlalchemy.ext.declarative import declarative_base
+from database import config_setting
 
 # 创建对象的基类:
-Base = declarative_base()
+# Base = declarative_base()
 
 # 定义User对象:
-class User(Base):
+class User(db.Model):
     # 表的名字:
-    __tablename__ = 't_user'
+    __tablename__ = 'user'
 
-    id = Column(Integer(32), primary_key=True,autoincrement=True)
-    name = Column(String(20), nullable=False)
-    phone = Column(String(20),nullable=False)
-    sex = Column(String(10),nullable=False)
-    birthday = Column(Date(),nullable=True)
-    pwd = Column(String(32),nullable=False)
-    organization = Column(String(30),nullable=False)
-    email = Column(String(20),nullable=False)
-    card_number = Column(String(20),nullable=False)
-    create_by = Column(String(20),nullable=False)
-    create_time = Column(Date(),nullable=False)
-    modified_date = Column(Date(),default=create_time)
-    modified_by = Column(String(20),default=create_by)
-    is_activated = Column(String(10),nullable=False)
-    # is_admin = Column(String(10),nullable=True)
-    status = Column(String(10),nullable=False)
-
+    id = Column(db.Integer(32), primary_key=True,autoincrement=True)
+    name = Column(db.String(100), nullable=False,unique=True)
+    phone = Column(db.String(20),nullable=False,unique=True)
+    sex = Column(db.Integer(2),nullable=False)
+    birthday = Column(db.Date(),nullable=True)
+    pwd = Column(db.String(256),nullable=False)
+    organization = Column(db.String(100),nullable=False)
+    email = Column(db.String(50),nullable=False)
+    card_number = Column(db.String(20),nullable=False,unique=True)
+    create_by = Column(db.String(32),nullable=False)
+    create_time = Column(db.Date(),nullable=False)
+    modified_date = Column(db.Date(),default=create_time)
+    modified_by = Column(db.String(32),default=create_by)
+    is_activated = Column(db.String(5),nullable=False)
+    is_admin = Column(db.String(10),nullable=True)
+    status = Column(db.String(10),nullable=True)
+    is_deleted = Column(db.Boolean,nullable=False,default=False)
+    
     #数据表属性 初始化
-    def __init__(self, name, phone, sex, pwd, organization, email, card_number, create_time,create_by,is_activated, is_admin,status, _id=None):
+    def __init__(self, name, phone, sex, pwd, organization, email, card_number,\
+                 create_time,create_by,is_activated, is_admin,is_deleted, _id=None):
         self.id = _id
         self.name = name
         self.sex = sex
-        self.pwd = pwd
+        self.pwd = sha256_crypt.encrypt(pwd)
         self.phone = phone
         self.organization = organization
         self.email = email
@@ -48,12 +50,51 @@ class User(Base):
         self.create_by = create_by
         # self.modified_date = modified_date
         # self.modified_by = modified_by
-        self.status = status
+        self.is_deleted = is_deleted
 
     def __repr__(self):
-        return "<User '{}'>".format('姓名：'+self.name +'\t性别：'+ self.sex +'\t组织：'+self.organization+'\t邮箱：'+\
-            self.email+'\t电话号码：'+ self.phone+'\t卡号：'+self.card_number + '\t创建时间：'+str(self.create_time))
+        if self.is_activated is not None:
+            return "<User '{}'>".format('姓名：'+self.name +'\t性别：'+ self.sex +\
+                                    '\t组织：'+self.organization+'\t邮箱：'+\
+                                    self.email+'\t电话号码：'+self.phone+'\t卡号：'\
+                                    + self.card_number + '\t创建时间：'\
+                                    + str(self.create_time) + self.pwd)
+    def verify(self, password):
+        return sha256_crypt.verify(password, self.pwd)
+    
+    def add_role(self, role):
+        self.roles.append(role)
 
+    def add_roles(self, roles):
+        for role in roles:
+            self.add_role(role)
+
+    def get_roles(self):
+        for role in self.roles:
+            yield role
+            
+    def add_user_group(self,group):
+        self.group.append(group)
+        
+    def get_user_group(self):
+        for group in self.group:
+            yield group
+    
+    def reset_password(self, pwd):
+        self.pwd = pwd
+        pass
+    
+    # 传入参数更新用户可更改内容
+    def update(data):
+        self.name = data.name
+        self.phone = data.phone
+        self.email = data.email
+        self.card_number = card_number
+    #判断权限 是否有：role存在并且角色的权限要包含传入的权限  
+    def can(self,permissions):
+        return self.role is not None and \
+            (self.roles.perms & permissions) == permissions
+        
 # 初始化数据库连接:
 # engine = create_engine('mysql+pymysql://root:tomcat@127.0.0.1:3306/acs')
 

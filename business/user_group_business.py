@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-class UserGroupService(object):
+class UserGroupBusiness(object):
 	
 	def __init__(self):
 		'''

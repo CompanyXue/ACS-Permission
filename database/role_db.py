@@ -1,14 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-
 import config_setting
+#from config_setting import db,Boolean
 
 from sqlalchemy import Column, String, Integer, Date, create_engine
-# from sqlalchemy.orm import sessionmaker
-# from sqlalchemy.ext.declarative import declarative_base
-
-# 创建对象的基类:
-# Base = declarative_base()
 
 # 定义Role对象
 class Role(db.Model):
@@ -33,11 +28,13 @@ class Role(db.Model):
                             backref=db.backref('roles', lazy='dynamic'))
 
     #数据表属性 初始化
-    def __init__(self, name, role_code, role_type, is_activated, create_time, _id=None):
+    def __init__(self, name, role_code, role_type, create_time,\
+                 create_by, is_activated, _id=None):
         self.id = _id
         self.name = name
         self.role_code = role_code
-        self.role_type = role_type   #管理员与普通身份    readonly 1 , modify 3, owner 4 
+        self.role_type = role_type   #管理员与普通身份    readonly 1 , modify 3, owner 4
+        self.create_by = create_by
         self.create_time = create_time
         self.is_activated = is_activated
 
