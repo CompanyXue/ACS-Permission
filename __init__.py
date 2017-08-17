@@ -1,9 +1,6 @@
 # -*- coding:utf-8 -*-
 import time
-from database import config_setting
-from database.models import Usergroup
-from role_db import Role
-from user_db import User
+import database
 from business.user_business import UserBusiness
         
 # 根据定义的表结构一键构建实体表

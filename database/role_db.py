@@ -1,9 +1,16 @@
 # -*- coding: UTF-8 -*-
-
+import sys
 import config_setting
-#from config_setting import db,Boolean
+import user_db
+from sqlalchemy import Column, String, Date, Boolean
+from sqlalchemy.types import BigInteger
 
-from sqlalchemy import Column, String, Integer, Date, create_engine
+db = config_setting.db
+
+user2role = db.Table('user_role_mapping',
+    db.Column('user_id', db.BigInteger, db.ForeignKey('user.id'),primary_key=True),
+    db.Column('role_id', db.BigInteger, db.ForeignKey('role.id'),primary_key=True)
+)
 
 # 定义Role对象
 class Role(db.Model):
@@ -14,7 +21,7 @@ class Role(db.Model):
     # primary_key等于主键
     # unique唯一
     # nullable非空
-    id = Column(db.Integer, primary_key=True,autoincrement=True)
+    id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(20), nullable=False,unique=True)
     role_code = Column(db.String(30), nullable=True)
     role_type = Column(db.String(10),nullable=False)

@@ -2,16 +2,14 @@
 #!/usr/bin/env python
 
 import time
-from database.models import  User, Role, Usergroup, db,app, Permission
-from services.user_service import UserService
-from services.role_service import RoleService
-from services.permission_service import PermissionService
-import views.views
+import database
+import business
+import views
 
 
 if __name__ == '__main__':
     
-    roleservice = RoleService()
+    roleservice = RoleBusiness()
     # 测试 @根据用户名 查询所属角色
     roels = roleservice.find_role_by_uerid(14)
     for role in roels:
@@ -28,7 +26,7 @@ if __name__ == '__main__':
     print 'SAAA 添加qunxian'
            
            
-    xxxx = PermissionService()
+    xxxx = PermissionBusiness()
     print xxxx
     perms = xxxx.find_all_permission()
     for per in perms:
@@ -79,6 +77,4 @@ if __name__ == '__main__':
     
     db.session.commit()
     
-    
-    app.run(debug=True)
     pass

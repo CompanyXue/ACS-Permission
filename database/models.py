@@ -2,38 +2,37 @@
 
 import hashlib
 import time
+from sqlalchemy import Column, String, Integer, Date, Boolean,Text
+from sqlalchemy.types import BigInteger
+import config_setting
+import user_db
+import role_db
 
-import config_setting 
-from role_db import Role
-from user_db import User
 
 # 关系最好不用 Model 创建，而是直接用定义的形式加入外键链接即可,
 # 定义：所有的关系表---规范为 mapping结尾，而实体属性表则用 英文名称 表示
-
-user2role = db.Table('user_role_mapping',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'),primary_key=True),
-    db.Column('role_id', db.Integer, db.ForeignKey('role.id'),primary_key=True)
-)
+db = config_setting.db
 
 user2group = db.Table('user_group_mapping',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'),primary_key=True),
-    db.Column('group_id', db.Integer, db.ForeignKey('user_group.id'),
+    db.Column('user_id', db.BigInteger, db.ForeignKey('user.id'),primary_key=True),
+    db.Column('group_id', db.BigInteger, db.ForeignKey('user_group.id'),\
               primary_key=True)
 )
 
 role2group = db.Table('group_role_mapping',
-    db.Column('group_id', db.Integer, db.ForeignKey('user_group.id'),primary_key=True),
-    db.Column('role_id', db.Integer, db.ForeignKey('role.id'),primary_key=True)
+    db.Column('group_id', db.BigInteger, db.ForeignKey('user_group.id'),\
+              primary_key=True),
+    db.Column('role_id', db.BigInteger, db.ForeignKey('role.id'),primary_key=True)
 )
 
 role2perm = db.Table('role_permission_mapping',
-    db.Column('perm_id', db.Integer, db.ForeignKey('permission.id'),primary_key=True),
-    db.Column('role_id', db.Integer, db.ForeignKey('role.id'),primary_key=True)
+    db.Column('perm_id', db.BigInteger, db.ForeignKey('permission.id'),primary_key=True),
+    db.Column('role_id', db.BigInteger, db.ForeignKey('role.id'),primary_key=True)
 )
 
 perm2resource = db.Table('resource_permission_mapping',
-    db.Column('perm_id', db.Integer, db.ForeignKey('permission.id'),primary_key=True),
-    db.Column('resource_id', db.Integer, db.ForeignKey('resource.id'),primary_key=True)
+    db.Column('perm_id', db.BigInteger, db.ForeignKey('permission.id'),primary_key=True),
+    db.Column('resource_id', db.BigInteger, db.ForeignKey('resource.id'),primary_key=True)
 )
 
 # 定义UserGroup对象
@@ -41,7 +40,7 @@ class Usergroup(db.Model):
     # 表的名字:
     __tablename__ = 'user_group'
 
-    id = Column(db.Integer, primary_key=True,autoincrement=True)
+    id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(20), nullable=False,unique=True)
     create_by = Column(db.String(32),nullable=False)
     create_time = Column(db.Date(),nullable=False)
@@ -105,7 +104,7 @@ class Resource(db.Model):
 
     # 表的结构:
     #primary_key等于主键
-    id = Column(db.Integer, primary_key=True,autoincrement=True)
+    id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False,unique=True)
     res_type = Column(db.String(10),nullable=False)  
     # owner = Column(db.Integer, db.ForeignKey('user.id'))
@@ -118,13 +117,16 @@ class Resource(db.Model):
     is_deleted = Column(db.Boolean,nullable=False,default=False)
     content = Column(db.String(200))
 
-    def __init__(self, name, resource_type, is_activated, create_time, _id=None):
+    def __init__(self, name, resource_type, is_activated, create_time,create_by\
+                 ,is_deleted,_id=None):
         self.id = _id
         # self.role_group_id = role_group_id  
         self.name = name
         self.resource_type = role_type   # 文件 1 , 门禁 2, 设备 3 
         self.create_time = create_time
+        self.create_by = create_by
         self.is_activated = is_activated
+        self.is_deleted = is_deleted
 
     def __repr__(self):
         return "<Role '{}'>".format('资源名称'+self.name + '\t资源类型'+ self.resource_type\
@@ -133,26 +135,25 @@ class Resource(db.Model):
 class Permission(db.Model):
     __tablename__ = 'permission'
     
-    id = Column(db.Integer, primary_key=True,autoincrement=True)
+    id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False)
     o_type = Column(db.String(10),nullable=False)  
-    # opter = Column(db.Integer, db.ForeignKey('role.id'))
-    # user = Column(db.Integer, db.ForeignKey('user.id'))
     create_time = Column(db.Date(),nullable=False)
     create_by = Column(db.String(32),nullable=False)
     create_time = Column(db.Date(),nullable=False)
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
-    resource = Column(db.Integer, db.ForeignKey('resource.id'))
-    content = Column(db.String(200))
+    # resource = Column(db.Integer, db.ForeignKey('resource.id'))
+    content = Column(db.Text)
     roles = db.relationship('Role', secondary=role2perm,
                             backref=db.backref('perms', lazy='dynamic'))
     
-    def __init__(self, name, o_type, create_time, content, _id=None):
+    def __init__(self, name, o_type, create_time,create_by, content, _id=None):
         self.id = _id
         self.name = name
         # self.pri_code = pri_code
-        self.o_type = o_type  
+        self.o_type = o_type
+        self.create_by = create_by
         self.create_time = create_time
         self.content = content
 
@@ -176,18 +177,9 @@ class Permission(db.Model):
 db.create_all()
 
 time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-print time 
+print time
 
-# 加密用户密码
-m = hashlib.md5()
-m.update('1223243456')
-
-new_user = User(name='Rose',sex='女',pwd=m.hexdigest(),phone='1234123527',organization\
-                = str('如家酒店').encode('utf-8'), email='1334942354@qq.com',\
-                card_number='103978034',is_activated='True',is_admin='True',\
-                create_time=time,create_by='SuperUser',status='close')
-
-new_role = Role(name='SBE',role_code='ADministartor',role_type='2',create_time=time,is_activated='true')
+# new_role = Role(name='SBE',role_code='ADministartor',role_type='2',create_time=time,is_activated='true')
 # 添加新角色到session:
 # db.session.add(new_role)
 

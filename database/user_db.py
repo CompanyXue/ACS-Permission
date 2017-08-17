@@ -2,23 +2,26 @@
 
 import time
 from passlib.hash import sha256_crypt
-# from sqlalchemy import Column, String, Integer, Date, create_engine
+from sqlalchemy import Column, String, Date, Boolean
+from sqlalchemy.types import BigInteger
 # from sqlalchemy.orm import sessionmaker
 # from sqlalchemy.ext.declarative import declarative_base
-from database import config_setting
+import config_setting
 
 # 创建对象的基类:
 # Base = declarative_base()
+
+db = config_setting.db
 
 # 定义User对象:
 class User(db.Model):
     # 表的名字:
     __tablename__ = 'user'
 
-    id = Column(db.Integer(32), primary_key=True,autoincrement=True)
+    id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False,unique=True)
     phone = Column(db.String(20),nullable=False,unique=True)
-    sex = Column(db.Integer(2),nullable=False)
+    sex = Column(db.String(2),nullable=False)
     birthday = Column(db.Date(),nullable=True)
     pwd = Column(db.String(256),nullable=False)
     organization = Column(db.String(100),nullable=False)
@@ -30,7 +33,7 @@ class User(db.Model):
     modified_by = Column(db.String(32),default=create_by)
     is_activated = Column(db.String(5),nullable=False)
     is_admin = Column(db.String(10),nullable=True)
-    status = Column(db.String(10),nullable=True)
+    status = Column(db.String(10),nullable=True,default='开启')
     is_deleted = Column(db.Boolean,nullable=False,default=False)
     
     #数据表属性 初始化
@@ -110,23 +113,26 @@ class User(db.Model):
 # 创建session对象:
 # session = DBSession()
 
+# 根据定义的表结构一键构建实体表
+# db.create_all()
+
+time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 # my_user = User()
 # my_user.add_roles('admin', 'superadmin')
 # db.session.add(my_user)
 # db.session.commit()
-new_user = User(name='timy',sex='女',pwd=m.hexdigest(),phone='1762434223',organization=str('如家酒店').encode('utf-8'), email='13142341@qq.com',card_number='1032432',is_activated='True',is_admin='True',create_time=time,create_by='SuperUser',status='open')
+new_user = User(name='timy',sex='女',pwd='1234',phone='1762434223',organization=\
+                u'如家酒店',email='13142341@qq.com',card_number='1032432',\
+                is_activated='True',is_admin='True',create_time=time,\
+                create_by='SuperUser',is_deleted=False)
 
 # 添加到session:
-session.add(new_user)
+db.session.add(new_user)
 
 # 提交即保存到数据库:
-session.commit()
-
-# users = User.query.all()
-user = session.query(User).filter(User.id=='5').one()
-print user
+# db.session.commit()
 
 # 关闭session:
-session.close()
+# db.session.close()
 
   
