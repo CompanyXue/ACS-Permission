@@ -13,6 +13,11 @@ import role_db
 # 定义：所有的关系表---规范为 mapping结尾，而实体属性表则用 英文名称 表示
 db = config_setting.db
 
+user2role = db.Table('user_role_mapping',
+    db.Column('user_id', db.BigInteger, db.ForeignKey('user.id'),primary_key=True),
+    db.Column('role_id', db.BigInteger, db.ForeignKey('role.id'),primary_key=True)
+)
+
 user2group = db.Table('user_group_mapping',
     db.Column('user_id', db.BigInteger, db.ForeignKey('user.id'),primary_key=True),
     db.Column('group_id', db.BigInteger, db.ForeignKey('user_group.id'),\
@@ -34,6 +39,65 @@ perm2resource = db.Table('resource_permission_mapping',
     db.Column('perm_id', db.BigInteger, db.ForeignKey('permission.id'),primary_key=True),
     db.Column('resource_id', db.BigInteger, db.ForeignKey('resource.id'),primary_key=True)
 )
+
+
+# 定义User对象:
+class User(db.Model):
+    # 表的名字:
+    __tablename__ = 'user'
+
+    id = Column(db.BigInteger, primary_key=True,autoincrement=True)
+    name = Column(db.String(100), nullable=False,unique=True)
+    phone = Column(db.String(20),nullable=False,unique=True)
+    sex = Column(db.String(2),nullable=False)
+    birthday = Column(db.Date(),nullable=True)
+    pwd = Column(db.String(64),nullable=False)
+    organization = Column(db.String(100),nullable=False)
+    email = Column(db.String(50),nullable=False)
+    card_number = Column(db.String(20),nullable=False,unique=True)
+    create_by = Column(db.String(32),nullable=False)
+    create_time = Column(db.Date(),nullable=False)
+    modified_date = Column(db.Date(),default=create_time)
+    modified_by = Column(db.String(32),default=create_by)
+    is_activated = Column(db.String(5),nullable=False)
+    is_admin = Column(db.String(10),nullable=True)
+    status = Column(db.String(10),nullable=True,default='开启')
+    is_deleted = Column(db.Boolean,nullable=False,default=False)
+
+
+# 定义Role对象
+class Role(db.Model):
+    # 表的名字:
+    __tablename__ = 'role'
+
+    # 表的结构:
+    # primary_key等于主键
+    # unique唯一
+    # nullable非空
+    id = Column(db.BigInteger, primary_key=True,autoincrement=True)
+    name = Column(db.String(20), nullable=False,unique=True)
+    role_code = Column(db.String(30), nullable=True)
+    role_type = Column(db.String(10),nullable=False)
+    create_by = Column(db.String(32),nullable=False)
+    create_time = Column(db.Date(),nullable=False)
+    modified_date = Column(db.Date(),default=create_time)
+    modified_by = Column(db.String(32),default=create_by)
+    is_activated = Column(db.String(5),nullable=False)
+    is_deleted = Column(db.Boolean,nullable=False,default=False)
+    users = db.relationship('User', secondary=user2role, \
+                            backref=db.backref('roles', lazy='dynamic'))
+
+    #数据表属性 初始化
+    def __init__(self, name, role_code, role_type, create_time,\
+                 create_by, is_activated, _id=None):
+        self.id = _id
+        self.name = name
+        self.role_code = role_code
+        self.role_type = role_type   #管理员与普通身份    readonly 1 , modify 3, owner 4
+        self.create_by = create_by
+        self.create_time = create_time
+        self.is_activated = is_activated
+
 
 # 定义UserGroup对象
 class Usergroup(db.Model):
@@ -110,12 +174,11 @@ class Resource(db.Model):
     # owner = Column(db.Integer, db.ForeignKey('user.id'))
     create_time = Column(db.Date(),nullable=False)
     create_by = Column(db.String(32),nullable=False)
-    create_time = Column(db.Date(),nullable=False)
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
     location = Column(db.String(100),nullable=True)
+    content = Column(db.Text)
     is_deleted = Column(db.Boolean,nullable=False,default=False)
-    content = Column(db.String(200))
 
     def __init__(self, name, resource_type, is_activated, create_time,create_by\
                  ,is_deleted,_id=None):

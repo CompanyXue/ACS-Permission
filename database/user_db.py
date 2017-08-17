@@ -6,11 +6,11 @@ from sqlalchemy import Column, String, Date, Boolean
 from sqlalchemy.types import BigInteger
 # from sqlalchemy.orm import sessionmaker
 # from sqlalchemy.ext.declarative import declarative_base
-import config_setting
 
 # 创建对象的基类:
 # Base = declarative_base()
 
+import config_setting
 db = config_setting.db
 
 # 定义User对象:
@@ -23,7 +23,7 @@ class User(db.Model):
     phone = Column(db.String(20),nullable=False,unique=True)
     sex = Column(db.String(2),nullable=False)
     birthday = Column(db.Date(),nullable=True)
-    pwd = Column(db.String(256),nullable=False)
+    pwd = Column(db.String(64),nullable=False)
     organization = Column(db.String(100),nullable=False)
     email = Column(db.String(50),nullable=False)
     card_number = Column(db.String(20),nullable=False,unique=True)
