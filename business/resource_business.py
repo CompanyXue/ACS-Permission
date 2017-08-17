@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-class ResourceService(object):
+class ResourceBusiness(object):
 	'''
 	 * 查询全部（门禁）资源信息
 	 * @return List<Resource> 

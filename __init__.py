@@ -81,7 +81,6 @@ for user in users:
 # print 'role——name:', role.name
 # print role
 
-
 # users = db.session.query(User).all()
 # user = db.session.query(User).filter(User.id=='2').one()
 # print user

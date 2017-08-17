@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from database.models import app
-from services.user_service import UserService
+from business.user_business import UserBusiness
 from flask import abort
 
 @app.route('/')
@@ -10,7 +10,7 @@ def index():
 
 @app.route('/user/<id>')
 def get_user(id):
-    xxx = UserService()
+    xxx = UserBusiness()
     user = xxx.find_user_by_id(id)
     roles = ''
     for i in user.roles:

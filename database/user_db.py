@@ -5,9 +5,7 @@ import time,sys,hashlib
 from sqlalchemy import Column, String, Integer, Date, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-
-reload(sys)
-sys.setdefaultencoding('utf-8')
+import config_setting
 
 # 创建对象的基类:
 Base = declarative_base()
@@ -17,7 +15,7 @@ class User(Base):
     # 表的名字:
     __tablename__ = 't_user'
 
-    id = Column(Integer, primary_key=True,autoincrement=True)
+    id = Column(Integer(32), primary_key=True,autoincrement=True)
     name = Column(String(20), nullable=False)
     phone = Column(String(20),nullable=False)
     sex = Column(String(10),nullable=False)
@@ -31,7 +29,7 @@ class User(Base):
     modified_date = Column(Date(),default=create_time)
     modified_by = Column(String(20),default=create_by)
     is_activated = Column(String(10),nullable=False)
-    is_admin = Column(String(10),nullable=True)
+    # is_admin = Column(String(10),nullable=True)
     status = Column(String(10),nullable=False)
 
     #数据表属性 初始化
@@ -57,22 +55,19 @@ class User(Base):
             self.email+'\t电话号码：'+ self.phone+'\t卡号：'+self.card_number + '\t创建时间：'+str(self.create_time))
 
 # 初始化数据库连接:
-engine = create_engine('mysql+pymysql://root:tomcat@127.0.0.1:3306/acs')
+# engine = create_engine('mysql+pymysql://root:tomcat@127.0.0.1:3306/acs')
 
-Base.metadata.create_all(engine) #创建所有表结构
+# Base.metadata.create_all(engine) #创建所有表结构
 
 # 创建DBSession类型:
-DBSession = sessionmaker(bind=engine)
+# DBSession = sessionmaker(bind=engine)
+
+#创建与数据库的会话session class    
+#注意,这里返回给session的是个class,不是实例 
+#session = SessionCls()
 
 # 创建session对象:
-session = DBSession()
-
-time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-print time 
-
-# 加密用户密码
-m = hashlib.md5()
-m.update('1223243456')
+# session = DBSession()
 
 # my_user = User()
 # my_user.add_roles('admin', 'superadmin')

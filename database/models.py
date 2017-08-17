@@ -3,15 +3,8 @@
 import hashlib
 import time
 
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, String, Integer, Date
-
-# 调用Flask App和 SQLAlchemy 组件，创建与数据库的连接
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:tomcat@127.0.0.1:3306/ACS-Permission'
-db = SQLAlchemy(app)
-
+import config_setting
+import role_db
 
 # 关系最好不用 Model 创建，而是直接用定义的形式加入外键链接即可,
 # 定义：所有的关系表---规范为 mapping结尾，而实体属性表则用 英文名称 表示
@@ -47,22 +40,23 @@ class User(db.Model):
     # 表的名字:
     __tablename__ = 'user'
 
-    id = Column(db.Integer, primary_key=True,autoincrement=True)
-    name = Column(db.String(20), nullable=False,unique=True)
+    id = Column(db.Integer(32), primary_key=True,autoincrement=True)
+    name = Column(db.String(100), nullable=False,unique=True)
     phone = Column(db.String(20),nullable=False,unique=True)
-    sex = Column(db.String(10),nullable=False)
+    sex = Column(db.Integer(2),nullable=False)
     birthday = Column(db.Date(),nullable=True)
     pwd = Column(db.String(32),nullable=False)
-    organization = Column(db.String(30),nullable=False)
-    email = Column(db.String(20),nullable=False)
+    organization = Column(db.String(100),nullable=False)
+    email = Column(db.String(50),nullable=False)
     card_number = Column(db.String(20),nullable=False,unique=True)
-    create_by = Column(db.String(20),nullable=False)
+    create_by = Column(db.String(32),nullable=False)
     create_time = Column(db.Date(),nullable=False)
     modified_date = Column(db.Date(),default=create_time)
-    modified_by = Column(db.String(20),default=create_by)
+    modified_by = Column(db.String(32),default=create_by)
     is_activated = Column(db.String(5),nullable=False)
     is_admin = Column(db.String(10),nullable=True)
     status = Column(db.String(10),nullable=False)
+    is_deleted = Column(db.Boolean,nullable=False,default=False)
     
     #数据表属性 初始化
     def __init__(self, name, phone, sex, pwd, organization, email, card_number,\
@@ -130,8 +124,12 @@ class Usergroup(db.Model):
 
     id = Column(db.Integer, primary_key=True,autoincrement=True)
     name = Column(db.String(20), nullable=False,unique=True)
+    create_by = Column(db.String(32),nullable=False)
     create_time = Column(db.Date(),nullable=False)
+    modified_date = Column(db.Date(),default=create_time)
+    modified_by = Column(db.String(32),default=create_by)
     is_activated = Column(db.String(5),nullable=False)
+    is_deleted = Column(db.Boolean,nullable=False,default=False)
     users = db.relationship('User', secondary=user2group,                     
         backref=db.backref('group', lazy='dynamic'))
     roles = db.relationship('Role', secondary=role2group,                     
@@ -166,64 +164,7 @@ class Usergroup(db.Model):
         for role in self.roles:
             yield role
         
-    
-# 定义Role对象
-class Role(db.Model):
-    # 表的名字:
-    __tablename__ = 'role'
-
-    id = Column(db.Integer, primary_key=True,autoincrement=True)
-    name = Column(db.String(20), nullable=False,unique=True)
-    role_code = Column(db.String(30), nullable=True)
-    role_type = Column(db.String(10),nullable=False)
-    create_time = Column(db.Date(),nullable=False)
-    is_activated = Column(db.String(5),nullable=False)
-    users = db.relationship('User', secondary=user2role, \
-                            backref=db.backref('roles', lazy='dynamic'))
-
-    #数据表属性 初始化
-    def __init__(self, name, role_code, role_type, is_activated, create_time, _id=None):
-        self.id = _id
-        self.name = name
-        self.role_code = role_code
-        self.role_type = role_type   #管理员与普通身份    readonly 1 , modify 3, owner 4 
-        self.create_time = create_time
-        self.is_activated = is_activated
-
-    def __repr__(self):
-        if self.is_activated is not None:
-             return "<Role '{}'>".format('角色名：'+self.name +'\t角色类型：'+ self. \
-                                         role_type + "\t创建时间："+str(self.create_time))
-    
-    def add_user(self, user):
-        self.users.append(user)
-
-    def remove_user(self, user):
-        self.users.remove(user)
-        pass
-    
-    def add_users(self, users):
-        for user in users:
-            self.add_user(user)
-
-    def get_users(self):
-        for user in self.users:
-            yield user
-            
-    def add_role_group(self,group):
-        self.group.append(group)
-        
-    def get_role_group(self):
-        for group in self.group:
-            yield group
-
-    def add_role_permission(self,perm):
-        self.perms.append(perm)
-        
-    def get_role_permission(self):
-        for perm in self.perms:
-           yield perm
-            
+           
 # class Log(db.Model):
 #     __tablename__ = 'log'
 # 
@@ -246,11 +187,16 @@ class Resource(db.Model):
     # 表的结构:
     #primary_key等于主键
     id = Column(db.Integer, primary_key=True,autoincrement=True)
-    name = Column(db.String(20), nullable=False,unique=True)
+    name = Column(db.String(100), nullable=False,unique=True)
     res_type = Column(db.String(10),nullable=False)  
     # owner = Column(db.Integer, db.ForeignKey('user.id'))
     create_time = Column(db.Date(),nullable=False)
+    create_by = Column(db.String(32),nullable=False)
+    create_time = Column(db.Date(),nullable=False)
+    modified_date = Column(db.Date(),default=create_time)
+    modified_by = Column(db.String(32),default=create_by)
     location = Column(db.String(100),nullable=True)
+    is_deleted = Column(db.Boolean,nullable=False,default=False)
     content = Column(db.String(200))
 
     def __init__(self, name, resource_type, is_activated, create_time, _id=None):
@@ -269,11 +215,15 @@ class Permission(db.Model):
     __tablename__ = 'permission'
     
     id = Column(db.Integer, primary_key=True,autoincrement=True)
-    name = Column(db.String(20), nullable=False)
+    name = Column(db.String(100), nullable=False)
     o_type = Column(db.String(10),nullable=False)  
     # opter = Column(db.Integer, db.ForeignKey('role.id'))
     # user = Column(db.Integer, db.ForeignKey('user.id'))
     create_time = Column(db.Date(),nullable=False)
+    create_by = Column(db.String(32),nullable=False)
+    create_time = Column(db.Date(),nullable=False)
+    modified_date = Column(db.Date(),default=create_time)
+    modified_by = Column(db.String(32),default=create_by)
     resource = Column(db.Integer, db.ForeignKey('resource.id'))
     content = Column(db.String(200))
     roles = db.relationship('Role', secondary=role2perm,
@@ -338,20 +288,6 @@ new_role = Role(name='SBE',role_code='ADministartor',role_type='2',create_time=t
 # print x
 # 提交即保存到数据库:
 # db.session.commit()
-
-    
-# 测试用法 
-# 创建Query查询，filter是where条件，最后调用one()返回唯一行，如果调用all()则返回所有行:
-# role = db.session.query(Role).filter(Role.id=='1').one()
-# 打印类型和对象的name属性:
-# print 'type:', type(role)
-# print 'role—name:', role.name
-# print role
-
-
-# users = db.session.query(User).all()
-# user = db.session.query(User).filter(User.id=='5').one()
-# print user
 
 # 关闭session:
 # db.session.close()
