@@ -15,6 +15,9 @@ class UserBusiness(object):
         '''
         
     def add_user(self,user):
+        if user is not None:
+            # if user.name in users.name 
+            db.session.add(user)
         pass
 
     # 查询全部用户信息
