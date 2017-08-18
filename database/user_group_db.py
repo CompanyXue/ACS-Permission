@@ -32,7 +32,6 @@ class Usergroup(db.Model):
     create_time = Column(db.Date(),nullable=False)
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
-    is_activated = Column(db.String(5),nullable=False)
     is_deleted = Column(db.Boolean,nullable=False,default=False)
     users = db.relationship('User', secondary=user2group,                     
         backref=db.backref('group', lazy='dynamic'))

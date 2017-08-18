@@ -48,17 +48,15 @@ class User(db.Model):
     name = Column(db.String(100), nullable=False,unique=True)
     phone = Column(db.String(20),nullable=False,unique=True)
     sex = Column(db.String(2),nullable=False)
-    birthday = Column(db.Date(),nullable=True)
+    birthday = Column(db.Date())
     pwd = Column(db.String(256),nullable=False)
     organization = Column(db.String(100),nullable=False)
-    email = Column(db.String(50),nullable=False)
-    card_number = Column(db.String(20),nullable=False,unique=True)
+    email = Column(db.String(50),)
+    card_number = Column(db.String(20),default='0001')
     create_by = Column(db.String(32),nullable=False)
     create_time = Column(db.Date(),nullable=False)
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
-    is_activated = Column(db.String(5),nullable=False)
-    is_admin = Column(db.String(10),nullable=True)
     status = Column(db.String(10),nullable=True,default='开启')
     is_deleted = Column(db.Boolean,nullable=False,default=False)
 
@@ -74,27 +72,23 @@ class Role(db.Model):
     # nullable非空
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False,unique=True)
-    role_code = Column(db.String(30), nullable=True)
+    role_code = Column(db.String(30))
     role_type = Column(db.String(10),nullable=False)
     create_by = Column(db.String(32),nullable=False)
     create_time = Column(db.Date(),nullable=False)
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
-    is_activated = Column(db.String(5),nullable=False)
     is_deleted = Column(db.Boolean,nullable=False,default=False)
     users = db.relationship('User', secondary=user2role, \
                             backref=db.backref('roles', lazy='dynamic'))
 
     #数据表属性 初始化
-    def __init__(self, name, role_code, role_type, create_time,\
-                 create_by, is_activated, _id=None):
+    def __init__(self, name, role_type, create_time, create_by, _id=None):
         self.id = _id
         self.name = name
-        self.role_code = role_code
         self.role_type = role_type   #管理员与普通身份    readonly 1 , modify 3, owner 4
         self.create_by = create_by
         self.create_time = create_time
-        self.is_activated = is_activated
 
 
 # 定义UserGroup对象
@@ -104,12 +98,11 @@ class Usergroup(db.Model):
 
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False,unique=True)
-    parent_name = Column(db.String(100), nullable=True)
+    parent_name = Column(db.String(100))
     create_by = Column(db.String(32),nullable=False)
     create_time = Column(db.Date(),nullable=False)
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
-    is_activated = Column(db.String(5),nullable=False)
     is_deleted = Column(db.Boolean,nullable=False,default=False)
     users = db.relationship('User', secondary=user2group,                     
         backref=db.backref('group', lazy='dynamic'))
@@ -117,12 +110,12 @@ class Usergroup(db.Model):
         backref=db.backref('group', lazy='dynamic'))
     
     #数据表属性 初始化
-    def __init__(self, name, is_activated, create_time, _id=None):
+    def __init__(self, name, create_time, create_by, _id=None):
         self.id = _id
-        # self.role_group_id = role_group_id  
         self.name = name
         self.create_time = create_time
-        self.is_activated = is_activated  # 0-关闭 1-活动
+        self.create_by = create_by
+        # self.is_activated = is_activated  # 0-关闭 1-活动
 
     def __repr__(self):
         return "<UserGroup'{}'>".format('用户组名'+self.name + "\t创建时间："+\
@@ -179,19 +172,17 @@ class Resource(db.Model):
     content = Column(db.Text)
     is_deleted = Column(db.Boolean,nullable=False,default=False)
 
-    def __init__(self, name, resource_type, is_activated, create_time,create_by\
-                 ,is_deleted,_id=None):
+    def __init__(self,name,res_type,create_time,create_by,is_deleted,_id=None):
         self.id = _id
         # self.role_group_id = role_group_id  
         self.name = name
-        self.resource_type = role_type   # 文件 1 , 门禁 2, 设备 3 
+        self.res_type = res_type   # 文件 1 , 门禁 2, 设备 3 
         self.create_time = create_time
         self.create_by = create_by
-        self.is_activated = is_activated
         self.is_deleted = is_deleted
 
     def __repr__(self):
-        return "<Role '{}'>".format('资源名称'+self.name + '\t资源类型'+ self.resource_type\
+        return "<Role '{}'>".format('资源名称'+self.name + '\t资源类型'+ self.res_type\
                                     + "创建时间："+str(self.create_time))
     
 class Permission(db.Model):
@@ -207,10 +198,11 @@ class Permission(db.Model):
     modified_by = Column(db.String(32),default=create_by)
     # resource = Column(db.Integer, db.ForeignKey('resource.id'))
     content = Column(db.Text)
+    is_deleted = Column(db.Boolean,nullable=False,default=False)
     roles = db.relationship('Role', secondary=role2perm,
                             backref=db.backref('perms', lazy='dynamic'))
     
-    def __init__(self, name, o_type, create_time,create_by, content, _id=None):
+    def __init__(self, name, o_type, create_time,create_by, content,is_deleted, _id=None):
         self.id = _id
         self.name = name
         # self.pri_code = pri_code
@@ -218,6 +210,7 @@ class Permission(db.Model):
         self.create_by = create_by
         self.create_time = create_time
         self.content = content
+        self.is_deleted = is_deleted
 
     def __repr__(self):
         return "<Permission '{}'>".format('权限名称 :'+self.name + "\t类型："+self.o_type\

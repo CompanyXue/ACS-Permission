@@ -23,27 +23,24 @@ class Role(db.Model):
     # nullable非空
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False,unique=True)
-    role_code = Column(db.String(30), nullable=True)
+    role_code = Column(db.String(30))
     role_type = Column(db.String(10),nullable=False)
     create_by = Column(db.String(32),nullable=False)
     create_time = Column(db.Date(),nullable=False)
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
-    is_activated = Column(db.String(5),nullable=False)
     is_deleted = Column(db.Boolean,nullable=False,default=False)
     users = db.relationship('User', secondary=user2role, \
                             backref=db.backref('roles', lazy='dynamic'))
 
     #数据表属性 初始化
-    def __init__(self, name, role_code, role_type, create_time,\
-                 create_by, is_activated, _id=None):
+    def __init__(self, name, role_type, create_time, create_by, _id=None):
         self.id = _id
         self.name = name
-        self.role_code = role_code
         self.role_type = role_type   #管理员与普通身份    readonly 1 , modify 3, owner 4
         self.create_by = create_by
         self.create_time = create_time
-        self.is_activated = is_activated
+
 
     def __repr__(self):
         if self.is_activated is not None:

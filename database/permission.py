@@ -25,11 +25,11 @@ class Permission(db.Model):
     modified_by = Column(db.String(32),default=create_by)
     # resource = Column(db.Integer, db.ForeignKey('resource.id'))
     content = Column(db.Text)
+    is_deleted = Column(db.Boolean,nullable=False,default=False)
     roles = db.relationship('Role', secondary=role2perm,
                             backref=db.backref('perms', lazy='dynamic'))
     
-	#数据表属性 初始化
-    def __init__(self, name, o_type, create_time,create_by, content, _id=None):
+    def __init__(self, name, o_type, create_time,create_by, content,is_deleted, _id=None):
         self.id = _id
         self.name = name
         # self.pri_code = pri_code
@@ -37,6 +37,7 @@ class Permission(db.Model):
         self.create_by = create_by
         self.create_time = create_time
         self.content = content
+        self.is_deleted = is_deleted
 
     def __repr__(self):
         return "<Permission '{}'>".format('权限名称 :'+self.name + "\t类型："+self.o_type\

@@ -22,23 +22,21 @@ class User(db.Model):
     name = Column(db.String(100), nullable=False,unique=True)
     phone = Column(db.String(20),nullable=False,unique=True)
     sex = Column(db.String(2),nullable=False)
-    birthday = Column(db.Date(),nullable=True)
+    birthday = Column(db.Date())
     pwd = Column(db.String(256),nullable=False)
     organization = Column(db.String(100),nullable=False)
     email = Column(db.String(50),nullable=False)
-    card_number = Column(db.String(20),nullable=False,unique=True)
+    card_number = Column(db.String(20),default='0001')
     create_by = Column(db.String(32),nullable=False)
     create_time = Column(db.Date(),nullable=False)
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
-    is_activated = Column(db.String(5),nullable=False)
-    is_admin = Column(db.String(10),nullable=True)
-    status = Column(db.String(10),nullable=True,default='开启')
+    status = Column(db.String(10),default='开启')
     is_deleted = Column(db.Boolean,nullable=False,default=False)
     
     #数据表属性 初始化
-    def __init__(self, name, phone, sex, pwd, organization, email, card_number,\
-                 create_time,create_by,is_activated, is_admin,is_deleted, _id=None):
+    def __init__(self, name, phone, sex, pwd, organization, email,\
+                 create_time, create_by, is_deleted, _id=None):
         self.id = _id
         self.name = name
         self.sex = sex
@@ -46,18 +44,12 @@ class User(db.Model):
         self.phone = phone
         self.organization = organization
         self.email = email
-        self.card_number = card_number
-        self.is_activated = is_activated
-        self.is_admin = is_admin
         self.create_time = create_time
         self.create_by = create_by
-        # self.modified_date = modified_date
-        # self.modified_by = modified_by
         self.is_deleted = is_deleted
 
     def __repr__(self):
-        if self.is_activated is not None:
-            return "<User '{}'>".format('姓名：'+self.name +'\t性别：'+ self.sex +\
+        return "<User '{}'>".format('姓名：'+self.name +'\t性别：'+ self.sex +\
                                     '\t组织：'+self.organization+'\t邮箱：'+\
                                     self.email+'\t电话号码：'+self.phone+'\t卡号：'\
                                     + self.card_number + '\t创建时间：'\
