@@ -1,6 +1,8 @@
 # -*- coding: UTF-8 -*-
-class VisitRecord:
-	def __init__(self, userid, user_name, role_group_id, name, start_time, event_time, _id=None):
+
+class VisitRecord(object):
+	
+	def __init__(self, userid, user_name, event_name, start_time, event_time, _id=None):
         self._id = _id
         self.userid = userid
         self.user_name = user_name

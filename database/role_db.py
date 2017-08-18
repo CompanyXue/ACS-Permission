@@ -22,7 +22,7 @@ class Role(db.Model):
     # unique唯一
     # nullable非空
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
-    name = Column(db.String(20), nullable=False,unique=True)
+    name = Column(db.String(100), nullable=False,unique=True)
     role_code = Column(db.String(30), nullable=True)
     role_type = Column(db.String(10),nullable=False)
     create_by = Column(db.String(32),nullable=False)

@@ -4,14 +4,12 @@ import hashlib
 import time
 from sqlalchemy import Column, String, Integer, Date, Boolean,Text
 from sqlalchemy.types import BigInteger
+
 import config_setting
-import user_db
-import role_db
-
-
-# 关系最好不用 Model 创建，而是直接用定义的形式加入外键链接即可,
-# 定义：所有的关系表---规范为 mapping结尾，而实体属性表则用 英文名称 表示
 db = config_setting.db
+
+# 关系没有用 Model 创建，而是直接用定义的形式加入外键链接即可,
+# 定义：所有的关系表---规范为 mapping结尾，而实体属性表则用 英文名称 表示
 
 user2role = db.Table('user_role_mapping',
     db.Column('user_id', db.BigInteger, db.ForeignKey('user.id'),primary_key=True),
@@ -51,7 +49,7 @@ class User(db.Model):
     phone = Column(db.String(20),nullable=False,unique=True)
     sex = Column(db.String(2),nullable=False)
     birthday = Column(db.Date(),nullable=True)
-    pwd = Column(db.String(64),nullable=False)
+    pwd = Column(db.String(256),nullable=False)
     organization = Column(db.String(100),nullable=False)
     email = Column(db.String(50),nullable=False)
     card_number = Column(db.String(20),nullable=False,unique=True)
@@ -75,7 +73,7 @@ class Role(db.Model):
     # unique唯一
     # nullable非空
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
-    name = Column(db.String(20), nullable=False,unique=True)
+    name = Column(db.String(100), nullable=False,unique=True)
     role_code = Column(db.String(30), nullable=True)
     role_type = Column(db.String(10),nullable=False)
     create_by = Column(db.String(32),nullable=False)
@@ -105,7 +103,8 @@ class Usergroup(db.Model):
     __tablename__ = 'user_group'
 
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
-    name = Column(db.String(20), nullable=False,unique=True)
+    name = Column(db.String(100), nullable=False,unique=True)
+    parent_name = Column(db.String(100), nullable=True)
     create_by = Column(db.String(32),nullable=False)
     create_time = Column(db.Date(),nullable=False)
     modified_date = Column(db.Date(),default=create_time)

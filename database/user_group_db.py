@@ -26,7 +26,8 @@ class Usergroup(db.Model):
     __tablename__ = 'user_group'
 
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
-    name = Column(db.String(20), nullable=False,unique=True)
+    name = Column(db.String(100), nullable=False,unique=True)
+    parent_name = Column(db.String(100), nullable=True)
     create_by = Column(db.String(32),nullable=False)
     create_time = Column(db.Date(),nullable=False)
     modified_date = Column(db.Date(),default=create_time)

@@ -2,7 +2,7 @@
 用户管理--权限管理--资源管理
 
 
-###一、角色访问控制（RBAC，Role-Based Access Control）
+### 一、角色访问控制（RBAC，Role-Based Access Control）
    概念最初是在1992年由美国国家标准局（NIST）所提出，目前国外RBAC研究机构主要是美国NIST和George Mansion Univ。LIST实验室（Prof。Ravi。Sandhu）。
 
       RBAC引入了Role的概念，目的是为了隔离User（即动作主体，Subject）与Privilege（权限，表示对Resource的一个操作，即Operation+Resource）。
@@ -42,7 +42,7 @@ Permission, 是Resource Related的权限。 而权限，包括系统定义权限
 
 * User  n : n   Role
 
-###核心实现
+### 核心实现
 
 权限系统的核心由以下三部分构成：创造权限、分配权限、使用权限。
 
@@ -56,7 +56,7 @@ Permission, 是Resource Related的权限。 而权限，包括系统定义权限
 3、 User 使用 Administrator 分配给的权限去使用各个子系统。Administrator 是用户，在他的心目中有一个比较适合他管理和维护的权限模型。于是，程序员只要回答一个问题，就是什么权限可以访问什么资源，也就是前面说的 Operator。程序员提供 Operator 就意味着给系统穿上了盔甲。Administrator 就可以按照他的意愿来建立他所希望的权限框架自行增加，删除，管理Resource和Privilege之间关系。可以自行设定用户User和角色Role的对应关系。(如果将 Creator看作是 Basic 的发明者， Administrator 就是 Basic 的使用者，他可以做一些脚本式的编程) Operator是这个系统中最关键的部分，它是一个纽带，一个系在Programmer，Administrator，User之间的纽带。
 
 ***
-###二、SQLAlchemy支撑
+### 二、SQLAlchemy支撑
 
       它是Python编程语言下的一款ORM框架，该框架建立在数据库API之上，使用关系对象映射进行数据库操作，
 简言之便是：将对象转换成SQL，然后使用数据API执行SQL并获取执行结果。
@@ -73,7 +73,7 @@ ORM 框架的作用:将数据库表中的一行记录与一个对象互相作自
 
 ***
 
-###三、User Story -用户故事
+### 三、User Story -用户故事
 
 
 通常按照如下的格式来表达：
