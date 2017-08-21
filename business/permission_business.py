@@ -1,6 +1,11 @@
 # -*- coding: UTF-8 -*-
 import time
-from database.models import Permission,Role,db
+import sys
+sys.path.append("..")
+# from database.models import Permission,Role,db
+from database.config_setting import db
+from database.permission_db import Permission
+from database.role_db import Role
 
 time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 
@@ -25,10 +30,11 @@ class PermissionBusiness(object):
 	 * @return perm set
 	'''
 	def find_perm_by_role(self,role_name):
-		role = db.session.query(Role).filter(Role.name==role_name).one()
-		for perm in role.perms:
-			if perm is not None:
-				yield perm
+		role = db.session.query(Role).filter(Role.name==role_name).first()
+		if role is not None:
+			for perm in role.perms:
+				if perm is not None:
+					yield perm
 		pass
 	
 	'''
@@ -37,10 +43,11 @@ class PermissionBusiness(object):
 	* @return role set
 	'''
 	def find_roles_by_perm(self, perm_name):
-		perm = db.session.query(Permission).filter(Permission.name==perm_name).one()
-		for role in perm.roles:
-			if role is not None:
-				yield role
+		perm = db.session.query(Permission).filter(Permission.name==perm_name).first()
+		if perm is not None:
+			for role in perm.roles:
+				if role is not None:
+					yield role
 		pass
 	
 	'''
@@ -63,7 +70,7 @@ class PermissionBusiness(object):
 	* @return perm
 	'''
 	def delete_permission_by_name(self,perm_name):
-		perm = db.session.query(Permission).filter(Permission.name==perm_name).one()
+		perm = db.session.query(Permission).filter(Permission.name==perm_name).first()
 		if perm is not None:
 			print perm
 			db.session.delete(perm)

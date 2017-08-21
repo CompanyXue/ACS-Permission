@@ -1,4 +1,10 @@
 # -*- coding: UTF-8 -*-
+import sys
+sys.path.append("..")
+from database.config_setting import db
+from database.permission_db import Permission
+from database.role_db import Role
+from database.resource_db import Resource
 
 class ResourceBusiness(object):
 	'''

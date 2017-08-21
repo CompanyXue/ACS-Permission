@@ -2,9 +2,13 @@
 
 import hashlib
 import sys
-# sys.path.append("..")
-sys.path.insert(0,"..")
-from database.models import db, Role, User, Usergroup
+sys.path.append("..")
+# sys.path.insert(0,"..")
+# from database.models import db, Role, User, Usergroup
+from database.config_setting import db
+from database.user_db import User
+from database.role_db import Role
+from database.user_group_db import Usergroup
 
 class UserBusiness(object):
     
@@ -39,7 +43,7 @@ class UserBusiness(object):
     # 根据用户id 查询用户信息
     # @return User
     def find_user_by_id(self,userid):
-        user = db.session.query(User).filter(User.id==userid).one()
+        user = db.session.query(User).filter(User.id==userid).first()
         if user is not None:
             # yield user
             return user
@@ -54,7 +58,7 @@ class UserBusiness(object):
     # 修改用户密码
     # @return
     def update_pwd(self,username,pwd):
-        user = db.session.query(User).filter(User.name==username).one()
+        user = db.session.query(User).filter(User.name==username).first()
         if user is not None:
             user.pwd = pwd
         pass
@@ -64,7 +68,7 @@ class UserBusiness(object):
     def reset_password(username):
         m = hashlib.md5()
         pwd = m.update('123456')
-        user = db.session.query(User).filter(User.name==username).one()
+        user = db.session.query(User).filter(User.name==username).first()
         if user is not None:
             user.pwd = pwd
         pass
@@ -80,26 +84,28 @@ class UserBusiness(object):
     
     @classmethod
     def delete_user_by_id(self,id):
-        user = db.session.query(User).filter(User.id==id).one()
+        user = db.session.query(User).filter(User.id==id).first()
         if user is not None:
-            # print user
+            # db.session.delete(user)
+            user.is_deleted = True
             yield user
-            db.session.delete(user)
             print ' 已删除！！'
         pass
     
     @classmethod
     def delete_user_by_name(self,name):
-        user = db.session.query(User).filter(User.name==name).one()
+        user = db.session.query(User).filter(User.name==name).first()
         if user is not None:
             yield user
-            db.session.delete(user)
+            # 此处的删除 并非现实意义的删除，而是将标志is_deleted置为1
+            # db.session.delete(user)
+            user.is_deleted = True
         pass
     
     # 设置用户所属权限组
     @classmethod
     def add_users_into_group(users, user_group):
-        for  user in users:
+        for user in users:
             if user is not None:
                 user.add_user_group(user_group)
         pass

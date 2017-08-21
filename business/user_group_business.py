@@ -1,22 +1,34 @@
 # -*- coding: UTF-8 -*-
+import sys
+sys.path.append("..")
+from database.config_setting import db
+from database.user_db import User
+from database.role_db import Role
+from database.user_group_db import Usergroup
 
-class UserGroupBusiness(object):
+class UsergroupBusiness(object):
 	
 	def __init__(self):
 		'''
 		Constructor
 		'''
-		
+	# 查询全部用户组信息
+	def find_all_groups(self):
+		groups = db.session.query(Usergroup).all()
+		for i in groups:
+			yield i
+		pass	
 	'''
 	 * 根据用户组名查找有哪些用户
 	 * @param role_name
 	 * @return 
 	'''
 	def find_users_by_group_name(self, group_name):
-		group = db.session.query(Group).filter(Group.name==group_name).one()
-		for user in group.users:
-			if user is not None :
-				yield user
+		group = db.session.query(Usergroup).filter(Usergroup.name==group_name).first()
+		if group is not None:
+			for user in group.users:
+				if user is not None :
+					yield user
 		pass
 	
 	'''
@@ -36,10 +48,11 @@ class UserGroupBusiness(object):
 	 * @return Set<Role>
 	'''
 	def find_group_by_user_name(self,username):
-		user = db.session.query(User).filter(User.name==username).one()
-		for group in user.group:
-			if group is not None:
-				yield group
+		user = db.session.query(User).filter(User.name==username).first()
+		if user is not None:
+			for group in user.group:
+				if group is not None:
+					yield group
 		pass
 	
 	'''
@@ -48,14 +61,12 @@ class UserGroupBusiness(object):
 	* @return 
 	'''
 	def remove_users_from_group(self, group_name, users):
-		group = db.session.query(Group).filter(Group.name==group_name).one()
+		group = db.session.query(Usergroup).filter(Usergroup.name==group_name).first()
 		if group is not None:
+			# if users in group.users:
 			for user in users:
 				if user in group.users:
 				    group.users.remove(user)
-		else:
-			if users in group.users:
-				group.users.remove(users)
 		pass
 	
 	'''
@@ -64,7 +75,7 @@ class UserGroupBusiness(object):
 	* @return 
 	'''
 	def delete_user_group(self, group_name):
-		group = db.session.query(Group).filter(Group.name==group_name).one()
+		group = db.session.query(Usergroup).filter(Usergroup.name==group_name).first()
 		if group is not None:
 			print '删除用户组：', group
 			db.session.delete(group)

@@ -1,7 +1,12 @@
 # -*- coding:utf-8 -*-
+
 import time
-import database
+from database.config_setting import db
+from database.user_db import User
+from database.role_db import Role
+from database.user_group_db import Usergroup
 from business.user_business import UserBusiness
+# from business.role_business import RoleBusiness,Role
         
 # 根据定义的表结构一键构建实体表
 db.create_all()
@@ -10,8 +15,7 @@ time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 print time 
 
 new_user = User(name='LeeNew',sex='男', pwd='gellon', phone='1235221323',\
-                organization=u'如家酒店1', email='13112002124@qq.com',card_number\
-                = '12145735600', is_activated='True', is_admin='True',
+                organization=u'如家酒店1', email='13112002124@qq.com',\
                 create_time=time, create_by='SuperUser', is_deleted=False)
 
 # 添加新用户到session:
@@ -20,15 +24,15 @@ db.session.add(new_user)
 # db.session.flush()
 
 # 添加新角色到 session:
-new_role = Role(name='S4admin',role_code='ADministartor',role_type='4',create_by\
-                ='Super User', create_time=time,is_activated='true')
+new_role = Role(name='S4admin',role_type='4',create_by\
+                ='Super User', create_time=time)
 db.session.add(new_role)
 # db.session.flush()
 
-# nenber = db.session.query(User).filter(User.name=='Rosee').one()
+nenber = db.session.query(User).filter(User.name=='Rose').one()
 
 nenber.add_role(new_role)
-# roles = nenber.get_roles()
+roles = nenber.get_roles()
 print "用户-多角色显示："
 for role in roles:
     if role is not None:
@@ -36,7 +40,7 @@ for role in roles:
 # x = User.query.with_parent(r_user_role) 
 # print x
 
-group = Usergroup(name=u'随机组',create_time=time,is_activated=True)
+group = Usergroup(name=u'随机组',create_time=time,create_by='Super User')
 db.session.add(group)
 print group
 # nenber.group.append(group)

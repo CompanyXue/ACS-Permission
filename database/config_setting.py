@@ -12,3 +12,4 @@ db = SQLAlchemy(app)
 
 #sqlalchemy.orm.exc.UnmappedInstanceError 异常
 #sqlalchemy.orm.exc.UnmappedInstanceError: Class '__builtin__.instance' is not mapped
+# 'SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead 。。。改为True
