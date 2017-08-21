@@ -2,7 +2,9 @@
 from sqlalchemy import Column, String, Date, Boolean
 from sqlalchemy.types import BigInteger
 
-import user_db, role_db
+from user_db import User
+from role_db import Role
+
 import config_setting
 db = config_setting.db
 
@@ -29,15 +31,13 @@ class Permission(db.Model):
     roles = db.relationship('Role', secondary=role2perm,
                             backref=db.backref('perms', lazy='dynamic'))
     
-    def __init__(self, name, o_type, create_time,create_by, content,is_deleted, _id=None):
+    def __init__(self, name, o_type, create_time, create_by, content, _id=None):
         self.id = _id
         self.name = name
-        # self.pri_code = pri_code
         self.o_type = o_type
         self.create_by = create_by
         self.create_time = create_time
         self.content = content
-        self.is_deleted = is_deleted
 
     def __repr__(self):
         return "<Permission '{}'>".format('权限名称 :'+self.name + "\t类型："+self.o_type\

@@ -41,10 +41,8 @@ class Role(db.Model):
         self.create_by = create_by
         self.create_time = create_time
 
-
     def __repr__(self):
-        if self.is_activated is not None:
-             return "<Role '{}'>".format('角色名：'+self.name +'\t角色类型：'+ self. \
+        return "<Role '{}'>".format('角色名：'+self.name +'\t角色类型：'+ self. \
                                          role_type + "\t创建时间："+str(self.create_time))
     
     def add_user(self, user):

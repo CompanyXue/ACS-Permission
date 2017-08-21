@@ -39,12 +39,13 @@ class Usergroup(db.Model):
         backref=db.backref('group', lazy='dynamic'))
     
     #数据表属性 初始化
-    def __init__(self, name, is_activated, create_time, _id=None):
+    def __init__(self, name, create_time, create_by, _id=None):
         self.id = _id
         # self.role_group_id = role_group_id  
         self.name = name
         self.create_time = create_time
-        self.is_activated = is_activated  # 0-关闭 1-活动
+        self.create_by = create_by
+        # self.is_activated = is_activated  # 0-关闭 1-活动
 
     def __repr__(self):
         return "<UserGroup'{}'>".format('用户组名'+self.name + "\t创建时间："+\

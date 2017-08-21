@@ -113,13 +113,12 @@ time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 # my_user.add_roles('admin', 'superadmin')
 # db.session.add(my_user)
 # db.session.commit()
-new_user = User(name='timy',sex='女',pwd='1234',phone='1762434223',organization=\
-                u'如家酒店',email='13142341@qq.com',card_number='1032432',\
-                is_activated='True',is_admin='True',create_time=time,\
-                create_by='SuperUser',is_deleted=False)
+new_user = User(name='Rose',sex='女',pwd='useris',phone='1762434283',organization=\
+                u'如家酒店',email='13142391@qq.com',\
+                create_time=time,create_by='SuperUser',is_deleted=False)
 
 # 添加到session:
-db.session.add(new_user)
+# db.session.add(new_user)
 
 # 提交即保存到数据库:
 db.session.commit()
