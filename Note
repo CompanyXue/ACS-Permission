@@ -83,6 +83,59 @@ sha512加密结果: 3f0020a726e9c1cb5d22290c967f3dd1bcecb409a51a8088db520750c876
 hashlib 加密啊的字符串类型为二进制编码，直接加密字符串 会报错！
 可以将字符串使用encode进行转换、或者使用byte转换为二进制，然后加盐值加密，更安全。
 
-5.
+5. filter_by与 filter的区别：
+1）filter 可以像写 sql 的 where 条件那样写 > < 等条件，但引用列名时，需要通过 类名.属性名 的方式。
+filter_by 可以使用 python 的正常参数传递方法传递条件，指定列名时，不需要额外指定类名。
+参数名对应名类中的属性名，但似乎不能使用 > < 等条件。
 
+2）filter指定列名的时候，可以不使用类名；filter_by也不是说任何时候都可以不指定类名
+平时使用的时候，两者语法区别在于当使用filter的时候条件之间是使用“=="，fitler_by使用的是"="。
+user1 = session.query(User).filter_by(id=1).first()
+user1 = session.query(User).filter(id==1).first()
 
+3）最重要的区别是filter不支持组合查询，只能连续调用filter来变相实现。
+而filter_by的参数是**kwargs，直接支持组合查询。
+
+q = sess.query(IS).filter(IS.node == node and IS.password == password).all()
+对应sql 语句：SELECT tb_is.id AS tb_is_id, tb_is.node AS tb_is_node, tb_is.password AS tb_is_password,
+tb_is.email AS tb_is_email, tb_is.`admin` AS tb_is_admin, tb_is.contact AS tb_is_contact,
+tb_is.is_available AS tb_is_is_available, tb_is.is_url AS tb_is_is_url, tb_is.note AS tb_is_note 
+FROM tb_is WHERE tb_is.node = %(node_1)s
+and后面的条件既不报错，又不生效，很坑。
+
+要实现组合查询，要么连续调用filter：
+q = sess.query(IS).filter(IS.node == node).filter(IS.password == password).all()
+
+或者直接用filter_by：
+q = sess.query(IS).filter_by(node=node, password=password).all()
+
+6.classmethod 和 staticmethod 的用法
+
+Python2.2以后可以使用@classmethod装饰器来创建类方法；
+@staticmethod
+经常有一些跟类有关系的功能但在运行时又不需要实例和类参与的情况下需要用到静态方法.
+比如更改环境变量或者修改其他类的属性等能用到静态方法. 这种情况可以直接用函数解决,
+但这样同样会扩散类内部的代码，造成维护困难.
+
+class Kls(object):
+    def __init__(self, data):
+        self.data = data
+    def printd(self):
+        print(self.data)
+    @staticmethod
+    def smethod(*arg):
+        print('Static:', arg)
+    @classmethod
+    def cmethod(*arg):
+        print('Class:', arg)
+
+作者：李保银 链接：https://www.zhihu.com/question/20021164/answer/18224953
+
+静态方法和在普通的非class的method作用是一样的，只不过是命名空间是在类里面。
+一般使用场景就是和类相关的操作，但是又不会依赖和改变类、实例的状态。
+
+类和实例都是对象.所以它们可以有方法.
+
+类的方法就叫类方法.
+实例的方法就叫实例方法.
+至于静态方法就是写在类里的方法,必须用类来调用(极少数情况下使用,一般都在全局里直接写函数了)

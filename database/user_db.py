@@ -10,8 +10,7 @@ from sqlalchemy.types import BigInteger
 # 创建对象的基类:
 # Base = declarative_base()
 
-import config_setting
-db = config_setting.db
+from config_setting import db
 
 # 定义User对象:
 class User(db.Model):

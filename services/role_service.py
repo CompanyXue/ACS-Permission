@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
-from database.models import  User, Role, db, Usergroup, Permission
+# from database.models import  User, Role, db, Usergroup, Permission
+from config_setting import db
 
 class RoleService(object):
 	

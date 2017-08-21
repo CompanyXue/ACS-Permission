@@ -4,7 +4,6 @@ import hashlib
 import sys
 sys.path.append("..")
 # sys.path.insert(0,"..")
-# from database.models import db, Role, User, Usergroup
 from database.config_setting import db
 from database.user_db import User
 from database.role_db import Role

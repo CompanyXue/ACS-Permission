@@ -1,12 +1,9 @@
 # -*- coding: UTF-8 -*-
 from sqlalchemy import Column, String, Date, Boolean
 from sqlalchemy.types import BigInteger
-
+from config_setting import db
 from user_db import User
 from role_db import Role
-
-import config_setting
-db = config_setting.db
 
 
 role2perm = db.Table('role_permission_mapping',

@@ -5,8 +5,8 @@ from sqlalchemy import Column, String, Date, Boolean
 from sqlalchemy.types import BigInteger
 
 import user_db, role_db
-import config_setting
-db = config_setting.db
+from config_setting import db
+
 
 user2group = db.Table('user_group_mapping',
     db.Column('user_id', db.BigInteger, db.ForeignKey('user.id'),primary_key=True),

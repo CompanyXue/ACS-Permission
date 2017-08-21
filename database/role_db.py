@@ -1,11 +1,9 @@
 # -*- coding: UTF-8 -*-
-import sys
-import config_setting
+
+from config_setting import db
 import user_db
 from sqlalchemy import Column, String, Date, Boolean
 from sqlalchemy.types import BigInteger
-
-db = config_setting.db
 
 user2role = db.Table('user_role_mapping',
     db.Column('user_id', db.BigInteger, db.ForeignKey('user.id'),primary_key=True),

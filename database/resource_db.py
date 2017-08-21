@@ -2,9 +2,7 @@
 
 from sqlalchemy import Column, String, Date, Boolean
 from sqlalchemy.types import BigInteger
-
-import config_setting
-db = config_setting.db
+from config_setting import db
 
 
 class Resource(db.Model):
