@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-
-from database.models import app
+import sys
+sys.path.append("..")
+from database.config_setting import app
 from business.user_business import UserBusiness
 from flask import abort
 
