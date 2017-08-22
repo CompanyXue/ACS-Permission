@@ -38,8 +38,8 @@ class UsergroupBusiness(object):
 	'''
 	def add_users_into_group(users,group):
 		for user in users:
-			if user is not None:
-				group.users.append(users)
+			if user is not None and group is not None:
+				group.users.append(user)
 		pass
 	
 	''' 

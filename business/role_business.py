@@ -4,7 +4,7 @@ sys.path.append("..")
 from database.config_setting import db
 from database.user_db import User
 from database.role_db import Role
-from database.user_group_db import Usergroup
+from database.permission_db import Permission
 
 class RoleBusiness(object):
 	
@@ -51,8 +51,9 @@ class RoleBusiness(object):
 	 '''
 	def find_role_by_user_name(self, user_name):
 		user = db.session.query(User).filter(User.name==user_name).first()
-		if role is not None:
+		if user is not None:
 			for role in user.roles:
+				if role is not None:
 					yield role
 		pass
 	
