@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 import hashlib
-import sys
+import sys,time
 sys.path.append("..")
 # sys.path.insert(0,"..")
 from database.config_setting import db
@@ -10,6 +10,7 @@ from database.role_db import Role
 from database.user_group_db import Usergroup
 
 class UserBusiness(object):
+    time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
     
     def __init__(self):
         '''
@@ -35,7 +36,7 @@ class UserBusiness(object):
         users = db.session.query(User).filter_by(name=name, phone=phone).all()
         for user in users:
             if user is not None:
-                print '用户'
+                print ('用户')
                 yield user
         pass
 
@@ -49,10 +50,18 @@ class UserBusiness(object):
         pass
 
     # 更新用户信息
-    @classmethod
-    def update_user(self, data):
-
-        pass
+    def update_user(self, id, data):
+        user = db.session.query(User).filter(User.id==id).first()
+        if user is not None:
+            user.name = data['name']
+            user.pwd = user['password']
+            user.email = user['email']
+            user.sex = user['sex']
+            user.modified_date = time
+            user.modified_by = user['modified_by']
+            user.is_deleted = user['is_deleted']
+            db.session.commit()
+        return user
 
     # 修改用户密码
     # @return
