@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-import sys
+import sys ,time
 sys.path.append("..")
 from business.user_business import UserBusiness
 from business.role_business import RoleBusiness
@@ -11,7 +11,7 @@ class UserService(object):
     ub = UserBusiness()
     rb = RoleBusiness()
     ugb = UsergroupBusiness()
-
+    now = time.strftime('%Y-%m-%d',time.localtime(time.time()))
     def __init__(self):
         '''
         Constructor
@@ -26,26 +26,31 @@ class UserService(object):
             groups[i] = str(groups[i])
         groups = ugb.form_group_object(groups)
         
-        
         print (user)
         name = user['name']
         pwd = user['password']
         email = user['email']
         sex = user['sex']
         is_deleted = user['is_deleted']
+        created_time = now
+        created_by = user['created_by']
+        
         
         if phone is None:
             phone = user['phone']
         if username is None:
             username = user['email']
-        user_obj = User(name, phone, organization,
-                    groups, group_id, name, mail, is_activated, is_worker, pwd, _id)
+        user_obj = User(name, phone, organization, sex, email, is_deleted,\
+                        created_time, created_by, pwd, _id)
         return user_obj
-        pass
-    def request(self, request):
-        user = request.object
+    
+    
+    def user_update(self, user):
+        id  = user.id
         
-        pass
+        user_obj = ub.update_user(id,user)
+        return user_obj
+        
     
     def manage(self,user,user_group,role):
         #数据库添加用户
@@ -57,6 +62,4 @@ class UserService(object):
         # roles = find_all_roles()
         user.roles.append(roles)
         pass
-    
-    
     
