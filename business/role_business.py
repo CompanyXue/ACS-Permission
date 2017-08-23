@@ -66,6 +66,7 @@ class RoleBusiness(object):
 		role = db.session.query(Role).filter(Role.id==role_id).first()
 		if role is not None:
 			db.session.delete(role)
+			db.session.commit()
 			yield role
 		pass
 	
@@ -78,6 +79,7 @@ class RoleBusiness(object):
 		role = db.session.query(Role).filter(Role.name==role_name).first()
 		if role is not None:
 			db.session.delete(role)
+			db.session.commit()
 			yield role
 		pass
 
@@ -91,6 +93,8 @@ class RoleBusiness(object):
 		role = db.session.query(Role).filter(Role.name==role_name).first()
 		if role is not None and perm is not None:
 			role.perms.append(perm)
+		
+		db.session.commit()
 		pass
 	
 	'''
@@ -103,5 +107,6 @@ class RoleBusiness(object):
 		if role is not None :
 			if perm in role.perms:
 				role.perms.remove(perm)
+				db.session.commit()
 		pass
 	

@@ -10,7 +10,7 @@ class RoleService(object):
 		
 	# 根据用户角色名查找有哪些用户
 	# @param role_name
-	# @return 
+	# @return users
 	def find_users_by_rolename(self, role_name):
 		role = db.session.query(Role).filter(Role.name==role_name).first()
 		if role is not None:
@@ -23,7 +23,7 @@ class RoleService(object):
 	''' 
 	 * 根据用户名查找用户拥有的角色信息
 	 * @param username
-	 * @return Set<Role>
+	 * @return roles
 	 '''
 	def find_role_by_user_name(self, user_name):
 		user = db.session.query(User).filter(User.name==user_name).first()

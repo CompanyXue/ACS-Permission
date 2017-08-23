@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-import hashlib
+from passlib.hash import sha256_crypt
 import sys,time
 sys.path.append("..")
 # sys.path.insert(0,"..")
@@ -21,6 +21,7 @@ class UserBusiness(object):
         if user is not None:
             # if user.name in users.name 
             db.session.add(user)
+            db.session.commit()
         pass
 
     # 查询全部用户信息
@@ -70,17 +71,18 @@ class UserBusiness(object):
     def update_pwd(self,username,pwd):
         user = db.session.query(User).filter(User.name==username).first()
         if user is not None:
-            user.pwd = pwd
+            user.pwd = sha256_crypt.encrypt(pwd)
+            db.session.commit()
         pass
 
     # （管理员）重置用户密码信息
     @classmethod
     def reset_password(username):
-        m = hashlib.md5()
-        pwd = m.update('123456')
+        default_pwd = ('123456')
         user = db.session.query(User).filter(User.name==username).first()
         if user is not None:
-            user.pwd = pwd
+            user.pwd = sha256_crypt.encrypt(default_pwd)
+            db.session.commit()
         pass
 
     # 根据组织id查询全部用户信息
@@ -98,6 +100,7 @@ class UserBusiness(object):
         if user is not None:
             # db.session.delete(user)
             user.is_deleted = True
+            db.session.commit()
             yield user
             print ' 已删除！！'
         pass
@@ -110,6 +113,7 @@ class UserBusiness(object):
             # 此处的删除 并非现实意义的删除，而是将标志is_deleted置为1
             # db.session.delete(user)
             user.is_deleted = True
+            db.session.commit()
         pass
     
     # 设置用户所属权限组
@@ -118,6 +122,7 @@ class UserBusiness(object):
         for user in users:
             if user is not None:
                 user.add_user_group(user_group)
+                db.session.commit()
         pass
     
 

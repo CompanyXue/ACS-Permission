@@ -17,6 +17,7 @@ class PermissionBusiness(object):
 		'''
 	
 	# 查询出所有的权限列表
+	# @return perms
 	def find_all_permission(self):
 		perms = db.session.query(Permission).all()
 		for re in perms:
@@ -27,7 +28,7 @@ class PermissionBusiness(object):
 	'''
 	 * 根据用户角色获取该用户的权限
 	 * @param role_name
-	 * @return perm set
+	 * @return perms
 	'''
 	def find_perm_by_role(self,role_name):
 		role = db.session.query(Role).filter(Role.name==role_name).first()
@@ -40,7 +41,7 @@ class PermissionBusiness(object):
 	'''
 	* 根据权限名称获取用户角色
 	* @param perm_name
-	* @return role set
+	* @return roles
 	'''
 	def find_roles_by_perm(self, perm_name):
 		perm = db.session.query(Permission).filter(Permission.name==perm_name).first()
@@ -53,7 +54,7 @@ class PermissionBusiness(object):
 	'''
 	* 根据权限名称获取资源信息
 	* @param perm_name
-	* @return resource set
+	* @return resources
 	'''
 	def find_resource_by_perm(self, perm_name):
 		perm = db.session.query(Permission).filter(Permission.name==perm_name).first()
@@ -64,7 +65,7 @@ class PermissionBusiness(object):
 	'''
 	* 根据权限名字刪除用户的权限
 	* @param perm_name
-	* @return perm
+	* @return perms
 	'''
 	def add_permission_by_name(self,perm_name):
 		print (u'类中的时间: ',time)
@@ -72,6 +73,7 @@ class PermissionBusiness(object):
 						  content='TODO ')
 		print '添加权限XXX'
 		db.session.add(perms)
+		db.session.commit()
 		print '添加成功'
 	
 
@@ -85,4 +87,5 @@ class PermissionBusiness(object):
 		if perm is not None:
 			print perm
 			db.session.delete(perm)
+			db.session.commit()
 		pass

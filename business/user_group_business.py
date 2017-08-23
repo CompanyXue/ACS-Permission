@@ -40,6 +40,8 @@ class UsergroupBusiness(object):
 		for user in users:
 			if user is not None and group is not None:
 				group.users.append(user)
+				
+		db.session.commit()
 		pass
 	
 	''' 
@@ -67,6 +69,7 @@ class UsergroupBusiness(object):
 			for user in users:
 				if user in group.users:
 				    group.users.remove(user)
+			db.session.commit()
 		pass
 	
 	'''
@@ -79,5 +82,6 @@ class UsergroupBusiness(object):
 		if group is not None:
 			print '删除用户组：', group
 			db.session.delete(group)
+			db.session.commit()
 		pass
 	

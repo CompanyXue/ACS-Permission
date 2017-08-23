@@ -10,9 +10,6 @@ from business.permission_business import PermissionBusiness, Permission
 
 
 if __name__ == '__main__':
-    
-    # 根据定义的表结构一键构建实体表
-    db.create_all()
 
     time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
     roleservice = RoleBusiness()

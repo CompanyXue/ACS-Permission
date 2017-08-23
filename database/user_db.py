@@ -75,7 +75,7 @@ class User(db.Model):
             yield group
     
     def reset_password(self, pwd):
-        self.pwd = pwd
+        self.pwd = sha256_crypt.encrypt(pwd)
         pass
     
     # 传入参数更新用户可更改内容
