@@ -79,7 +79,7 @@ class User(db.Model):
         pass
     
     # 传入参数更新用户可更改内容
-    def update(data):
+    def update(self, data):
         self.name = data.name
         self.phone = data.phone
         self.email = data.email

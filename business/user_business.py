@@ -51,6 +51,8 @@ class UserBusiness(object):
 
     # 更新用户信息
     def update_user(self, id, data):
+        # 如果用 update()，则更新的内容必须是 Dict 数据类型.
+        # user = db.session.query(User).update({'name': data.name,'sex':data.sex})
         user = db.session.query(User).filter(User.id==id).first()
         if user is not None:
             user.name = data['name']
