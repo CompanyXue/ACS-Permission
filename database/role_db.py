@@ -21,7 +21,6 @@ class Role(db.Model):
     # nullable非空
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False,unique=True)
-    role_code = Column(db.String(30))
     role_type = Column(db.String(10),nullable=False)
     create_by = Column(db.String(32),nullable=False)
     create_time = Column(db.Date(),nullable=False)

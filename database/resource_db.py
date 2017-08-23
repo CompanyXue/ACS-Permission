@@ -3,24 +3,30 @@
 from sqlalchemy import Column, String, Date, Boolean
 from sqlalchemy.types import BigInteger
 from config_setting import db
+import permission_db
 
+perm2resource = db.Table('resource_permission_mapping',
+    db.Column('perm_id', db.BigInteger, db.ForeignKey('permission.id'),primary_key=True),
+    db.Column('resource_id', db.BigInteger, db.ForeignKey('resource.id'),primary_key=True)
+)
 
 class Resource(db.Model):
     __tablename__ = 'resource'
 
     # 表的结构:
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
-    nid = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False,unique=True)
-    res_type = Column(db.String(10),nullable=False)  
+    res_type = Column(db.String(10),nullable=False)
+    location = Column(db.String(100))
+    content = Column(db.Text)
     # owner = Column(db.Integer, db.ForeignKey('user.id'))
     create_time = Column(db.Date(),nullable=False)
     create_by = Column(db.String(32),nullable=False)
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
-    location = Column(db.String(100))
-    content = Column(db.Text)
     is_deleted = Column(db.Boolean,nullable=False,default=False)
+    perms = db.relationship('Permission', secondary=perm2resource,
+                            backref=db.backref('resources', lazy='dynamic'))
 
     def __init__(self,name,res_type,create_time,create_by,is_deleted,_id=None):
         self.id = _id
@@ -32,5 +38,5 @@ class Resource(db.Model):
         self.is_deleted = is_deleted
 
     def __repr__(self):
-        return "<Role '{}'>".format('资源名称'+self.name + '\t资源类型'+ self.res_type\
-                                    + "创建时间："+str(self.create_time))
+        return "<Role '{}'>".format('资源名称: '+self.name + '\t资源类型: '+ self.\
+                                    res_type + "\t创建时间："+str(self.create_time))

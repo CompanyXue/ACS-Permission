@@ -4,6 +4,8 @@ import time
 from database.config_setting import db
 from database.user_db import User
 from database.role_db import Role
+from database.permission_db import Permission
+from database.resource_db import Resource
 from database.user_group_db import Usergroup
 from business.user_business import UserBusiness
 # from business.role_business import RoleBusiness,Role
@@ -14,8 +16,8 @@ db.create_all()
 time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 #print time 
 
-new_user = User(name='Lely',sex='女', pwd='gellon', phone='1235221323',\
-                organization=u'如家酒店1', email='13112002124@qq.com',\
+new_user = User(name='Lenone',sex='女', pwd='gel111', phone='13522321123',\
+                organization=u'如家酒店', email='131220024@qq.com',\
                 create_time=time, create_by='SuperUser', is_deleted=False)
 
 # 添加新用户到session:
@@ -24,7 +26,7 @@ db.session.add(new_user)
 # db.session.flush()
 
 # 添加新角色到 session:
-new_role = Role(name='S4admin',role_type='4',create_by\
+new_role = Role(name='S5',role_type='4',create_by\
                 ='Super User', create_time=time)
 db.session.add(new_role)
 # db.session.flush()
@@ -40,7 +42,7 @@ for role in roles:
 # x = User.query.with_parent(r_user_role) 
 # print x
 
-group = Usergroup(name=u'TEST',create_time=time,create_by='Super User')
+group = Usergroup(name=u'你好',create_time=time,create_by='Super User')
 db.session.add(group)
 print (group)
 # nenber.group.append(group)

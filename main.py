@@ -3,14 +3,18 @@
 
 import time
 from database.config_setting import db
+from database.resource_db import Resource
 from business.user_business import  UserBusiness, User
 from business.role_business import RoleBusiness, Role
 from business.permission_business import PermissionBusiness, Permission
-import views
 
 
 if __name__ == '__main__':
     
+    # 根据定义的表结构一键构建实体表
+    db.create_all()
+
+    time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
     roleservice = RoleBusiness()
     # 测试 @根据用户名 查询所属角色
     roels = roleservice.find_role_by_uerid(3)
@@ -40,10 +44,10 @@ if __name__ == '__main__':
         print i
    
     perms = xxxx.find_roles_by_perm('用户关注')
+    print ('用户关注权限：：')
     for i in perms:
         print i
         
-    time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
     print ('当前时间：',time)
     # 添加、删除 权限已测试成功
     # perm = Permission(name=u'添加用户组', o_type='3',create_time=time,content='Group Mamager TODO')
@@ -53,7 +57,7 @@ if __name__ == '__main__':
     
     # roleservice.add_permission_by_name(u'系统配置管理','SAAA')
     perm = db.session.query(Permission).filter(Permission.name==u'系统配置管理').first()
-    role = db.session.query(Role).filter(Role.id ==4).first()
+    role = db.session.query(Role).filter(Role.id==1).first()
     if role is not None:
         users = role.get_users()
     print 'roles --------- users:'
@@ -75,8 +79,14 @@ if __name__ == '__main__':
         if i is not None:
             print i
     # roleservice.remove_permission_by_name(perm,u'系统管理员')
-    print '添加角色权限，并移除之'
+    print ('添加角色权限，并移除之')
     
+    # 通过权限查找到可操作的资源
+    res = xxxx.find_resource_by_perm('添加门禁')
+    for i in res:
+        if i is not None:
+            print i
+            
     #把 role表里id大于15的 role_code 全部更新成 Common Users
     # db.session.query(Role).filter(Role.id > 15).update({'role_code' :'Common Users'})
     

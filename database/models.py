@@ -171,6 +171,8 @@ class Resource(db.Model):
     location = Column(db.String(100),nullable=True)
     content = Column(db.Text)
     is_deleted = Column(db.Boolean,nullable=False,default=False)
+    perms = db.relationship('Permission', secondary=perm2resource,
+                            backref=db.backref('resources', lazy='dynamic'))
 
     def __init__(self,name,res_type,create_time,create_by,is_deleted,_id=None):
         self.id = _id

@@ -51,6 +51,17 @@ class PermissionBusiness(object):
 		pass
 	
 	'''
+	* 根据权限名称获取资源信息
+	* @param perm_name
+	* @return resource set
+	'''
+	def find_resource_by_perm(self, perm_name):
+		perm = db.session.query(Permission).filter(Permission.name==perm_name).first()
+		if perm is not None:
+			for i in perm.resources:
+				yield i
+		pass
+	'''
 	* 根据权限名字刪除用户的权限
 	* @param perm_name
 	* @return perm
