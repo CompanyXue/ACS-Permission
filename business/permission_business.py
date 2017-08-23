@@ -3,11 +3,10 @@ import time
 import sys
 sys.path.append("..")
 # from database.models import Permission,Role,db
-from database.config_setting import db
+from database.config_setting import db, time_now
 from database.permission_db import Permission
 from database.role_db import Role
 
-time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 
 class PermissionBusiness(object):
 	
@@ -69,7 +68,7 @@ class PermissionBusiness(object):
 	'''
 	def add_permission_by_name(self,perm_name):
 		print (u'类中的时间: ',time)
-		perms = Permission(name=str(perm_name), o_type='2', create_time=time,\
+		perms = Permission(name=str(perm_name), o_type='2', create_time=time_now,\
 						  content='TODO ')
 		print '添加权限XXX'
 		db.session.add(perms)

@@ -1,16 +1,16 @@
 # -*- coding: UTF-8 -*-
 
-from passlib.hash import sha256_crypt
-import sys,time
+import sys
 sys.path.append("..")
 # sys.path.insert(0,"..")
-from database.config_setting import db
+from passlib.hash import sha256_crypt
+
+from database.config_setting import db , time_now
 from database.user_db import User
 from database.role_db import Role
 from database.user_group_db import Usergroup
 
 class UserBusiness(object):
-    time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
     
     def __init__(self):
         '''
@@ -60,7 +60,7 @@ class UserBusiness(object):
             user.pwd = user['password']
             user.email = user['email']
             user.sex = user['sex']
-            user.modified_date = time
+            user.modified_date = time_now
             user.modified_by = user['modified_by']
             user.is_deleted = user['is_deleted']
             db.session.commit()
@@ -72,7 +72,17 @@ class UserBusiness(object):
         user = db.session.query(User).filter(User.name==username).first()
         if user is not None:
             user.pwd = sha256_crypt.encrypt(pwd)
+            user.modified_date = time_now
             db.session.commit()
+        pass
+    
+    # 根据组织id查询全部用户信息
+    # @return
+    def get_all_by_organization(self,o_id):
+        users = db.session.query(User).filter(User.organization==o_id).all()
+        for user in users:
+            if user.is_deleted is False:
+                yield user
         pass
 
     # （管理员）重置用户密码信息
@@ -82,46 +92,48 @@ class UserBusiness(object):
         user = db.session.query(User).filter(User.name==username).first()
         if user is not None:
             user.pwd = sha256_crypt.encrypt(default_pwd)
+            user.modified_date = time_now
             db.session.commit()
         pass
-
-    # 根据组织id查询全部用户信息
-    # @return
-    def get_all_by_organization(self,o_id):
-        users = db.session.query(User).filter(User.organization==o_id).all()
-        for user in users:
-            if user:
-                yield user
-        pass
     
+    '''
+    * 根据用户id禁用某用户，删除掉
+    * @return user 
+    '''
     @classmethod
     def delete_user_by_id(self,id):
         user = db.session.query(User).filter(User.id==id).first()
         if user is not None:
             # db.session.delete(user)
             user.is_deleted = True
+            user.modified_date = time_now
             db.session.commit()
-            yield user
+            return user
             print ' 已删除！！'
         pass
     
+    
+    # 根据用户名字删除某用户
+    # @return user 
     @classmethod
     def delete_user_by_name(self,name):
         user = db.session.query(User).filter(User.name==name).first()
         if user is not None:
-            yield user
             # 此处的删除 并非现实意义的删除，而是将标志is_deleted置为1
             # db.session.delete(user)
             user.is_deleted = True
+            user.modified_date = time_now
             db.session.commit()
+            return user
         pass
     
-    # 设置用户所属权限组
+    # 设置用户所属用户组
     @classmethod
     def add_users_into_group(users, user_group):
         for user in users:
             if user is not None:
                 user.add_user_group(user_group)
+                user.modified_date = time_now
                 db.session.commit()
         pass
     

@@ -1,5 +1,6 @@
 # -*-coding:utf-8 -*-  
 
+import time
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -9,6 +10,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:tomcat@127.0.0.1:3
 db = SQLAlchemy(app)
 
 # app.run(debug=True)
+
+time_now = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 
 #sqlalchemy.orm.exc.UnmappedInstanceError 异常
 #sqlalchemy.orm.exc.UnmappedInstanceError: Class '__builtin__.instance' is not mapped
