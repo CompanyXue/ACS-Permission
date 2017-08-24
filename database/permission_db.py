@@ -19,10 +19,9 @@ class Permission(db.Model):
     o_type = Column(db.String(10),nullable=False)  
     create_time = Column(db.Date(),nullable=False)
     create_by = Column(db.String(32),nullable=False)
-    create_time = Column(db.Date(),nullable=False)
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
-    # resource = Column(db.Integer, db.ForeignKey('resource.id'))
+    # resource = Column(db.BigInteger, db.ForeignKey('resource.id'))
     content = Column(db.Text)
     is_deleted = Column(db.Boolean,nullable=False,default=False)
     roles = db.relationship('Role', secondary=role2perm,
