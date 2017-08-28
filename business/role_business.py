@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 import sys
 sys.path.append("..")
-from database.config_setting import db, time_now
+from database.config_setting import db, date_time
 from database.user_db import User
 from database.role_db import Role
 from database.permission_db import Permission
@@ -107,7 +107,7 @@ class RoleBusiness(object):
 		if role is not None :
 			if perm in role.perms:
 				role.perms.remove(perm)
-				role.modified_date = time_now
+				role.modified_date = date_time
 				db.session.commit()
 		pass
 	

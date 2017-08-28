@@ -12,7 +12,7 @@ db = SQLAlchemy(app)
 
 # app.run(debug=True)
 
-time_now = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+date_time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 
 date_time = datetime.utcnow
 

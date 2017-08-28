@@ -5,7 +5,7 @@ sys.path.append("..")
 # sys.path.insert(0,"..")
 from passlib.hash import sha256_crypt
 
-from database.config_setting import db , time_now
+from database.config_setting import db , date_time
 from database.user_db import User
 from database.role_db import Role
 from database.user_group_db import Usergroup
@@ -16,6 +16,7 @@ class UserBusiness(object):
         '''
         Constructor
         '''
+        
     @classmethod     
     def add_user(self,user):
         if user is not None:
@@ -36,7 +37,7 @@ class UserBusiness(object):
     # @return
     @classmethod 
     def search_user_by_info(self, name, phone):
-        users = db.session.query(User).filter_by(name=name, phone=phone).all()
+        users = User.query().filter_by(name=name, phone=phone).all()
         for user in users:
             if user is not None:
                 print ('用户')
@@ -61,10 +62,10 @@ class UserBusiness(object):
         user = db.session.query(User).filter(User.id==id).first()
         if user is not None:
             user.name = data['name']
-            user.pwd = user['password']
-            user.email = user['email']
-            user.sex = user['sex']
-            user.modified_date = time_now
+            user.pwd = data['password']
+            user.email = data['email']
+            user.sex = data['sex']
+            user.modified_date = date_time
             user.modified_by = user['modified_by']
             user.is_deleted = user['is_deleted']
             db.session.commit()
@@ -74,10 +75,10 @@ class UserBusiness(object):
     # @return
     @classmethod 
     def update_pwd(self,username,pwd):
-        user = db.session.query(User).filter(User.name==username).first()
+        user = User.query().filter(name=username).first()
         if user is not None:
             user.pwd = sha256_crypt.encrypt(pwd)
-            user.modified_date = time_now
+            user.modified_date = date_time
             db.session.commit()
         pass
     
@@ -85,7 +86,7 @@ class UserBusiness(object):
     # @return
     @classmethod 
     def get_all_by_organization(self,o_id):
-        users = db.session.query(User).filter(User.organization==o_id).all()
+        users = User.query().filter(organization=o_id).all()
         for user in users:
             if user.is_deleted is False:
                 yield user
@@ -95,10 +96,10 @@ class UserBusiness(object):
     @classmethod
     def reset_password(username):
         default_pwd = ('123456')
-        user = db.session.query(User).filter(User.name==username).first()
+        user = User.query().filter(name=username).first()
         if user is not None:
             user.pwd = sha256_crypt.encrypt(default_pwd)
-            user.modified_date = time_now
+            user.modified_date = date_time
             db.session.commit()
         pass
     
@@ -108,11 +109,11 @@ class UserBusiness(object):
     '''
     @classmethod
     def delete_user_by_id(self,id):
-        user = db.session.query(User).filter(User.id==id).first()
+        user = User.query().filter(id=id).first()
         if user is not None:
             # db.session.delete(user)
             user.is_deleted = True
-            user.modified_date = time_now
+            user.modified_date = date_time
             db.session.commit()
             return user
             print ' 已删除！！'
@@ -128,7 +129,7 @@ class UserBusiness(object):
             # 此处的删除 并非现实意义的删除，而是将标志is_deleted置为1
             # db.session.delete(user)
             user.is_deleted = True
-            user.modified_date = time_now
+            user.modified_date = date_time
             db.session.commit()
             return user
         pass
@@ -139,7 +140,11 @@ class UserBusiness(object):
         for user in users:
             if user is not None:
                 user.add_user_group(user_group)
-                user.modified_date = time_now
+                user.modified_date = date_time
                 db.session.commit()
-        pass
-
+        
+    
+    # 验证用户密码
+    def verify(self, password):
+        return sha256_crypt.verify(password, self.pwd)
+    

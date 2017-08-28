@@ -60,21 +60,21 @@ if __name__ == '__main__':
     print 'roles --------- users:'
     for user in users:
         if user is not None:
-           print user
+           print (user)
     # role.remove_user(user)
     if role is not None:
         groups = role.group
     print 'roles -------- groups:'
     for group in groups:
         if user is not None:
-           print group
+           print (group)
     
     print 'roles -------- permissions:'
     if role is not None:
         perms = role.perms
     for i in perms:
         if i is not None:
-            print i
+            print (i)
     # roleservice.remove_permission_by_name(perm,u'系统管理员')
     print ('添加角色权限，并移除之')
     
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     res = xxxx.find_resource_by_perm('添加门禁')
     for i in res:
         if i is not None:
-            print i
+            print (i)
             
     #把 role表里id大于15的 role_code 全部更新成 Common Users
     # db.session.query(Role).filter(Role.id > 15).update({'role_code' :'Common Users'})

@@ -10,7 +10,7 @@ from business.user_business import UserBusiness
 # from business.role_business import RoleBusiness,Role
         
 
-new_user = User(name='Lenoe',sex='女', pwd='gel111', phone='1351111123',\
+new_user = User(name='BiBy',sex='女', pwd='gel123', phone='135878783',\
                 organization=u'如家酒店', email='131220024@qq.com',\
                 create_by='SuperUser')
 
@@ -20,7 +20,7 @@ db.session.add(new_user)
 db.session.flush()
 
 # 添加新角色到 session:
-new_role = Role(name='SB',role_type='4',create_by='Super User')
+new_role = Role(name='SKT',role_type='3',create_by='Super User')
 db.session.add(new_role)
 # db.session.flush()
 
@@ -35,7 +35,7 @@ for role in roles:
 # x = User.query.with_parent(r_user_role) 
 # print x
 
-group = Usergroup(name=u'你好',create_by='Super User')
+group = Usergroup(name=u'弱鸡', create_by='Super User')
 db.session.add(group)
 print (group)
 # nenber.group.append(group)

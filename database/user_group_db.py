@@ -28,7 +28,7 @@ class Usergroup(db.Model):
 
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), unique=True)
-    parent_name = Column(db.String(100), nullable=True)
+    parent_name = Column(db.String(100), default='Basic')
     create_by = Column(db.String(32))
     create_time = Column(db.DateTime,default=date_time)
     modified_date = Column(db.DateTime,default=create_time)
@@ -40,11 +40,10 @@ class Usergroup(db.Model):
         backref=db.backref('group', lazy='dynamic'))
     
     #数据表属性 初始化
-    def __init__(self, name, parent_name, create_by, _id=None):
+    def __init__(self, name, create_by, _id=None):
         self.id = _id
         # self.role_group_id = role_group_id  
         self.name = name
-        self.parent_name = parent_name
         self.create_by = create_by
         # self.is_activated = is_activated  # 0-关闭 1-活动
 
