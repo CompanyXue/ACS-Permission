@@ -56,14 +56,14 @@ if __name__ == '__main__':
     perm = db.session.query(Permission).filter(Permission.name==u'系统配置管理').first()
     role = db.session.query(Role).filter(Role.id==1).first()
     if role is not None:
-        users = role.get_users()
+        users = role.users
     print 'roles --------- users:'
     for user in users:
         if user is not None:
            print user
     # role.remove_user(user)
     if role is not None:
-        groups = role.get_role_group()
+        groups = role.group
     print 'roles -------- groups:'
     for group in groups:
         if user is not None:
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     
     print 'roles -------- permissions:'
     if role is not None:
-        perms = role.get_role_permission()
+        perms = role.perms
     for i in perms:
         if i is not None:
             print i

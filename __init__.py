@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 
-import time
-from database.config_setting import db
+from database.config_setting import db , date_time
 from database.user_db import User
 from database.role_db import Role
 from database.permission_db import Permission
@@ -10,31 +9,25 @@ from database.user_group_db import Usergroup
 from business.user_business import UserBusiness
 # from business.role_business import RoleBusiness,Role
         
-# 根据定义的表结构一键构建实体表
-db.create_all()
 
-time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-#print time 
-
-new_user = User(name='Lenone',sex='女', pwd='gel111', phone='13522321123',\
+new_user = User(name='Lenoe',sex='女', pwd='gel111', phone='1351111123',\
                 organization=u'如家酒店', email='131220024@qq.com',\
-                create_time=time, create_by='SuperUser', is_deleted=False)
+                create_by='SuperUser')
 
 # 添加新用户到session:
 db.session.add(new_user)
 # 进行数据库交互, 但是事务并没有提交. 
-# db.session.flush()
+db.session.flush()
 
 # 添加新角色到 session:
-new_role = Role(name='S5',role_type='4',create_by\
-                ='Super User', create_time=time)
+new_role = Role(name='SB',role_type='4',create_by='Super User')
 db.session.add(new_role)
 # db.session.flush()
 
 nenber = db.session.query(User).filter(User.name=='Rose').one()
 
-nenber.add_role(new_role)
-roles = nenber.get_roles()
+nenber.roles.append(new_role)
+roles = nenber.roles
 print ("用户-多角色显示：")
 for role in roles:
     if role is not None:
@@ -42,7 +35,7 @@ for role in roles:
 # x = User.query.with_parent(r_user_role) 
 # print x
 
-group = Usergroup(name=u'你好',create_time=time,create_by='Super User')
+group = Usergroup(name=u'你好',create_by='Super User')
 db.session.add(group)
 print (group)
 # nenber.group.append(group)
@@ -51,8 +44,9 @@ xxx = UserBusiness()
 print (xxx)
 #查询所有用户列表
 users = xxx.find_all_users()
-for user in users:
-    print (user)
+if users is not None:
+    for user in users:
+        print (user)
 
 # 通过用户id 来进行删除 (√)
 # user = xxx.delete_user_by_id(18)

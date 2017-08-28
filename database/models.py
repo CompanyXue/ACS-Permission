@@ -46,19 +46,19 @@ class User(db.Model):
 
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False,unique=True)
-    phone = Column(db.String(20),nullable=False,unique=True)
-    sex = Column(db.String(2),nullable=False)
+    phone = Column(db.String(20),unique=True)
+    sex = Column(db.String(2))
     birthday = Column(db.Date())
-    pwd = Column(db.String(256),nullable=False)
-    organization = Column(db.String(100),nullable=False)
+    pwd = Column(db.String(256))
+    organization = Column(db.String(100))
     email = Column(db.String(50),)
     card_number = Column(db.String(20),default='0001')
-    create_by = Column(db.String(32),nullable=False)
-    create_time = Column(db.Date(),nullable=False)
+    create_by = Column(db.String(32))
+    create_time = Column(db.Date())
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
     status = Column(db.String(10),nullable=True,default='开启')
-    is_deleted = Column(db.Boolean,nullable=False,default=False)
+    is_deleted = Column(db.Boolean,default=False)
 
 
 # 定义Role对象
@@ -73,12 +73,12 @@ class Role(db.Model):
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False,unique=True)
     role_code = Column(db.String(30))
-    role_type = Column(db.String(10),nullable=False)
-    create_by = Column(db.String(32),nullable=False)
-    create_time = Column(db.Date(),nullable=False)
+    role_type = Column(db.String(10))
+    create_by = Column(db.String(32))
+    create_time = Column(db.Date())
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
-    is_deleted = Column(db.Boolean,nullable=False,default=False)
+    is_deleted = Column(db.Boolean,default=False)
     users = db.relationship('User', secondary=user2role, \
                             backref=db.backref('roles', lazy='dynamic'))
 
@@ -99,11 +99,11 @@ class Usergroup(db.Model):
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False,unique=True)
     parent_name = Column(db.String(100))
-    create_by = Column(db.String(32),nullable=False)
-    create_time = Column(db.Date(),nullable=False)
+    create_by = Column(db.String(32))
+    create_time = Column(db.Date())
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
-    is_deleted = Column(db.Boolean,nullable=False,default=False)
+    is_deleted = Column(db.Boolean,default=False)
     users = db.relationship('User', secondary=user2group,                     
         backref=db.backref('group', lazy='dynamic'))
     roles = db.relationship('Role', secondary=role2group,                     
@@ -144,12 +144,12 @@ class Usergroup(db.Model):
 # 
 #     # 表的结构:
 #     id = Column(db.Integer, primary_key=True,autoincrement=True)
-#     op_type = Column(db.String(20),nullable=False)
-#     op_time = Column(db.String(20),nullable=False)
+#     op_type = Column(db.String(20))
+#     op_time = Column(db.String(20))
 #     user_id = Column(db.Integer, db.ForeignKey('user.id'))
 #     # user = db.relationship('User',
 #     #     backref=db.backref('posts', lazy='dynamic'))
-#     create_time = Column(db.Date(),nullable=False)
+#     create_time = Column(db.Date())
 #     content = Column(db.String(200))
 # 
 #     def __init__(self, name, role_type, create_time, _id=None):
@@ -162,15 +162,15 @@ class Resource(db.Model):
     #primary_key等于主键
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False,unique=True)
-    res_type = Column(db.String(10),nullable=False)  
+    res_type = Column(db.String(10))  
     # owner = Column(db.Integer, db.ForeignKey('user.id'))
-    create_time = Column(db.Date(),nullable=False)
-    create_by = Column(db.String(32),nullable=False)
+    create_time = Column(db.Date())
+    create_by = Column(db.String(32))
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
     location = Column(db.String(100),nullable=True)
     content = Column(db.Text)
-    is_deleted = Column(db.Boolean,nullable=False,default=False)
+    is_deleted = Column(db.Boolean,default=False)
     perms = db.relationship('Permission', secondary=perm2resource,
                             backref=db.backref('resources', lazy='dynamic'))
 
@@ -192,15 +192,15 @@ class Permission(db.Model):
     
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False)
-    o_type = Column(db.String(10),nullable=False)  
-    create_time = Column(db.Date(),nullable=False)
-    create_by = Column(db.String(32),nullable=False)
-    create_time = Column(db.Date(),nullable=False)
+    o_type = Column(db.String(10))  
+    create_time = Column(db.Date())
+    create_by = Column(db.String(32))
+    create_time = Column(db.Date())
     modified_date = Column(db.Date(),default=create_time)
     modified_by = Column(db.String(32),default=create_by)
     # resource = Column(db.Integer, db.ForeignKey('resource.id'))
     content = Column(db.Text)
-    is_deleted = Column(db.Boolean,nullable=False,default=False)
+    is_deleted = Column(db.Boolean,default=False)
     roles = db.relationship('Role', secondary=role2perm,
                             backref=db.backref('perms', lazy='dynamic'))
     

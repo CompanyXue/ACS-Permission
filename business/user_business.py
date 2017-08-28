@@ -16,7 +16,7 @@ class UserBusiness(object):
         '''
         Constructor
         '''
-        
+    @classmethod     
     def add_user(self,user):
         if user is not None:
             # if user.name in users.name 
@@ -25,6 +25,7 @@ class UserBusiness(object):
         pass
 
     # 查询全部用户信息
+    @classmethod 
     def find_all_users(self):
         users = db.session.query(User).all()
         for user in users:
@@ -33,6 +34,7 @@ class UserBusiness(object):
 
     # 根据用户名或者电话号码、组织来查询用户信息
     # @return
+    @classmethod 
     def search_user_by_info(self, name, phone):
         users = db.session.query(User).filter_by(name=name, phone=phone).all()
         for user in users:
@@ -43,6 +45,7 @@ class UserBusiness(object):
 
     # 根据用户id 查询用户信息
     # @return User
+    @classmethod 
     def find_user_by_id(self,userid):
         user = db.session.query(User).filter(User.id==userid).first()
         if user is not None:
@@ -51,6 +54,7 @@ class UserBusiness(object):
         pass
 
     # 更新用户信息
+    @classmethod 
     def update_user(self, id, data):
         # 如果用 update()，则更新的内容必须是 Dict 数据类型.
         # user = db.session.query(User).update({'name': data.name,'sex':data.sex})
@@ -68,6 +72,7 @@ class UserBusiness(object):
 
     # 修改用户密码
     # @return
+    @classmethod 
     def update_pwd(self,username,pwd):
         user = db.session.query(User).filter(User.name==username).first()
         if user is not None:
@@ -78,6 +83,7 @@ class UserBusiness(object):
     
     # 根据组织id查询全部用户信息
     # @return
+    @classmethod 
     def get_all_by_organization(self,o_id):
         users = db.session.query(User).filter(User.organization==o_id).all()
         for user in users:
@@ -136,6 +142,4 @@ class UserBusiness(object):
                 user.modified_date = time_now
                 db.session.commit()
         pass
-    
-
 

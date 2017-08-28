@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 from sqlalchemy import Column, String, Date, Boolean
 from sqlalchemy.types import BigInteger
-from config_setting import db
+from config_setting import db, date_time
 from user_db import User
 from role_db import Role
 
@@ -16,23 +16,22 @@ class Permission(db.Model):
     
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
     name = Column(db.String(100), nullable=False)
-    o_type = Column(db.String(10),nullable=False)  
-    create_time = Column(db.Date(),nullable=False)
-    create_by = Column(db.String(32),nullable=False)
-    modified_date = Column(db.Date(),default=create_time)
+    o_type = Column(db.String(10))  
+    create_time = Column(db.DateTime,default=date_time)
+    create_by = Column(db.String(32))
+    modified_date = Column(db.DateTime,default=create_time)
     modified_by = Column(db.String(32),default=create_by)
     # resource = Column(db.BigInteger, db.ForeignKey('resource.id'))
     content = Column(db.Text)
-    is_deleted = Column(db.Boolean,nullable=False,default=False)
+    is_deleted = Column(db.Boolean,default=False)
     roles = db.relationship('Role', secondary=role2perm,
                             backref=db.backref('perms', lazy='dynamic'))
     
-    def __init__(self, name, o_type, create_time, create_by, content, _id=None):
+    def __init__(self, name, o_type, create_by, content, _id=None):
         self.id = _id
         self.name = name
         self.o_type = o_type
         self.create_by = create_by
-        self.create_time = create_time
         self.content = content
 
     def __repr__(self):

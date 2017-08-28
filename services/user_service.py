@@ -16,7 +16,7 @@ class UserService(object):
         '''
         Constructor
         '''
-    
+    @classmethod
     def user_query(username=None, phone=None):
         user = ub.search_user_by_info(username, phone)
         _id = str(user['_id'])

@@ -2,15 +2,15 @@
 
 import time
 from passlib.hash import sha256_crypt
-from sqlalchemy import Column, String, Date, Boolean
+from sqlalchemy import Column, String, Date, Boolean, DateTime
 from sqlalchemy.types import BigInteger
 # from sqlalchemy.orm import sessionmaker
-# from sqlalchemy.ext.declarative import declarative_base
+# from sqlalchemy.ext.declarative imdate_timeport declarative_base
 
 # 创建对象的基类:
 # Base = declarative_base()
 
-from config_setting import db
+from config_setting import db, date_time
 
 # 定义User对象:
 class User(db.Model):
@@ -18,34 +18,32 @@ class User(db.Model):
     __tablename__ = 'user'
 
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
-    name = Column(db.String(100), nullable=False,unique=True)
-    phone = Column(db.String(20),nullable=False,unique=True)
-    sex = Column(db.String(2),nullable=False)
+    name = Column(db.String(100),unique=True)
+    phone = Column(db.String(20),unique=True)
+    sex = Column(db.String(2))
     birthday = Column(db.Date())
-    pwd = Column(db.String(256),nullable=False)
-    organization = Column(db.String(100),nullable=False)
-    email = Column(db.String(50),nullable=False)
+    pwd = Column(db.String(256))
+    organization = Column(db.String(100))
+    email = Column(db.String(50))
     card_number = Column(db.String(20),default='0001')
-    create_by = Column(db.String(32),nullable=False)
-    create_time = Column(db.Date(),nullable=False)
-    modified_date = Column(db.Date(),default=create_time)
+    create_by = Column(db.String(32))
+    create_time = Column(db.DateTime,default=date_time)
+    modified_date = Column(db.DateTime,default=create_time)
     modified_by = Column(db.String(32),default=create_by)
     status = Column(db.String(10),default='开启')
-    is_deleted = Column(db.Boolean,nullable=False,default=False)
+    is_deleted = Column(db.Boolean,default=False)
     
     #数据表属性 初始化
     def __init__(self, name, phone, sex, pwd, organization, email,\
-                 create_time, create_by, is_deleted, _id=None):
+                 create_by, _id=None):
         self.id = _id
         self.name = name
+        self.phone = phone
         self.sex = sex
         self.pwd = sha256_crypt.encrypt(pwd)
-        self.phone = phone
         self.organization = organization
         self.email = email
-        self.create_time = create_time
         self.create_by = create_by
-        self.is_deleted = is_deleted
 
     def __repr__(self):
         return "<User '{}'>".format('姓名：'+self.name +'\t性别：'+ self.sex +\
@@ -56,34 +54,13 @@ class User(db.Model):
     def verify(self, password):
         return sha256_crypt.verify(password, self.pwd)
     
-    def add_role(self, role):
-        self.roles.append(role)
-
-    def add_roles(self, roles):
-        for role in roles:
-            self.add_role(role)
-
-    def get_roles(self):
-        for role in self.roles:
-            yield role
-            
-    def add_user_group(self,group):
-        self.group.append(group)
-        
-    def get_user_group(self):
-        for group in self.group:
-            yield group
-    
-    def reset_password(self, pwd):
-        self.pwd = sha256_crypt.encrypt(pwd)
-        pass
-    
     # 传入参数更新用户可更改内容
     def update(self, data):
         self.name = data.name
         self.phone = data.phone
         self.email = data.email
         self.card_number = card_number
+        
     #判断权限 是否有：role存在并且角色的权限要包含传入的权限  
     def can(self,permissions):
         return self.role is not None and \
@@ -112,9 +89,8 @@ time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 # my_user.add_roles('admin', 'superadmin')
 # db.session.add(my_user)
 # db.session.commit()
-new_user = User(name='Rose',sex='女',pwd='useris',phone='1762434283',organization=\
-                u'如家酒店',email='13142391@qq.com',\
-                create_time=time,create_by='SuperUser',is_deleted=False)
+new_user = User(name='Romo',sex='女',pwd='userio',phone='1762434203',organization=\
+                u'如家酒店',email='13142391@qq.com', create_by='SuperUser')
 
 # 添加到session:
 # db.session.add(new_user)

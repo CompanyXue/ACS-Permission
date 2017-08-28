@@ -1,6 +1,7 @@
 # -*-coding:utf-8 -*-  
 
 import time
+from datetime import datetime
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -13,6 +14,16 @@ db = SQLAlchemy(app)
 
 time_now = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 
+date_time = datetime.utcnow
+
+# 根据定义的表结构一键构建实体表
+def init_db():
+    db.create_all()
+  
+# 删除数据库表  
+def drop_db():
+    db.drop_all()
+    
 #sqlalchemy.orm.exc.UnmappedInstanceError 异常
 #sqlalchemy.orm.exc.UnmappedInstanceError: Class '__builtin__.instance' is not mapped
 # 'SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead 。。。改为True
