@@ -138,22 +138,6 @@ class Usergroup(db.Model):
         for role in self.roles:
             yield role
         
-           
-# class Log(db.Model):
-#     __tablename__ = 'log'
-# 
-#     # 表的结构:
-#     id = Column(db.Integer, primary_key=True,autoincrement=True)
-#     op_type = Column(db.String(20))
-#     op_time = Column(db.String(20))
-#     user_id = Column(db.Integer, db.ForeignKey('user.id'))
-#     # user = db.relationship('User',
-#     #     backref=db.backref('posts', lazy='dynamic'))
-#     create_time = Column(db.Date())
-#     content = Column(db.String(200))
-# 
-#     def __init__(self, name, role_type, create_time, _id=None):
-#         pass
 
 class Resource(db.Model):
     __tablename__ = 'resource'

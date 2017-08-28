@@ -4,3 +4,6 @@
 *.project
 *.pydevproject
 *.komodoproject
+
+.idea
+.git

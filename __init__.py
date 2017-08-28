@@ -1,17 +1,18 @@
 # -*- coding:utf-8 -*-
 
-from database.config_setting import db , date_time
+from database.config_setting import db, date_time
 from database.user_db import User
 from database.role_db import Role
 from database.permission_db import Permission
 from database.resource_db import Resource
 from database.user_group_db import Usergroup
 from business.user_business import UserBusiness
-# from business.role_business import RoleBusiness,Role
-        
 
-new_user = User(name='BiBy',sex='女', pwd='gel123', phone='135878783',\
-                organization=u'如家酒店', email='131220024@qq.com',\
+# from business.role_business import RoleBusiness,Role
+
+
+new_user = User(name='BiBy', sex='女', pwd='gel123', phone='135878783', \
+                organization=u'如家酒店', email='131220024@qq.com', \
                 create_by='SuperUser')
 
 # 添加新用户到session:
@@ -20,11 +21,11 @@ db.session.add(new_user)
 db.session.flush()
 
 # 添加新角色到 session:
-new_role = Role(name='SKT',role_type='3',create_by='Super User')
+new_role = Role(name='SKT', role_type='3', create_by='Super User')
 db.session.add(new_role)
 # db.session.flush()
 
-nenber = db.session.query(User).filter(User.name=='Rose').one()
+nenber = db.session.query(User).filter(User.name == 'Rose').one()
 
 nenber.roles.append(new_role)
 roles = nenber.roles
@@ -42,7 +43,7 @@ print (group)
 
 xxx = UserBusiness()
 print (xxx)
-#查询所有用户列表
+# 查询所有用户列表
 users = xxx.find_all_users()
 if users is not None:
     for user in users:
@@ -52,15 +53,15 @@ if users is not None:
 # user = xxx.delete_user_by_id(18)
 # print user
 
-#密码的更新，总提示参数不对。
+# 密码的更新，总提示参数不对。
 # xxx.update_pwd(name='Brand',pwd=m.update('123'))
 
-#输出根据id 去查询用户信息
+# 输出根据id 去查询用户信息
 print ('start\n')
 user5 = xxx.find_user_by_id(1)
-print ('user - id ==5:',user5)
+print ('user - id ==5:', user5)
 
-users = xxx.search_user_by_info('Brank','1762388223')
+users = xxx.search_user_by_info('Brank', '1762388223')
 for user in users:
     print (user)
 # 提交即保存到数据库:
