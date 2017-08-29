@@ -1,6 +1,6 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: UTF-8 -
 
-import time
+from database.config_setting import db, date_time
 from passlib.hash import sha256_crypt
 from sqlalchemy import Column, String, Date, Boolean, DateTime
 from sqlalchemy.types import BigInteger
@@ -10,10 +10,10 @@ from sqlalchemy.types import BigInteger
 # 创建对象的基类:
 # Base = declarative_base()
 
-from config_setting import db, date_time
 
 # 定义User对象:
 class User(db.Model):
+
     # 表的名字:
     __tablename__ = 'user'
 
@@ -50,16 +50,8 @@ class User(db.Model):
                                     '\t组织：'+self.organization+'\t邮箱：'+\
                                     self.email+'\t电话号码：'+self.phone+'\t卡号：'\
                                     + self.card_number + '\t创建时间：'\
-                                    + str(self.create_time) + self.pwd)
-    def verify(self, password):
-        return sha256_crypt.verify(password, self.pwd)
-    
-    # 传入参数更新用户可更改内容
-    def update(self, data):
-        self.name = data.name
-        self.phone = data.phone
-        self.email = data.email
-        self.card_number = card_number
+                                    + str(self.create_time) +'\tBy:'+ self.create_by)
+
         
     #判断权限 是否有：role存在并且角色的权限要包含传入的权限  
     def can(self,permissions):
@@ -84,13 +76,12 @@ class User(db.Model):
 # 根据定义的表结构一键构建实体表
 # db.create_all()
 
-time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 # my_user = User()
 # my_user.add_roles('admin', 'superadmin')
 # db.session.add(my_user)
 # db.session.commit()
-new_user = User(name='Romo',sex='女',pwd='userio',phone='1762434203',organization=\
-                u'如家酒店',email='13142391@qq.com', create_by='SuperUser')
+new_user = User(name='Romo', sex='女', pwd='userio', phone='1762434203', organization \
+    =u'如家酒店', email='13142391@qq.com', create_by='SuperUser')
 
 # 添加到session:
 # db.session.add(new_user)
@@ -100,5 +91,3 @@ db.session.commit()
 
 # 关闭session:
 # db.session.close()
-
-  

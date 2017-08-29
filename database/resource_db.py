@@ -2,8 +2,8 @@
 
 from sqlalchemy import Column, String, Date, Boolean, DateTime
 from sqlalchemy.types import BigInteger
-from config_setting import db, date_time
-import permission_db
+from database.config_setting import db, date_time
+from database import permission_db
 
 perm2resource = db.Table('resource_permission_mapping',
     db.Column('perm_id', db.BigInteger, db.ForeignKey('permission.id'),primary_key=True),

@@ -1,10 +1,10 @@
 # -*- coding: UTF-8 -*-
 
-from config_setting import db, date_time
 from sqlalchemy import Table, Column, ForeignKey 
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import BigInteger, String, Date, Boolean, DateTime
-import user_db
+from database import user_db
+from database.config_setting import db, date_time
 
 user2role = db.Table('user_role_mapping',
     db.Column('user_id', db.BigInteger, db.ForeignKey('user.id'),primary_key=True),
@@ -28,8 +28,8 @@ class Role(db.Model):
     modified_date = Column(db.DateTime,default=create_time)
     modified_by = Column(db.String(32),default=create_by)
     is_deleted = Column(db.Boolean, default=False)
-    users = relationship('User', secondary=user2role, \
-                            backref=backref('roles', lazy='dynamic'))
+    users = relationship('User', secondary=user2role,\
+                         backref=backref('roles', lazy='dynamic'))
 
     #数据表属性 初始化
     def __init__(self, name, role_type, create_by, _id=None):
@@ -41,4 +41,3 @@ class Role(db.Model):
     def __repr__(self):
         return "<Role '{}'>".format('角色名：'+self.name +'\t角色类型：'+ self.\
                        role_type + "\t创建时间："+str(self.create_time))
-    

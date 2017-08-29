@@ -1,8 +1,7 @@
 # -*- coding: UTF-8 -*-
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
-import time
-from database.config_setting import db
+from database.config_setting import db, date_time
 from database.resource_db import Resource
 from business.user_business import  UserBusiness, User
 from business.role_business import RoleBusiness, Role
@@ -11,7 +10,6 @@ from business.permission_business import PermissionBusiness, Permission
 
 if __name__ == '__main__':
 
-    time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
     roleservice = RoleBusiness()
     # 测试 @根据用户名 查询所属角色
     roels = roleservice.find_role_by_uerid(3)

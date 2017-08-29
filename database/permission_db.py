@@ -1,9 +1,7 @@
 # -*- coding: UTF-8 -*-
 from sqlalchemy import Column, String, Date, Boolean
 from sqlalchemy.types import BigInteger
-from config_setting import db, date_time
-from user_db import User
-from role_db import Role
+from database.config_setting import db, date_time
 
 
 role2perm = db.Table('role_permission_mapping',
@@ -11,14 +9,15 @@ role2perm = db.Table('role_permission_mapping',
     db.Column('role_id', db.BigInteger, db.ForeignKey('role.id'),primary_key=True)
 )
 
+
 class Permission(db.Model):
     __tablename__ = 'permission'
     
-    id = Column(db.BigInteger, primary_key=True,autoincrement=True)
-    name = Column(db.String(100), nullable=False)
-    o_type = Column(db.String(10))  
-    create_time = Column(db.DateTime,default=date_time)
+    id = Column(db.BigInteger, primary_key=True, autoincrement=True)
+    name = Column(db.String(100),unique=True)
+    o_type = Column(db.String(10))
     create_by = Column(db.String(32))
+    create_time = Column(db.DateTime,default=date_time)
     modified_date = Column(db.DateTime,default=create_time)
     modified_by = Column(db.String(32),default=create_by)
     # resource = Column(db.BigInteger, db.ForeignKey('resource.id'))

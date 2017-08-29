@@ -1,13 +1,7 @@
 # -*- coding: UTF-8 -*-
-#!/usr/bin/env python
 
-from config_setting import db, date_time
-from sqlalchemy import Table, Column, ForeignKey 
-from sqlalchemy.orm import relationship, backref
-from sqlalchemy.types import BigInteger, String, Date, Boolean, DateTime
-
-import user_db, role_db
-
+from database.config_setting import db, date_time
+from sqlalchemy import Table, Column, ForeignKey
 
 user2group = db.Table('user_group_mapping',
     db.Column('user_id', db.BigInteger, db.ForeignKey('user.id'),primary_key=True),
@@ -23,7 +17,7 @@ role2group = db.Table('group_role_mapping',
 
 # 定义UserGroup对象
 class Usergroup(db.Model):
-    
+
     __tablename__ = 'user_group'
 
     id = Column(db.BigInteger, primary_key=True,autoincrement=True)
@@ -34,19 +28,18 @@ class Usergroup(db.Model):
     modified_date = Column(db.DateTime,default=create_time)
     modified_by = Column(db.String(32),default=create_by)
     is_deleted = Column(db.Boolean, default=False)
-    users = db.relationship('User', secondary=user2group,                     
+    users = db.relationship('User', secondary=user2group,
         backref=db.backref('group', lazy='dynamic'))
-    roles = db.relationship('Role', secondary=role2group,                     
+    roles = db.relationship('Role', secondary=role2group,
         backref=db.backref('group', lazy='dynamic'))
-    
+
     #数据表属性 初始化
     def __init__(self, name, create_by, _id=None):
         self.id = _id
-        # self.role_group_id = role_group_id  
         self.name = name
         self.create_by = create_by
         # self.is_activated = is_activated  # 0-关闭 1-活动
 
     def __repr__(self):
-        return "<UserGroup'{}'>".format('用户组名'+self.name + "\t创建时间："+\
+        return "<UserGroup'{}'>".format('用户组名: '+self.name + "\t创建时间："+\
                                         str(self.create_time))

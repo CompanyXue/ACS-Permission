@@ -33,9 +33,3 @@ class ResourceBusiness(object):
        db.session.add(res)
        db.session.commit()
        pass
-
-
-
-
-
-

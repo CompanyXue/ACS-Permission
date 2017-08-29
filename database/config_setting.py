@@ -12,9 +12,11 @@ db = SQLAlchemy(app)
 
 # app.run(debug=True)
 
-date_time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-
-date_time = datetime.utcnow
+date_now = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+# 国际时间
+date_time = datetime.utcnow()
+# 本地时间
+date_time = datetime.now()
 
 # 根据定义的表结构一键构建实体表
 def init_db():
