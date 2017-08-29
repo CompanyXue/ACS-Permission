@@ -62,4 +62,7 @@ class UserService(object):
         # roles = find_all_roles()
         user.roles.append(roles)
         pass
-    
+
+    def find_users_by_role_name(self, role_name):
+
+        pass

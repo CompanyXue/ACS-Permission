@@ -2,7 +2,7 @@
 
 from business.user_business import UserBusiness
 from business.role_business import RoleBusiness
-from business.user_group_business import UsergroupBusiness
+from business.permission_business import PermissionBusiness
 
 
 class RoleService(object):
@@ -68,9 +68,32 @@ class RoleService(object):
     '''
 
     @classmethod
-    def find_resource_by_user_name(cls, user_name):
-        user = UserBusiness.find_user_by_name(user_name)
-        if user is not None:
-            for role in user.perms.resources:
-                yield role
+    def find_resource_by_role_name(cls, role_name):
+        perms = PermissionBusiness.find_perm_by_role(role_name)
+        for perm in perms:
+            for i in perm.resources:
+                yield i
         pass
+
+    ''' 
+     * 根据角色名查找资源信息（权限）
+     * @param role_name
+     * @return 
+    '''
+
+    @classmethod
+    def find_group_by_role_name(cls, role_name):
+        role = RoleBusiness.find_by_role_name(role_name)
+        for i in role.group:
+            yield i
+        users = role.users
+        for user in users:
+            print (user)
+            for j in user.group:
+                yield j
+
+        pass
+
+    @classmethod
+    def delete_role(self,role_name):
+        RoleBusiness.delete_role_by_name(role_name)

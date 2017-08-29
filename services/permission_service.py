@@ -58,7 +58,6 @@ class PermissionService(object):
     * @param perm_name
     * @return perm
     '''
-
     @classmethod
     def add_permission_by_name(self, perm_name):
         print(u'类中的时间: ', date_time)
