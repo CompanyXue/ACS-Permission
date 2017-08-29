@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 from business.permission_business import Permission,PermissionBusiness
 from business.role_business import Role
-from database.config_setting import date_time, date_now
+from database.config_setting import db, date_now
 
 class PermissionService(object):
     def __init__(self):
@@ -67,8 +67,6 @@ class PermissionService(object):
     @classmethod
     def delete_permission_by_name(self, perm_name):
 
-        perm = Permission.query().filter(name=perm_name).first()
+        perm = db.session.query(Permission).filter_by(name=perm_name).first()
         if perm is not None:
-            print (perm)
-            Permission.delete(perm)
-    pass
+            PermissionBusiness.delete_permission(perm)
