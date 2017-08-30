@@ -7,13 +7,13 @@ from business.permission_business import PermissionBusiness
 
 class RoleService(object):
     def __init__(self):
-        '''
-        Constructor
-        '''
+        pass
 
+    '''
     # 根据用户角色名查找有哪些用户
     # @param role_name
     # @return
+    '''
     @classmethod
     def find_users_by_role_name(cls, role_name):
         role = RoleBusiness.find_by_role_name(role_name)

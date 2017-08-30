@@ -2,8 +2,6 @@
 *.pot
 *.pyc
 *.project
-*.pydevproject
-*.komodoproject
 
 .idea
 .git

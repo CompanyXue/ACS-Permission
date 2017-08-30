@@ -1,7 +1,8 @@
 # -*- coding: UTF-8 -*-
 import sys
 sys.path.append("..")
-from database.config_setting import app
+from database.config_setting import db
+from database.user_db import User
 
 @app.route('/',methods=['GET','POST'])
 def index():

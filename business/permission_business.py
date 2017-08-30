@@ -1,16 +1,14 @@
 # -*- coding: UTF-8 -*-
-import time
 import sys
 
 sys.path.append("..")
-# from database.models import Permission,Role,db
 from database.config_setting import db, date_time
 from database.permission_db import Permission
 from database.role_db import Role
 
 
 class PermissionBusiness(object):
-    def __init__(self):
+    def __init__(cls):
         '''
         Constructor
         '''
@@ -18,7 +16,7 @@ class PermissionBusiness(object):
     # 查询出所有的权限列表
     # @return perms
     @classmethod
-    def find_all_permission(self):
+    def find_all_permission(cls):
         perms = db.session.query(Permission).all()
         for re in perms:
             if re is not None:
@@ -32,7 +30,7 @@ class PermissionBusiness(object):
     '''
 
     @classmethod
-    def find_perm_by_role(self, role_name):
+    def find_perm_by_role(cls, role_name):
         role = db.session.query(Role).filter(Role.name == role_name).first()
         if role is not None:
             for perm in role.perms:
@@ -47,12 +45,10 @@ class PermissionBusiness(object):
     '''
 
     @classmethod
-    def find_roles_by_perm(self, perm_name):
-        perm = db.session.query(Permission).filter(Permission.name == perm_name).first()
+    def find_by_name(cls, perm_name):
+        perm = db.session.query(Permission).filter_by(name=perm_name).first()
         if perm is not None:
-            for role in perm.roles:
-                if role is not None:
-                    yield role
+            return perm
         pass
 
     '''
@@ -62,11 +58,11 @@ class PermissionBusiness(object):
     '''
 
     @classmethod
-    def find_resource_by_perm(self, perm_name):
-        perm = db.session.query(Permission).filter(Permission.name == perm_name).first()
-        if perm is not None:
-            for i in perm.resources:
-                yield i
+    def find_resource_by_perm(cls, perm_name):
+        perm = cls.find_by_name(perm_name)
+
+        for i in perm.resources:
+            yield i
         pass
 
     '''
@@ -76,25 +72,24 @@ class PermissionBusiness(object):
     '''
 
     @classmethod
-    def add_permission(self, perm1):
+    def add_permission(cls, perm1):
         print('添加权限XXX')
-        if db.session.query(Permission).filter(Permission.name==perm1.name).first() is None:
+        if cls.find_by_name(perm1.name) is None:
             # 去掉重复的name
             db.session.add(perm1)
             db.session.commit()
-            print('添加成功')
+            print('添加成功！')
 
     '''
     * 根据权限名字刪除用户的权限
     * @param perm_name
     * @return perm
     '''
-
     @classmethod
-    def delete_permission_by_name(self, perm_name):
-        perm = db.session.query(Permission).filter(Permission.name == perm_name).first()
-        if perm is not None:
-            print(perm)
-            db.session.delete(perm)
+    def delete_permission(cls, perm1):
+        if perm1 is not None:
+            print(perm1)
+            db.session.delete(perm1)
             db.session.commit()
+            print('删除成功！')
         pass

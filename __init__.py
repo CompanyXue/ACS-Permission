@@ -1,10 +1,9 @@
 # -*- coding:utf-8 -*-
 
+import  database
 from database.config_setting import db, date_time
 from database.user_db import User
 from database.role_db import Role
-from database.permission_db import Permission
-from database.resource_db import Resource
 from database.user_group_db import Usergroup
 from business.user_business import UserBusiness
 
@@ -29,25 +28,25 @@ nenber = db.session.query(User).filter(User.name == 'Rose').one()
 
 nenber.roles.append(new_role)
 roles = nenber.roles
-print ("用户-多角色显示：")
+print("用户-多角色显示：")
 for role in roles:
     if role is not None:
-        print (role)
+        print(role)
 # x = User.query.with_parent(r_user_role) 
 # print x
 
 group = Usergroup(name=u'弱鸡', create_by='Super User')
 db.session.add(group)
-print (group)
+print(group)
 # nenber.group.append(group)
 
 xxx = UserBusiness()
-print (xxx)
+print(xxx)
 # 查询所有用户列表
 users = xxx.find_all_users()
 if users is not None:
     for user in users:
-        print (user)
+        print(user)
 
 # 通过用户id 来进行删除 (√)
 # user = xxx.delete_user_by_id(18)
@@ -57,13 +56,13 @@ if users is not None:
 # xxx.update_pwd(name='Brand',pwd=m.update('123'))
 
 # 输出根据id 去查询用户信息
-print ('start\n')
+print('start\n')
 user5 = xxx.find_user_by_id(1)
-print ('user - id ==5:', user5)
+print('user - id ==5:', user5)
 
 users = xxx.search_user_by_info('Brank', '1762388223')
 for user in users:
-    print (user)
+    print(user)
 # 提交即保存到数据库:
 db.session.commit()
 

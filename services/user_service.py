@@ -6,9 +6,7 @@ from business.role_business import RoleBusiness
 
 class UserService(object):
     def __init__(self):
-        '''
-        Constructor
-        '''
+        pass
 
     # 用户查询
     @classmethod

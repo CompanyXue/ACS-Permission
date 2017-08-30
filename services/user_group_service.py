@@ -6,9 +6,7 @@ from business.user_group_business import UsergroupBusiness
 
 class UserGroupService(object):
     def __init__(self):
-        '''
-        Constructor
-        '''
+        pass
 
     # 设置用户所属用户组
     @classmethod
