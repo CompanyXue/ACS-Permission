@@ -22,18 +22,6 @@ class RoleService(object):
             yield user
         pass
 
-    ''' 
-    * 根据用户名查找用户拥有的角色信息
-    * 根据角色id 刪除角色
-    * @param role_id
-    * @return role
-    '''
-
-    @classmethod
-    def add_role_by_name(self, role_name):
-
-        pass
-
     '''
      * 根据用户的Id查找用户的角色信息
      * @param userId
@@ -41,7 +29,7 @@ class RoleService(object):
     '''
     @classmethod
     def find_role_by_user_id(cls, user_id):
-        user =  UserBusiness.find_user_by_id(user_id)
+        user = UserBusiness.find_user_by_id(user_id)
         if user is not None:
             for role in user.roles:
                 yield role
@@ -60,13 +48,11 @@ class RoleService(object):
                 yield role
         pass
 
-
     ''' 
      * 根据角色名查找资源信息（权限）
      * @param role_name
      * @return 
     '''
-
     @classmethod
     def find_resource_by_role_name(cls, role_name):
         perms = PermissionBusiness.find_perm_by_role(role_name)
@@ -80,7 +66,6 @@ class RoleService(object):
      * @param role_name
      * @return 
     '''
-
     @classmethod
     def find_group_by_role_name(cls, role_name):
         role = RoleBusiness.find_by_role_name(role_name)
@@ -88,12 +73,17 @@ class RoleService(object):
             yield i
         users = role.users
         for user in users:
-            print (user)
+            print(user)
             for j in user.group:
                 yield j
 
+    # 通过名称添加角色
+    @classmethod
+    def add_role_by_name(cls, role_name):
+
         pass
 
+    # 通过名称删除角色
     @classmethod
-    def delete_role(self,role_name):
+    def delete_role(cls, role_name):
         RoleBusiness.delete_role_by_name(role_name)
