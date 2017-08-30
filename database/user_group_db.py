@@ -1,17 +1,23 @@
 # -*- coding: UTF-8 -*-
 
 from database.config_setting import db, date_time
-from sqlalchemy import Table, Column, ForeignKey
+from sqlalchemy import Column
 
 user2group = db.Table('user_group_mapping',
-    db.Column('user_id', db.BigInteger, db.ForeignKey('user.id'),primary_key=True),
-    db.Column('group_id', db.BigInteger, db.ForeignKey('user_group.id'), primary_key=True)
-)
+                      db.Column('user_id', db.BigInteger,
+                                db.ForeignKey('user.id'), primary_key=True),
+                      db.Column('group_id', db.BigInteger,
+                                db.ForeignKey('user_group.id'),
+                                primary_key=True)
+                      )
 
 role2group = db.Table('group_role_mapping',
-    db.Column('group_id', db.BigInteger, db.ForeignKey('user_group.id'), primary_key=True),
-    db.Column('role_id', db.BigInteger, db.ForeignKey('role.id'), primary_key=True)
-)
+                      db.Column('group_id', db.BigInteger,
+                                db.ForeignKey('user_group.id'),
+                                primary_key=True),
+                      db.Column('role_id', db.BigInteger,
+                                db.ForeignKey('role.id'), primary_key=True)
+                      )
 
 
 # 定义UserGroup对象
@@ -40,4 +46,5 @@ class Usergroup(db.Model):
         # self.is_activated = is_activated  # 0-关闭 1-活动
 
     def __repr__(self):
-        return "<UserGroup'{}'>".format('用户组名: ' + self.name + "\t创建时间：" + str(self.create_time))
+        return "<UserGroup'{}'>".format('用户组名: ' + self.name + "\t创建时间：" \
+                                        + str(self.create_time))
