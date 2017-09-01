@@ -23,7 +23,7 @@ USer Story：
 
 
 新添加一系列的用户（统一公司或组织）。
-1.新建用户组（orgnazition）
+1.新建用户组（organization）
 2.可以通过文件导入 User 信息    -Xml  -JSON
 3.给组内添加管理员 
  Admin  --审核 组员（新增）

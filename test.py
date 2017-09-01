@@ -1,11 +1,12 @@
 # -*- coding: UTF-8 -*-
 
 import database
-from database.config_setting import date_time
+from database.config_setting import date_time, app
 from business.user_business import UserBusiness
 from services.permission_service import PermissionService
 from services.role_service import RoleService
 from services.user_group_service import UserGroupService
+from views import views
 
 if __name__ == '__main__':
 
@@ -46,6 +47,9 @@ if __name__ == '__main__':
     for i in users:
         print(i)
 
-    grops = UserGroupService.find_group_by_user_name('Rose')
-    for grop in grops:
-        print(grop)
+    groups = UserGroupService.find_group_by_user_name('Rose')
+    for group in groups:
+        print(group)
+
+    app.run(debug=True)
+

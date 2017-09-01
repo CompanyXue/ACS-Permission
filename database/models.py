@@ -43,50 +43,50 @@ perm2resource = db.Table('resource_permission_mapping',
 class User(db.Model):
     # 表的名字:
     __tablename__ = 'user'
-
-    id = Column(db.BigInteger, primary_key=True,autoincrement=True)
-    name = Column(db.String(100), nullable=False,unique=True)
-    phone = Column(db.String(20),unique=True)
+    
+    id = Column(db.BigInteger, primary_key=True, autoincrement=True)
+    name = Column(db.String(100), nullable=False, unique=True)
+    phone = Column(db.String(20), unique=True)
     sex = Column(db.String(2))
     birthday = Column(db.Date())
     pwd = Column(db.String(256))
     organization = Column(db.String(100))
-    email = Column(db.String(50),)
-    card_number = Column(db.String(20),default='0001')
+    email = Column(db.String(50), )
+    card_number = Column(db.String(20), default='0001')
     create_by = Column(db.String(32))
     create_time = Column(db.Date())
-    modified_date = Column(db.Date(),default=create_time)
-    modified_by = Column(db.String(32),default=create_by)
-    status = Column(db.String(10),nullable=True,default='开启')
-    is_deleted = Column(db.Boolean,default=False)
+    modified_date = Column(db.Date(), default=create_time)
+    modified_by = Column(db.String(32), default=create_by)
+    status = Column(db.String(10), nullable=True, default='开启')
+    is_deleted = Column(db.Boolean, default=False)
 
 
 # 定义Role对象
 class Role(db.Model):
     # 表的名字:
     __tablename__ = 'role'
-
+    
     # 表的结构:
     # primary_key等于主键
     # unique唯一
     # nullable非空
-    id = Column(db.BigInteger, primary_key=True,autoincrement=True)
-    name = Column(db.String(100), nullable=False,unique=True)
+    id = Column(db.BigInteger, primary_key=True, autoincrement=True)
+    name = Column(db.String(100), nullable=False, unique=True)
     role_code = Column(db.String(30))
     role_type = Column(db.String(10))
     create_by = Column(db.String(32))
     create_time = Column(db.Date())
-    modified_date = Column(db.Date(),default=create_time)
-    modified_by = Column(db.String(32),default=create_by)
-    is_deleted = Column(db.Boolean,default=False)
-    users = db.relationship('User', secondary=user2role, \
+    modified_date = Column(db.Date(), default=create_time)
+    modified_by = Column(db.String(32), default=create_by)
+    is_deleted = Column(db.Boolean, default=False)
+    users = db.relationship('User', secondary=user2role,
                             backref=db.backref('roles', lazy='dynamic'))
-
-    #数据表属性 初始化
+    
+    # 数据表属性 初始化
     def __init__(self, name, role_type, create_time, create_by, _id=None):
         self.id = _id
         self.name = name
-        self.role_type = role_type   #管理员与普通身份    readonly 1 , modify 3, owner 4
+        self.role_type = role_type  # 管理员与普通身份    readonly 1 , modify 3, owner 4
         self.create_by = create_by
         self.create_time = create_time
 
@@ -95,100 +95,105 @@ class Role(db.Model):
 class Usergroup(db.Model):
     # 表的名字:
     __tablename__ = 'user_group'
-
-    id = Column(db.BigInteger, primary_key=True,autoincrement=True)
-    name = Column(db.String(100), nullable=False,unique=True)
+    
+    id = Column(db.BigInteger, primary_key=True, autoincrement=True)
+    name = Column(db.String(100), nullable=False, unique=True)
     parent_name = Column(db.String(100))
     create_by = Column(db.String(32))
     create_time = Column(db.Date())
-    modified_date = Column(db.Date(),default=create_time)
-    modified_by = Column(db.String(32),default=create_by)
-    is_deleted = Column(db.Boolean,default=False)
-    users = db.relationship('User', secondary=user2group,                     
-        backref=db.backref('group', lazy='dynamic'))
-    roles = db.relationship('Role', secondary=role2group,                     
-        backref=db.backref('group', lazy='dynamic'))
+    modified_date = Column(db.Date(), default=create_time)
+    modified_by = Column(db.String(32), default=create_by)
+    is_deleted = Column(db.Boolean, default=False)
+    users = db.relationship('User', secondary=user2group,
+                            backref=db.backref('group', lazy='dynamic'))
+    roles = db.relationship('Role', secondary=role2group,
+                            backref=db.backref('group', lazy='dynamic'))
     
-    #数据表属性 初始化
+    # 数据表属性 初始化
     def __init__(self, name, create_time, create_by, _id=None):
         self.id = _id
         self.name = name
         self.create_time = create_time
         self.create_by = create_by
         # self.is_activated = is_activated  # 0-关闭 1-活动
-
+    
     def __repr__(self):
-        return "<UserGroup'{}'>".format('用户组名'+self.name + "\t创建时间："+\
+        return "<UserGroup'{}'>".format('用户组名' + self.name + "\t创建时间：" +
                                         str(self.create_time))
+    
     def add_user(self, user):
         self.users.append(user)
-
+    
     def remove_user(self, user):
         self.users.remove(user)
     
     def add_users(self, users):
         for user in users:
             self.add_user(user)
-
+    
     def get_users(self):
         for user in self.users:
             yield user
     
-    def get_roles(self ):
+    def get_roles(self):
         for role in self.roles:
             yield role
-        
+
 
 class Resource(db.Model):
     __tablename__ = 'resource'
-
+    
     # 表的结构:
-    #primary_key等于主键
-    id = Column(db.BigInteger, primary_key=True,autoincrement=True)
-    name = Column(db.String(100), nullable=False,unique=True)
-    res_type = Column(db.String(10))  
+    # primary_key等于主键
+    id = Column(db.BigInteger, primary_key=True, autoincrement=True)
+    name = Column(db.String(100), nullable=False, unique=True)
+    res_type = Column(db.String(10))
     # owner = Column(db.Integer, db.ForeignKey('user.id'))
     create_time = Column(db.Date())
     create_by = Column(db.String(32))
-    modified_date = Column(db.Date(),default=create_time)
-    modified_by = Column(db.String(32),default=create_by)
-    location = Column(db.String(100),nullable=True)
+    modified_date = Column(db.Date(), default=create_time)
+    modified_by = Column(db.String(32), default=create_by)
+    location = Column(db.String(100), nullable=True)
     content = Column(db.Text)
-    is_deleted = Column(db.Boolean,default=False)
+    is_deleted = Column(db.Boolean, default=False)
     perms = db.relationship('Permission', secondary=perm2resource,
                             backref=db.backref('resources', lazy='dynamic'))
-
-    def __init__(self,name,res_type,create_time,create_by,is_deleted,_id=None):
+    
+    def __init__(self, name, res_type, create_time, create_by, is_deleted,
+                 _id=None):
         self.id = _id
         # self.role_group_id = role_group_id  
         self.name = name
-        self.res_type = res_type   # 文件 1 , 门禁 2, 设备 3 
+        self.res_type = res_type  # 文件 1 , 门禁 2, 设备 3
         self.create_time = create_time
         self.create_by = create_by
         self.is_deleted = is_deleted
-
-    def __repr__(self):
-        return "<Role '{}'>".format('资源名称'+self.name + '\t资源类型'+ self.res_type\
-                                    + "创建时间："+str(self.create_time))
     
+    def __repr__(self):
+        return "<Role '{}'>".format(
+            '资源名称' + self.name + '\t资源类型' + self.res_type + "创建时间："
+            + str(self.create_time))
+
+
 class Permission(db.Model):
     __tablename__ = 'permission'
     
-    id = Column(db.BigInteger, primary_key=True,autoincrement=True)
+    id = Column(db.BigInteger, primary_key=True, autoincrement=True)
     name = Column(db.String(100), nullable=False)
-    o_type = Column(db.String(10))  
+    o_type = Column(db.String(10))
     create_time = Column(db.Date())
     create_by = Column(db.String(32))
     create_time = Column(db.Date())
-    modified_date = Column(db.Date(),default=create_time)
-    modified_by = Column(db.String(32),default=create_by)
+    modified_date = Column(db.Date(), default=create_time)
+    modified_by = Column(db.String(32), default=create_by)
     # resource = Column(db.Integer, db.ForeignKey('resource.id'))
     content = Column(db.Text)
-    is_deleted = Column(db.Boolean,default=False)
+    is_deleted = Column(db.Boolean, default=False)
     roles = db.relationship('Role', secondary=role2perm,
                             backref=db.backref('perms', lazy='dynamic'))
     
-    def __init__(self, name, o_type, create_time,create_by, content,is_deleted, _id=None):
+    def __init__(self, name, o_type, create_time, create_by, content,
+                 is_deleted, _id=None):
         self.id = _id
         self.name = name
         # self.pri_code = pri_code
@@ -197,11 +202,12 @@ class Permission(db.Model):
         self.create_time = create_time
         self.content = content
         self.is_deleted = is_deleted
-
+    
     def __repr__(self):
-        return "<Permission '{}'>".format('权限名称 :'+self.name + "\t类型："+self.o_type\
-                                          + '\t权限内容：'+ self.content+"\t创建时间："\
-                                          + str(self.create_time))
+        return "<Permission '{}'>".format(
+            '权限名称 :' + self.name + "\t类型：" + self.o_type + '\t权限内容：' +
+            self.content + "\t创建时间：" + str(self.create_time))
+
 
 # class PermissionList(models.Model):
 #     name = models.CharField(max_length=64)
@@ -209,7 +215,7 @@ class Permission(db.Model):
 
 #     def __unicode__(self):
 #         return '%s(%s)' %(self.name,self.url)
-                                              
+
 # class RoleList(models.Model):
 #     name = models.CharField(max_length=64)
 #     permission = models.ManyToManyField(PermissionList,null=True,blank=True)
@@ -217,8 +223,9 @@ class Permission(db.Model):
 # 根据定义的表结构一键构建实体关系表
 db.create_all()
 
-time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-print time
+time = time.strftime('%Y-%m-%d', time.localtime(time.time()))
+print(time)
+
 
 # new_role = Role(name='SBE',role_code='ADministartor',role_type='2',create_time=time,is_activated='true')
 # 添加新角色到session:
@@ -228,7 +235,7 @@ print time
 # db.session.add(new_user)
 # n = db.session.query(User).filter(User.name=='Branky').one()
 
-#举例说明
+# 举例说明
 # ro1 = db.session.query(Role).filter(Role.name=='SSE').one()
 # ro2 = db.session.query(Role).filter(Role.name=='SSS').one()
 # ro1.users.append(n)

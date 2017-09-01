@@ -1,7 +1,9 @@
 # -*- coding: UTF-8 -*-
-
-from business.user_business import UserBusiness
+from itsdangerous import (TimedJSONWebSignatureSerializer
+                          as Serializer, BadSignature, SignatureExpired)
+from business.user_business import UserBusiness,User
 from business.role_business import RoleBusiness
+from database.config_setting import app
 
 
 class UserService(object):
@@ -13,10 +15,10 @@ class UserService(object):
     def user_query(cls, username=None, phone=None):
         user = UserBusiness.search_user_by_info(username, phone)
 
-        organization = str(user['organization'])
-        groups = user['group']
-        for i in range(0, len(groups)):
-            groups[i] = str(groups[i])
+        # organization = str(user['organization'])
+        # groups = user['group']
+        # for i in range(0, len(groups)):
+        #     groups[i] = str(groups[i])
 
         return user
 
@@ -47,3 +49,43 @@ class UserService(object):
         for i in role.users:
             yield i
         pass
+
+    # 自动生成认证 Token
+    @classmethod
+    def generate_auth_token(cls, expiration=600):
+        s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'id': cls.id})
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None  # valid token, but expired
+        except BadSignature:
+            return None  # invalid token
+        user = UserBusiness.find_user_by_id(data['id'])
+        return user
+
+    @classmethod
+    def user_add(cls, data):
+        user = UserBusiness.create_user(data)
+        name = user.name
+        if cls.user_query(username=name, phone=user.phone):
+            # if UserBusiness.find_user_by_name(username):
+            print('用户已存在')
+            cls.user_update(name, data)
+            user = UserBusiness.find_user_by_name(name)
+            print(name + '--更新成功 ！！！')
+        else:
+            UserBusiness.add_user(user)
+            
+        return user
+
+    @classmethod
+    def user_delete(cls, name):
+        user = UserBusiness.find_user_by_name(name)
+        if user:
+            UserBusiness.delete_user_by_name(name)
+        return user

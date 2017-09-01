@@ -10,8 +10,8 @@ from business.user_business import UserBusiness
 # from business.role_business import RoleBusiness,Role
 
 
-new_user = User(name='BiBy', sex='女', pwd='gel123', phone='135878783', \
-                organization=u'如家酒店', email='131220024@qq.com', \
+new_user = User(name='BiBy', sex='女', pwd='gel123', phone='135878783',
+                organization=u'如家酒店', email='131220024@qq.com',
                 create_by='SuperUser')
 
 # 添加新用户到session:

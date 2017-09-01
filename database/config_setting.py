@@ -7,7 +7,9 @@ from flask_sqlalchemy import SQLAlchemy
 
 # 调用Flask App和 SQLAlchemy 组件，创建与数据库的连接
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy dog'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:tomcat@127.0.0.1:3306/acs'
+app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 db = SQLAlchemy(app)
 
 # app.run(debug=True)

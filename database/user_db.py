@@ -46,11 +46,11 @@ class User(db.Model):
         self.create_by = create_by
 
     def __repr__(self):
-        return "<User '{}'>".format('姓名：' + self.name + '\t性别：' + self.sex +\
-                                    '\t组织：' + self.organization + '\t邮箱：' + \
-                                    self.email + '\t电话号码：' + self.phone + '\t卡号：'\
-                                    + self.card_number + '\t创建时间：'\
-                                    + str(self.create_time) + '\tBy:' + self.create_by)
+        return "<User '{}'>".format(
+            '姓名：' + self.name + '\t性别：' + self.sex + '\t组织：' +
+            self.organization + '\t邮箱：' + self.email + '\t电话号码：' +
+            self.phone + '\t 卡号：' + self.card_number + '\t创建时间：' +
+            str(self.create_time) + '\tBy:' + self.create_by)
 
     # 判断权限 是否有：role存在并且角色的权限要包含传入的权限
     def can(self, permissions):
@@ -80,8 +80,8 @@ class User(db.Model):
 # my_user.add_roles('admin', 'superadmin')
 # db.session.add(my_user)
 # db.session.commit()
-new_user = User(name='Romo', sex='女', pwd='userio', phone='1762434203',\
-                organization=u'如家酒店', email='13142391@qq.com', create_by='SuperUser')
+new_user = User(name='Romo', sex='女', pwd='userp', phone='1762434203',
+                organization=u'如家酒店', email='13142391@qq.com', create_by='U')
 
 # 添加到session:
 # db.session.add(new_user)
