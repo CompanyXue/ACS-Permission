@@ -10,23 +10,11 @@ class UserService(object):
     def __init__(self):
         pass
 
-    # 用户查询
-    @classmethod
-    def user_query(cls, username=None, phone=None):
-        user = UserBusiness.search_user_by_info(username, phone)
-
-        # organization = str(user['organization'])
-        # groups = user['group']
-        # for i in range(0, len(groups)):
-        #     groups[i] = str(groups[i])
-
-        return user
-
     # 用户更新
     @classmethod
     def user_update(cls, user_name, data):
-        name = user_name
-        user_obj = UserBusiness.update_user(name, data)
+        user = UserBusiness.find_user_by_name(user_name)
+        user_obj = UserBusiness.update_user(user.id, data)
         return user_obj
 
     # 用户管理
@@ -50,29 +38,12 @@ class UserService(object):
             yield i
         pass
 
-    # 自动生成认证 Token
-    @classmethod
-    def generate_auth_token(cls, expiration=600):
-        s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
-        return s.dumps({'id': cls.id})
-
-    @staticmethod
-    def verify_auth_token(token):
-        s = Serializer(app.config['SECRET_KEY'])
-        try:
-            data = s.loads(token)
-        except SignatureExpired:
-            return None  # valid token, but expired
-        except BadSignature:
-            return None  # invalid token
-        user = UserBusiness.find_user_by_id(data['id'])
-        return user
-
+    
     @classmethod
     def user_add(cls, data):
         user = UserBusiness.create_user(data)
         name = user.name
-        if cls.user_query(username=name, phone=user.phone):
+        if  UserBusiness.search_user_by_info(name=name, phone=user.phone):
             # if UserBusiness.find_user_by_name(username):
             print('用户已存在')
             cls.user_update(name, data)
@@ -88,4 +59,23 @@ class UserService(object):
         user = UserBusiness.find_user_by_name(name)
         if user:
             UserBusiness.delete_user_by_name(name)
+        return user
+
+    # 自动生成认证 Token
+    @classmethod
+    def generate_auth_token(cls, expiration=600):
+        s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'id': cls.id})
+
+    # 验证 Token
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None  # valid token, but expired
+        except BadSignature:
+            return None  # invalid token
+        user = UserBusiness.find_user_by_id(data['id'])
         return user

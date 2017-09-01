@@ -63,3 +63,8 @@ def delete_user():
     user = UserService.user_delete(name)
     return jsonify(
         {'username': user.name, 'phone': user.phone, 'email': user.email})
+
+
+@app.route('/api/roles/create', methods=['POST'])
+def role_add():
+    return '<h1> Roles Manage! </h1>'

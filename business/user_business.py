@@ -83,6 +83,7 @@ class UserBusiness(object):
             user.sex = data.get('sex')
             user.modified_date = date_time
             user.modified_by = name
+            user.is_deleted = False
             db.session.commit()
 
     # 修改用户密码
