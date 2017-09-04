@@ -1,16 +1,46 @@
 # -*- coding: UTF-8 -*-
-import sys
-from flask import abort, request, jsonify, g, url_for, redirect
 
-sys.path.append("..")
+from flask import abort, request, jsonify, g, url_for, redirect
+from flask_jwt import JWT, current_identity
+from flask_jwt_extended import (create_access_token, JWTManager, jwt_required,
+                                get_jwt_identity, jwt_refresh_token_required,
+                                create_refresh_token, get_raw_jwt)
+
 from database.config_setting import app
 from business.user_business import UserBusiness
 from services.user_service import UserService
 
+jwt = JWTManager(app)
+JWT_AUTH_URL_RULE = '/login'
 
-@app.route('/')
-def index():
-    return '<h1> Hello World! </h1>'
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.json.get('username', None)
+    print(username)
+    password = request.json.get('password', None)
+    # first verify user in database
+    if username in {u.name: u for u in UserBusiness.find_all_users()}:
+        # then verify the user password
+        if UserBusiness.verify_password(username, password):
+            #  user = UserBusiness.find_user_by_name(username)
+            ret = {'access_token': create_access_token(username, fresh=True),
+                   'refresh_token': create_refresh_token(identity=username)
+                   }
+            return jsonify(ret), 200
+        return jsonify({"msg": "Bad password"}), 401
+    return jsonify({"msg": "Username is not exists!"}), 401
+
+
+# Endpoint for revoking the current users access token
+@app.route('/logout', methods=['DELETE'])
+@jwt_required
+def logout():
+    jti = get_raw_jwt()['jti']
+    # blacklist.add(jti)
+    resp = jsonify({'logout': True})
+    # unset_jwt_cookies(resp)
+    return jsonify({"msg": "Successfully logged out"}), 200
 
 
 @app.route('/api/users', methods=['GET'])
@@ -51,11 +81,11 @@ def new_user():
     print(data)
     user = UserService.user_add(data)
     print(user.id)
-    return (jsonify({'username': user.name, 'phone': user.phone, 'email':
-                     user.email, 'created_date': str(user.create_time)}), 201,
+    return (jsonify({'username': user.name, 'phone': user.phone, 'email': user.
+                    email, 'created_date': str(user.create_time)}), 201,
             {'Location': url_for('get_user', id=user.id, _external=True)})
-    
-    
+
+
 @app.route('/api/users/delete', methods=['POST'])
 def delete_user():
     name = request.json.get('username')
@@ -68,3 +98,25 @@ def delete_user():
 @app.route('/api/roles/create', methods=['POST'])
 def role_add():
     return '<h1> Roles Manage! </h1>'
+
+
+# This will generate a new access token from
+# the refresh token, but will mark that access token as non-fresh
+@app.route('/refresh', methods=['POST'])
+@jwt_refresh_token_required
+def refresh():
+    current_user = get_jwt_identity()
+    new_token = create_access_token(identity=current_user.name, fresh=False)
+    ret = {
+        'access_token': new_token
+    }
+    return jsonify(ret), 200
+
+
+@app.route('/protected')
+@jwt_required
+def protected():
+    # claims = get_jwt_claims()
+    # return '%s' % current_identity
+    current_user = get_jwt_identity()
+    return jsonify({'hello_from': current_user}), 200
