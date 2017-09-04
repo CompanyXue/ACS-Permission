@@ -2,7 +2,7 @@
 # sys.path.insert(0,"..")
 
 from passlib.hash import sha256_crypt
-
+from sqlalchemy.exc import SQLAlchemyError
 from database.config_setting import db, date_time
 from database.user_db import User
 
@@ -16,8 +16,11 @@ class UserBusiness(object):
         if user is not None:
             # if user.name in users.name 
             db.session.add(user)
-            db.session.commit()
-        pass
+            try:
+                db.session.commit()
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                return str(e)
 
     @classmethod
     def create_user(cls, data):
@@ -25,14 +28,15 @@ class UserBusiness(object):
         password = data.get('password')
         email = data.get('email')
         phone = data.get('phone')
-        organization = data.get('organization')
+        organization = data.get('organization', None)
         sex = data.get('sex')
         
         if username is None or password is None or email is None or phone is None:
-             return ('缺失用户-信息参数')  # missing arguments
-            
+            return (u"缺失用户-信息参数")  # missing arguments
+
         user = User(name=username, pwd=password, sex=sex, phone=phone,
-                    email=email, organization=organization, create_by='SuperUser')
+                    email=email, organization=organization,
+                    create_by='Super User')
         return user
     
     # 查询全部用户信息
@@ -64,7 +68,7 @@ class UserBusiness(object):
     # @return User
     @classmethod
     def find_user_by_name(cls, user_name):
-        user = db.session.query(User).filter(User.name == user_name).first()
+        user = db.session.query(User).filter_by(name=user_name).first()
         if user is not None:
             return user
         pass
