@@ -34,9 +34,11 @@ class Usergroup(db.Model):
     modified_by = Column(db.String(32), default=create_by)
     is_deleted = Column(db.Boolean, default=False)
     users = db.relationship('User', secondary=user2group,
-                            backref=db.backref('group', lazy='dynamic'))
+                            backref=db.backref('group', lazy='dynamic',
+                                               cascade='all, delete'))
     roles = db.relationship('Role', secondary=role2group,
-                            backref=db.backref('group', lazy='dynamic'))
+                            backref=db.backref('group', lazy='dynamic',
+                                               cascade='all, delete'))
 
     # 数据表属性 初始化
     def __init__(self, name, create_by, _id=None):
@@ -46,5 +48,5 @@ class Usergroup(db.Model):
         # self.is_activated = is_activated  # 0-关闭 1-活动
 
     def __repr__(self):
-        return "<UserGroup'{}'>".format('用户组名: ' + self.name + "\t创建时间：" \
+        return "<UserGroup'{}'>".format('用户组名: ' + self.name + "\t创建时间："
                                         + str(self.create_time))

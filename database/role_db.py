@@ -7,9 +7,11 @@ from database import user_db
 from database.config_setting import db, date_time
 
 user2role = db.Table('user_role_mapping',
-    db.Column('user_id', db.BigInteger, db.ForeignKey('user.id'),primary_key=True),
-    db.Column('role_id', db.BigInteger, db.ForeignKey('role.id'),primary_key=True)
-)
+                     db.Column('user_id', db.BigInteger,
+                               db.ForeignKey('user.id'), primary_key=True),
+                     db.Column('role_id', db.BigInteger,
+                               db.ForeignKey('role.id'), primary_key=True)
+                     )
 
 
 # 定义Role对象
@@ -29,7 +31,9 @@ class Role(db.Model):
     modified_date = Column(db.DateTime, default=create_time)
     modified_by = Column(db.String(32), default=create_by)
     is_deleted = Column(db.Boolean, default=False)
-    users = relationship('User', secondary=user2role, backref=backref('roles', lazy='dynamic'))
+    users = relationship('User', secondary=user2role,
+                         backref=backref('roles', lazy='dynamic',
+                                         cascade='all, delete'))
 
     # 数据表属性 初始化
     def __init__(self, name, role_type, create_by, _id=None):
@@ -39,5 +43,6 @@ class Role(db.Model):
         self.create_by = create_by
 
     def __repr__(self):
-        return "<Role '{}'>".format('角色名：' + self.name + '\t角色类型：' + self. \
-                                    role_type + "\t创建时间：" + str(self.create_time))
+        return "<Role '{}'>".format(
+            '角色名：' + self.name + '\t角色类型：' + self.role_type + "\t创建时间："
+            + str(self.create_time))

@@ -50,8 +50,8 @@ class UserBusiness(object):
     # 根据用户名或者电话号码、组织来查询用户信息
     # @return
     @classmethod
-    def search_user_by_info(cls, name, phone):
-        user = db.session.query(User).filter_by(name=name, phone=phone).first()
+    def search_user_by_info(cls, name, org):
+        user = db.session.query(User).filter_by(name=name, organization=org).first()
         if user is not None:
             return user
 
@@ -64,7 +64,7 @@ class UserBusiness(object):
             return user
         pass
 
-    # 根据用户id 查询用户信息
+    # 根据用户name 查询用户信息
     # @return User
     @classmethod
     def find_user_by_name(cls, user_name):
@@ -72,7 +72,17 @@ class UserBusiness(object):
         if user is not None:
             return user
         pass
-  
+
+    # 根据用户name + org 查询用户信息
+    # @return User
+    @classmethod
+    def find_user_by_org_name(cls, org, user_name):
+        user = db.session.query(User).filter(User.name == user_name,
+                                             User.organization == org).first()
+        if user is not None:
+            return user
+        pass
+    
     # 传入参数更新用户可更改内容信息
     @classmethod
     def update_user(cls, name, data):
@@ -155,6 +165,6 @@ class UserBusiness(object):
 
     # 验证用户密码
     @classmethod
-    def verify_password(cls, user_name, password):
-        user = cls.find_user_by_name(user_name)
+    def verify_password(cls, org, user_name, password):
+        user = cls.find_user_by_org_name(org, user_name)
         return sha256_crypt.verify(password, user.pwd)

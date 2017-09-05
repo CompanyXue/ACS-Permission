@@ -1,9 +1,7 @@
 # -*- coding: UTF-8 -*-
-from itsdangerous import (TimedJSONWebSignatureSerializer
-                          as Serializer, BadSignature, SignatureExpired)
-from business.user_business import UserBusiness,User
+
+from business.user_business import UserBusiness
 from business.role_business import RoleBusiness
-from database.config_setting import app
 
 
 class UserService(object):
@@ -15,6 +13,7 @@ class UserService(object):
     def user_update(cls, user_name, data):
         user = UserBusiness.find_user_by_name(user_name)
         user_obj = UserBusiness.update_user(user.id, data)
+        print(user_obj.name + '--更新成功 ！！！')
         return user_obj
 
     # 用户管理
@@ -29,26 +28,16 @@ class UserService(object):
         # roles = find_all_roles()
         user.roles.append(role)
         pass
-
-    # 根据角色名称查询用户信息
-    @classmethod
-    def find_users_by_role_name(cls, role_name):
-        role = RoleBusiness.find_by_role_name(role_name)
-        for i in role.users:
-            yield i
-        pass
-
-    
+  
     @classmethod
     def user_add(cls, data):
         user = UserBusiness.create_user(data)
         name = user.name
-        if  UserBusiness.search_user_by_info(name=name, phone=user.phone):
+        oa = str(user.organization)
+        # 同一个应用下，用户名唯一，也即name+org 唯一
+        if UserBusiness.search_user_by_info(name=name, org=oa):
             # if UserBusiness.find_user_by_name(username):
-            print('用户已存在')
-            cls.user_update(name, data)
-            user = UserBusiness.find_user_by_name(name)
-            print(name + '--更新成功 ！！！')
+            return "用户已存在,请重新输入！"
         else:
             UserBusiness.add_user(user)
             
@@ -61,21 +50,19 @@ class UserService(object):
             UserBusiness.delete_user_by_name(name)
         return user
 
-    # 自动生成认证 Token
+    # 根据角色名称查询用户信息
     @classmethod
-    def generate_auth_token(cls, expiration=600):
-        s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
-        return s.dumps({'id': cls.id})
+    def find_users_by_role_name(cls, role_name):
+        role = RoleBusiness.find_by_role_name(role_name)
+        for i in role.users:
+            yield i
+        pass
 
-    # 验证 Token
-    @staticmethod
-    def verify_auth_token(token):
-        s = Serializer(app.config['SECRET_KEY'])
-        try:
-            data = s.loads(token)
-        except SignatureExpired:
-            return None  # valid token, but expired
-        except BadSignature:
-            return None  # invalid token
-        user = UserBusiness.find_user_by_id(data['id'])
-        return user
+    # 根据用户 - 查询用户组信息
+    
+    @classmethod
+    def find_groups_by_user_name(cls, org, user_name):
+        user = UserBusiness.find_user_by_org_name(org, user_name)
+        for i in user.group:
+            yield i
+        pass

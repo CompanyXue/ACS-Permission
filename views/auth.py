@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 
+from database.config_setting import app
 from business.user_business import UserBusiness
 from werkzeug.security import safe_str_cmp
 from itsdangerous import (TimedJSONWebSignatureSerializer
@@ -41,3 +42,19 @@ class Auth(object):
     
 # auth = Auth()
 # jwt = JWT(app, auth.authenticate, auth.identity)
+
+'''
+Flask-jwt对JWT生成和解析的过程进行了封装，所以使用时只需要调用它的接口，从上面的代码可以看到，实现代码非常简洁。
+
+（1）错误处理
+
+认证类的error_handler方法提供了异常处理，flask-jwt内部也封装了对异常和各类错误的处理，可以从后面运行的结果中看到。
+
+（2）认证方法
+
+认证类的authenticate方法提供认证服务，正确返回用户信息用作生成token的用户依据(payload)
+
+（3）鉴权
+
+认证类的identity用于鉴权并返回结果
+'''

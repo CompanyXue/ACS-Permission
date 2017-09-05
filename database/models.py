@@ -105,9 +105,11 @@ class Usergroup(db.Model):
     modified_by = Column(db.String(32), default=create_by)
     is_deleted = Column(db.Boolean, default=False)
     users = db.relationship('User', secondary=user2group,
-                            backref=db.backref('group', lazy='dynamic'))
+                            backref=db.backref('group', lazy='dynamic',
+                                               cascade='all, delete-orphan'))
     roles = db.relationship('Role', secondary=role2group,
-                            backref=db.backref('group', lazy='dynamic'))
+                            backref=db.backref('group', lazy='dynamic',
+                                               cascade='all, delete-orphan'))
     
     # 数据表属性 初始化
     def __init__(self, name, create_time, create_by, _id=None):
@@ -157,7 +159,8 @@ class Resource(db.Model):
     content = Column(db.Text)
     is_deleted = Column(db.Boolean, default=False)
     perms = db.relationship('Permission', secondary=perm2resource,
-                            backref=db.backref('resources', lazy='dynamic'))
+                            backref=db.backref('resources', lazy='dynamic',
+                                               cascade='all, delete-orphan'))
     
     def __init__(self, name, res_type, create_time, create_by, is_deleted,
                  _id=None):
@@ -190,7 +193,8 @@ class Permission(db.Model):
     content = Column(db.Text)
     is_deleted = Column(db.Boolean, default=False)
     roles = db.relationship('Role', secondary=role2perm,
-                            backref=db.backref('perms', lazy='dynamic'))
+                            backref=db.backref('perms', lazy='dynamic',
+                                               cascade='all, delete-orphan'))
     
     def __init__(self, name, o_type, create_time, create_by, content,
                  is_deleted, _id=None):

@@ -13,6 +13,7 @@ if __name__ == '__main__':
     users = UserBusiness.find_all_users()
     for i in users:
         print(i)
+        # UserBusiness.reset_password(i.name)
 
     print(date_time.strftime('%Y-%m-%d %H:%M:%S'))
 

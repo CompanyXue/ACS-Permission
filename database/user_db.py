@@ -19,8 +19,8 @@ class User(db.Model):
     __tablename__ = 'user'
 
     id = Column(db.BigInteger, primary_key=True, autoincrement=True)
-    name = Column(db.String(100), unique=True)
-    phone = Column(db.String(20), unique=True)
+    name = Column(db.String(100))
+    phone = Column(db.String(20))
     sex = Column(db.String(2))
     birthday = Column(db.Date())
     pwd = Column(db.String(256))

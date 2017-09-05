@@ -4,11 +4,14 @@ from sqlalchemy import Column, String, Date, Boolean, DateTime
 from sqlalchemy.types import BigInteger
 from database.config_setting import db, date_time
 
-
 perm2resource = db.Table('resource_permission_mapping',
-    db.Column('perm_id', db.BigInteger, db.ForeignKey('permission.id'),primary_key=True),
-    db.Column('resource_id', db.BigInteger, db.ForeignKey('resource.id'),primary_key=True)
-)
+                         db.Column('perm_id', db.BigInteger,
+                                   db.ForeignKey('permission.id'),
+                                   primary_key=True),
+                         db.Column('resource_id', db.BigInteger,
+                                   db.ForeignKey('resource.id'),
+                                   primary_key=True)
+                         )
 
 
 class Resource(db.Model):
@@ -27,7 +30,8 @@ class Resource(db.Model):
     modified_by = Column(db.String(32), default=create_by)
     is_deleted = Column(db.Boolean, default=False)
     perms = db.relationship('Permission', secondary=perm2resource,
-                            backref=db.backref('resources', lazy='dynamic'))
+                            backref=db.backref('resources', lazy='dynamic',
+                                               cascade='all, delete'))
 
     def __init__(self, name, res_type, location, create_by, _id=None):
         self.id = _id
@@ -38,5 +42,5 @@ class Resource(db.Model):
         self.create_by = create_by
 
     def __repr__(self):
-        return "<Role '{}'>".format('资源名称: ' + self.name + '\t资源类型: ' + self. \
-                                    res_type + "\t创建时间：" + str(self.create_time))
+        return "<Role '{}'>".format('资源名称: ' + self.name + '\t资源类型: ' +
+                          self.res_type + "\t创建时间：" + str(self.create_time))

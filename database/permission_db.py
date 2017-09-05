@@ -4,9 +4,13 @@ from sqlalchemy.types import BigInteger
 from database.config_setting import db, date_time
 
 role2perm = db.Table('role_permission_mapping',
-    db.Column('perm_id', db.BigInteger, db.ForeignKey('permission.id'),primary_key=True),
-    db.Column('role_id', db.BigInteger, db.ForeignKey('role.id'),primary_key=True)
-)
+                     db.Column('perm_id', db.BigInteger,
+                               db.ForeignKey('permission.id'),
+                               primary_key=True),
+                     db.Column('role_id', db.BigInteger,
+                               db.ForeignKey('role.id'),
+                               primary_key=True)
+                     )
 
 
 class Permission(db.Model):
@@ -23,7 +27,8 @@ class Permission(db.Model):
     content = Column(db.Text)
     is_deleted = Column(db.Boolean, default=False)
     roles = db.relationship('Role', secondary=role2perm,
-                            backref=db.backref('perms', lazy='dynamic'))
+                            backref=db.backref('perms', lazy='dynamic',
+                                               cascade='all, delete'))
     
     def __init__(self, name, o_type, create_by, content, _id=None):
         self.id = _id
@@ -33,7 +38,7 @@ class Permission(db.Model):
         self.content = content
 
     def __repr__(self):
-        return "<Permission '{}'>".format('权限名称 :' + self.name + "\t类型：" + self.o_type
-                                          + '\t权限内容：' + self.content + "\t创建时间："
-                                          + str(self.create_time))
+        return "<Permission '{}'>".format(
+            '权限名称 :' + self.name + "\t类型：" + self.o_type + '\t权限内容：' +
+            self.content + "\t创建时间：" + str(self.create_time))
         pass
