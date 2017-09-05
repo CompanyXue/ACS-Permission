@@ -5,38 +5,50 @@ import time
 from sqlalchemy import Column, String, Integer, Date, Boolean,Text
 from sqlalchemy.types import BigInteger
 
-import config_setting
-db = config_setting.db
+from database.config_setting import db
 
 # 关系没有用 Model 创建，而是直接用定义的形式加入外键链接即可,
 # 定义：所有的关系表---规范为 mapping结尾，而实体属性表则用 英文名称 表示
 
 user2role = db.Table('user_role_mapping',
-    db.Column('user_id', db.BigInteger, db.ForeignKey('user.id'),primary_key=True),
-    db.Column('role_id', db.BigInteger, db.ForeignKey('role.id'),primary_key=True)
-)
+                     db.Column('user_id', db.BigInteger,
+                               db.ForeignKey('user.id'), primary_key=True),
+                     db.Column('role_id', db.BigInteger,
+                               db.ForeignKey('role.id'), primary_key=True)
+                     )
 
 user2group = db.Table('user_group_mapping',
-    db.Column('user_id', db.BigInteger, db.ForeignKey('user.id'),primary_key=True),
-    db.Column('group_id', db.BigInteger, db.ForeignKey('user_group.id'),\
-              primary_key=True)
-)
+                      db.Column('user_id', db.BigInteger,
+                                db.ForeignKey('user.id'), primary_key=True),
+                      db.Column('group_id', db.BigInteger,
+                                db.ForeignKey('user_group.id'),
+                                primary_key=True)
+                      )
 
 role2group = db.Table('group_role_mapping',
-    db.Column('group_id', db.BigInteger, db.ForeignKey('user_group.id'),\
-              primary_key=True),
-    db.Column('role_id', db.BigInteger, db.ForeignKey('role.id'),primary_key=True)
-)
+                      db.Column('group_id', db.BigInteger,
+                                db.ForeignKey('user_group.id'),
+                                primary_key=True),
+                      db.Column('role_id', db.BigInteger,
+                                db.ForeignKey('role.id'), primary_key=True)
+                      )
 
 role2perm = db.Table('role_permission_mapping',
-    db.Column('perm_id', db.BigInteger, db.ForeignKey('permission.id'),primary_key=True),
-    db.Column('role_id', db.BigInteger, db.ForeignKey('role.id'),primary_key=True)
-)
+                     db.Column('perm_id', db.BigInteger,
+                               db.ForeignKey('permission.id'),
+                               primary_key=True),
+                     db.Column('role_id', db.BigInteger,
+                               db.ForeignKey('role.id'), primary_key=True)
+                     )
 
 perm2resource = db.Table('resource_permission_mapping',
-    db.Column('perm_id', db.BigInteger, db.ForeignKey('permission.id'),primary_key=True),
-    db.Column('resource_id', db.BigInteger, db.ForeignKey('resource.id'),primary_key=True)
-)
+                         db.Column('perm_id', db.BigInteger,
+                                   db.ForeignKey('permission.id'),
+                                   primary_key=True),
+                         db.Column('resource_id', db.BigInteger,
+                                   db.ForeignKey('resource.id'),
+                                   primary_key=True)
+                         )
 
 
 # 定义User对象:
@@ -106,10 +118,10 @@ class Usergroup(db.Model):
     is_deleted = Column(db.Boolean, default=False)
     users = db.relationship('User', secondary=user2group,
                             backref=db.backref('group', lazy='dynamic',
-                                               cascade='all, delete-orphan'))
+                                               cascade='all, delete'))
     roles = db.relationship('Role', secondary=role2group,
                             backref=db.backref('group', lazy='dynamic',
-                                               cascade='all, delete-orphan'))
+                                               cascade='all, delete'))
     
     # 数据表属性 初始化
     def __init__(self, name, create_time, create_by, _id=None):
@@ -160,7 +172,7 @@ class Resource(db.Model):
     is_deleted = Column(db.Boolean, default=False)
     perms = db.relationship('Permission', secondary=perm2resource,
                             backref=db.backref('resources', lazy='dynamic',
-                                               cascade='all, delete-orphan'))
+                                               cascade='all, delete'))
     
     def __init__(self, name, res_type, create_time, create_by, is_deleted,
                  _id=None):
@@ -186,7 +198,6 @@ class Permission(db.Model):
     o_type = Column(db.String(10))
     create_time = Column(db.Date())
     create_by = Column(db.String(32))
-    create_time = Column(db.Date())
     modified_date = Column(db.Date(), default=create_time)
     modified_by = Column(db.String(32), default=create_by)
     # resource = Column(db.Integer, db.ForeignKey('resource.id'))
@@ -194,7 +205,7 @@ class Permission(db.Model):
     is_deleted = Column(db.Boolean, default=False)
     roles = db.relationship('Role', secondary=role2perm,
                             backref=db.backref('perms', lazy='dynamic',
-                                               cascade='all, delete-orphan'))
+                                               cascade='all, delete'))
     
     def __init__(self, name, o_type, create_time, create_by, content,
                  is_deleted, _id=None):
@@ -231,7 +242,8 @@ time = time.strftime('%Y-%m-%d', time.localtime(time.time()))
 print(time)
 
 
-# new_role = Role(name='SBE',role_code='ADministartor',role_type='2',create_time=time,is_activated='true')
+# new_role = Role(name='SBE',role_code='ADministartor',role_type='2',create_time
+# =time,is_activated='true')
 # 添加新角色到session:
 # db.session.add(new_role)
 

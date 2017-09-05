@@ -128,8 +128,8 @@ def new_user():
 @app.route('/api/users/delete', methods=['POST'])
 def delete_user():
     name = request.json.get('username')
-    # phone = request.json.get('phone')
-    user = UserService.user_delete(name)
+    org = request.json.get('organization')
+    user = UserService.user_delete(name, org)
     return jsonify(
         {'username': user.name, 'phone': user.phone, 'email': user.email})
 

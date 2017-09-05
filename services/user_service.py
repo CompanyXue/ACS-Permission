@@ -44,10 +44,10 @@ class UserService(object):
         return user
 
     @classmethod
-    def user_delete(cls, name):
-        user = UserBusiness.find_user_by_name(name)
+    def user_delete(cls, name, org):
+        user = UserBusiness.find_user_by_org_name(org, name)
         if user:
-            UserBusiness.delete_user_by_name(name)
+            UserBusiness.delete_user_by_id(user.id)
         return user
 
     # 根据角色名称查询用户信息

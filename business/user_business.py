@@ -115,7 +115,7 @@ class UserBusiness(object):
     # @return
     @classmethod
     def get_all_by_organization(cls, o_name):
-        users = User.query().filter(organization=o_name).all()
+        users = db.session.query(User).filter(User.organization == o_name).all()
         for user in users:
             if user.is_deleted is False:
                 yield user
@@ -138,7 +138,7 @@ class UserBusiness(object):
     '''
     @classmethod
     def delete_user_by_id(cls, user_id):
-        user = User.query().filter(id=user_id).first()
+        user = db.session.query(User).filter_by(id=user_id).first()
         if user is not None:
             # db.session.delete(user)
             user.is_deleted = True
@@ -153,7 +153,7 @@ class UserBusiness(object):
     @classmethod
     def delete_user_by_name(cls, name):
         user = cls.find_user_by_name(name)
-        if user is not None:
+        if user is not None and user.is_deleted is False:
             # 此处的删除 并非现实意义的删除，而是将标志is_deleted置为1
             # db.session.delete(user)
             user.is_deleted = True
@@ -164,7 +164,9 @@ class UserBusiness(object):
         pass
 
     # 验证用户密码
+    # @return True-正确 ， False-错误
     @classmethod
     def verify_password(cls, org, user_name, password):
         user = cls.find_user_by_org_name(org, user_name)
-        return sha256_crypt.verify(password, user.pwd)
+        if user:
+            return sha256_crypt.verify(password, user.pwd)
