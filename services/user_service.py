@@ -50,7 +50,6 @@ class UserService(object):
         user = UserBusiness.find_user_by_org_name(org, name)
         if user:
             UserBusiness.delete_user_by_id(user.id)
-        return user
 
     # 根据角色名称查询用户信息
     @classmethod

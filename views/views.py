@@ -5,7 +5,7 @@ from flask_jwt_extended import (create_access_token, JWTManager, jwt_required,
                                 get_jwt_identity, jwt_refresh_token_required,
                                 create_refresh_token, get_raw_jwt)
 from views import utility
-from database.config_setting import app
+from database.config_setting import app, date_time
 from business.user_business import UserBusiness
 from services.user_service import UserService
 from services.role_service import RoleService
@@ -129,9 +129,9 @@ def new_user():
 def delete_user():
     name = request.json.get('username')
     org = request.json.get('organization')
-    user = UserService.user_delete(name, org)
+    UserService.user_delete(name, org)
     return jsonify(
-        {'username': user.name, 'phone': user.phone, 'email': user.email})
+        {'username': name, 'organization': org, 'modified_date': date_time})
 
 
 @app.route('/api/roles/create', methods=['POST'])
@@ -151,10 +151,10 @@ def role_add():
 @app.route('/api/roles/delete', methods=['POST'])
 def delete_role():
     name = request.json.get('name')
-    # org = request.json.get('organization')
-    role = RoleService.delete_role(name)
+    role_type = request.json.get('type')
+    RoleService.delete_role(name)
     return jsonify(
-        {'username': role.name, 'role_type': role.role_type})
+        {'role_name': name, 'role_type': role_type, 'modified_date': date_time})
 
 
 @app.route('/api/perms/create', methods=['POST'])
@@ -169,3 +169,11 @@ def perm_add():
                     'created_date': str(perm.create_time)
         }
         return jsonify(utility.true_return(perm_obj, '权限添加成功！')), 201
+    
+    
+@app.route('/api/perms/delete', methods=['POST'])
+def delete_permission():
+    name = request.json.get('name')
+    # org = request.json.get('organization')
+    PermissionService.delete_permission_by_name(name)
+    return jsonify({'permission_name': name, 'modified_date': str(date_time)})

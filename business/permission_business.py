@@ -81,6 +81,9 @@ class PermissionBusiness(object):
                 db.session.rollback()
                 return str(e)
             print('添加成功！')
+            return perm1
+        else:
+            return "该权限已存在,请重新输入！"
 
     '''
     * 根据权限名字刪除用户的权限

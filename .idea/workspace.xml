@@ -4,9 +4,7 @@
     <list default="true" id="3fd204fd-409f-4aae-9b9a-fb5bfc1ae6b6" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/business/permission_business.py" afterPath="$PROJECT_DIR$/business/permission_business.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/business/role_business.py" afterPath="$PROJECT_DIR$/business/role_business.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/services/permission_service.py" afterPath="$PROJECT_DIR$/services/permission_service.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/services/role_service.py" afterPath="$PROJECT_DIR$/services/role_service.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/services/user_service.py" afterPath="$PROJECT_DIR$/services/user_service.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/views.py" afterPath="$PROJECT_DIR$/views/views.py" />
     </list>
@@ -22,8 +20,8 @@
       <file leaf-file-name="test.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="17" column="47" lean-forward="false" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
+            <state relative-caret-position="-85">
+              <caret line="27" column="16" lean-forward="true" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="16" />
               <folding>
                 <element signature="e#25#40#0" expanded="true" />
               </folding>
@@ -41,11 +39,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/views/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1304">
-              <caret line="171" column="0" lean-forward="true" selection-start-line="171" selection-start-column="0" selection-end-line="171" selection-end-column="0" />
+            <state relative-caret-position="1074">
+              <caret line="175" column="35" lean-forward="true" selection-start-line="175" selection-start-column="35" selection-end-line="175" selection-end-column="35" />
               <folding>
                 <element signature="e#25#85#0" expanded="true" />
               </folding>
@@ -53,11 +51,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="permission_service.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/services/permission_service.py">
+      <file leaf-file-name="user_service.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/services/user_service.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="456">
-              <caret line="75" column="51" lean-forward="true" selection-start-line="75" selection-start-column="51" selection-end-line="75" selection-end-column="51" />
+            <state relative-caret-position="182">
+              <caret line="51" column="51" lean-forward="false" selection-start-line="51" selection-start-column="51" selection-end-line="51" selection-end-column="51" />
               <folding />
             </state>
           </provider>
@@ -66,8 +64,8 @@
       <file leaf-file-name="role_service.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/services/role_service.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="93" column="0" lean-forward="true" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
+            <state relative-caret-position="219">
+              <caret line="97" column="37" lean-forward="true" selection-start-line="97" selection-start-column="37" selection-end-line="97" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -76,8 +74,8 @@
       <file leaf-file-name="role_business.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/business/role_business.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="41" column="14" lean-forward="true" selection-start-line="41" selection-start-column="14" selection-end-line="41" selection-end-column="14" />
+            <state relative-caret-position="117">
+              <caret line="78" column="8" lean-forward="false" selection-start-line="78" selection-start-column="8" selection-end-line="78" selection-end-column="8" />
               <folding>
                 <element signature="e#25#67#0" expanded="true" />
               </folding>
@@ -85,11 +83,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="permission_business.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="permission_business.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/business/permission_business.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="95">
-              <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+            <state relative-caret-position="288">
+              <caret line="102" column="16" lean-forward="true" selection-start-line="102" selection-start-column="16" selection-end-line="102" selection-end-column="16" />
               <folding>
                 <element signature="e#24#66#0" expanded="true" />
               </folding>
@@ -100,8 +98,8 @@
       <file leaf-file-name="user_business.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/business/user_business.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="321">
-              <caret line="87" column="37" lean-forward="true" selection-start-line="85" selection-start-column="3" selection-end-line="87" selection-end-column="37" />
+            <state relative-caret-position="1577">
+              <caret line="87" column="37" lean-forward="false" selection-start-line="85" selection-start-column="3" selection-end-line="87" selection-end-column="37" />
               <folding>
                 <element signature="n#!!doc" expanded="false" />
               </folding>
@@ -178,12 +176,12 @@
         <option value="$PROJECT_DIR$/database/user_db.py" />
         <option value="$PROJECT_DIR$/business/user_business.py" />
         <option value="$PROJECT_DIR$/database/models.py" />
-        <option value="$PROJECT_DIR$/services/user_service.py" />
         <option value="$PROJECT_DIR$/services/role_service.py" />
         <option value="$PROJECT_DIR$/business/role_business.py" />
-        <option value="$PROJECT_DIR$/services/permission_service.py" />
-        <option value="$PROJECT_DIR$/views/views.py" />
         <option value="$PROJECT_DIR$/business/permission_business.py" />
+        <option value="$PROJECT_DIR$/services/permission_service.py" />
+        <option value="$PROJECT_DIR$/services/user_service.py" />
+        <option value="$PROJECT_DIR$/views/views.py" />
       </list>
     </option>
   </component>
@@ -230,7 +228,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -263,6 +260,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -439,11 +437,10 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19106881" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3283582" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32935917" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32886904" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -455,6 +452,7 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32886904" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3283582" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -646,7 +644,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
           <caret line="12" column="7" lean-forward="false" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -661,7 +658,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1298">
           <caret line="175" column="0" lean-forward="false" selection-start-line="175" selection-start-column="0" selection-end-line="175" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -690,7 +686,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
           <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -720,17 +715,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="17" column="47" lean-forward="false" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
-          <folding>
-            <element signature="e#25#40#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -746,7 +730,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="13" lean-forward="true" selection-start-line="0" selection-start-column="13" selection-end-line="0" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -754,9 +737,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="551">
           <caret line="29" column="63" lean-forward="true" selection-start-line="29" selection-start-column="63" selection-end-line="29" selection-end-column="63" />
-          <folding>
-            <element signature="e#25#39#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -764,10 +744,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="760">
           <caret line="59" column="0" lean-forward="true" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
-          <folding>
-            <element signature="e#23#72#0" expanded="false" />
-            <element signature="e#216#257#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -775,22 +751,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="283">
           <caret line="35" column="61" lean-forward="false" selection-start-line="35" selection-start-column="61" selection-end-line="35" selection-end-column="61" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/services/user_service.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="760">
-          <caret line="41" column="33" lean-forward="true" selection-start-line="41" selection-start-column="33" selection-end-line="41" selection-end-column="33" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/business/user_business.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="321">
-          <caret line="87" column="37" lean-forward="true" selection-start-line="85" selection-start-column="3" selection-end-line="87" selection-end-column="37" />
+        <state relative-caret-position="1577">
+          <caret line="87" column="37" lean-forward="false" selection-start-line="85" selection-start-column="3" selection-end-line="87" selection-end-column="37" />
           <folding>
             <element signature="n#!!doc" expanded="false" />
           </folding>
@@ -801,52 +768,69 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="399">
           <caret line="35" column="19" lean-forward="false" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/services/role_service.py">
+    <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="93" column="0" lean-forward="true" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/business/role_business.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="41" column="14" lean-forward="true" selection-start-line="41" selection-start-column="14" selection-end-line="41" selection-end-column="14" />
+        <state relative-caret-position="-85">
+          <caret line="27" column="16" lean-forward="true" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="16" />
           <folding>
-            <element signature="e#25#67#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/services/permission_service.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="75" column="51" lean-forward="true" selection-start-line="75" selection-start-column="51" selection-end-line="75" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1304">
-          <caret line="171" column="0" lean-forward="true" selection-start-line="171" selection-start-column="0" selection-end-line="171" selection-end-column="0" />
-          <folding>
-            <element signature="e#25#85#0" expanded="true" />
+            <element signature="e#25#40#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/business/permission_business.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+        <state relative-caret-position="288">
+          <caret line="102" column="16" lean-forward="true" selection-start-line="102" selection-start-column="16" selection-end-line="102" selection-end-column="16" />
           <folding>
             <element signature="e#24#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/permission_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="117">
+          <caret line="77" column="50" lean-forward="false" selection-start-line="77" selection-start-column="50" selection-end-line="77" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/user_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="51" column="51" lean-forward="false" selection-start-line="51" selection-start-column="51" selection-end-line="51" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/role_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="97" column="37" lean-forward="true" selection-start-line="97" selection-start-column="37" selection-end-line="97" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/business/role_business.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="117">
+          <caret line="78" column="8" lean-forward="false" selection-start-line="78" selection-start-column="8" selection-end-line="78" selection-end-column="8" />
+          <folding>
+            <element signature="e#25#67#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1074">
+          <caret line="175" column="35" lean-forward="true" selection-start-line="175" selection-start-column="35" selection-end-line="175" selection-end-column="35" />
+          <folding>
+            <element signature="e#25#85#0" expanded="true" />
           </folding>
         </state>
       </provider>

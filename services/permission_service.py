@@ -64,17 +64,10 @@ class PermissionService(object):
     # 通过json创建对象，添加权限
     @classmethod
     def add_permission(cls, data):
-
-        perm = PermissionBusiness.create_permission(data)
-        if type(perm) == str:
-            return perm
-
-        if RoleBusiness.find_by_role_name(perm.name):
-            # if UserBusiness.find_user_by_name(username):
-            return "该权限已存在,请重新输入！"
-        else:
-            PermissionBusiness.add_permission(perm)
-            return perm
+        temp = PermissionBusiness()
+        perm = temp.add_permission(temp.create_permission(data))
+        temp = ""
+        return perm
         
     '''
     * 根据权限名字刪除用户的权限
@@ -83,7 +76,6 @@ class PermissionService(object):
     '''
     @classmethod
     def delete_permission_by_name(cls, perm_name):
-
         perm = PermissionBusiness.find_by_name(perm_name)
         if perm is not None:
             PermissionBusiness.delete_permission(perm)
