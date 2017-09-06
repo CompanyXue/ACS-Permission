@@ -77,11 +77,20 @@ class RoleService(object):
             for j in user.group:
                 yield j
 
-    # 通过名称添加角色
+    # 通过json创建对象，添加角色
     @classmethod
-    def add_role_by_name(cls, role_name):
-
-        pass
+    def add_role(cls, data):
+    
+        role = RoleBusiness.create_role(data)
+        if type(role) == str:
+            return role
+    
+        if RoleBusiness.find_by_role_name(role.name):
+            # if UserBusiness.find_user_by_name(username):
+            return "角色已存在,请重新输入！"
+        else:
+            RoleBusiness.add_role(role)
+            return role
 
     # 通过名称删除角色
     @classmethod

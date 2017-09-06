@@ -14,7 +14,6 @@ class PermissionService(object):
      * @param role_name
      * @return perm set
     '''
-
     @classmethod
     def find_perm_by_role(cls, role_name):
         role = RoleBusiness.find_by_role_name(role_name)
@@ -28,7 +27,6 @@ class PermissionService(object):
      * @param role_name
      * @return perm set
     '''
-
     @classmethod
     def find_perm_by_resource(cls, res_name):
         res = ResourceBusiness.find_by_name(res_name)
@@ -42,7 +40,6 @@ class PermissionService(object):
     * @param perm_name
     * @return role set
     '''
-
     @classmethod
     def find_roles_by_perm(cls, perm_name):
         perm = PermissionBusiness.find_by_name(perm_name)
@@ -53,23 +50,37 @@ class PermissionService(object):
         pass
 
     '''
-    * 根据权限名字刪除用户的权限
+    * 根据权限名字添加用户的权限
     * @param perm_name
     * @return perm
     '''
-
     @classmethod
     def add_permission_by_name(cls, perm_name):
         print(u'类中的时间: ', date_time)
-        perm = Permission(name=str(perm_name), o_type='2', create_by='Admin', content='TODO ')
+        perm = Permission(name=str(perm_name), o_type='2', create_by='Admin',
+                          content='TODO ')
         PermissionBusiness.add_permission(perm)
 
+    # 通过json创建对象，添加权限
+    @classmethod
+    def add_permission(cls, data):
+
+        perm = PermissionBusiness.create_permission(data)
+        if type(perm) == str:
+            return perm
+
+        if RoleBusiness.find_by_role_name(perm.name):
+            # if UserBusiness.find_user_by_name(username):
+            return "该权限已存在,请重新输入！"
+        else:
+            PermissionBusiness.add_permission(perm)
+            return perm
+        
     '''
     * 根据权限名字刪除用户的权限
     * @param perm_name
     * @return perm
     '''
-
     @classmethod
     def delete_permission_by_name(cls, perm_name):
 

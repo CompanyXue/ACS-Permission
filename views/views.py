@@ -1,15 +1,15 @@
 # -*- coding: UTF-8 -*-
 
-from flask import abort, request, jsonify, g, url_for, redirect
-from flask_jwt import JWT, current_identity
+from flask import abort, request, jsonify, url_for, redirect
 from flask_jwt_extended import (create_access_token, JWTManager, jwt_required,
                                 get_jwt_identity, jwt_refresh_token_required,
                                 create_refresh_token, get_raw_jwt)
-
+from views import utility
 from database.config_setting import app
 from business.user_business import UserBusiness
 from services.user_service import UserService
-from views import utility
+from services.role_service import RoleService
+from services.permission_service import PermissionService
 
 jwt = JWTManager(app)
 JWT_AUTH_URL_RULE = '/login'
@@ -136,4 +136,36 @@ def delete_user():
 
 @app.route('/api/roles/create', methods=['POST'])
 def role_add():
-    return '<h1> Roles Manage! </h1>'
+    data = request.json
+    role = RoleService.add_role(data)
+    if type(role) == str:
+        return jsonify(utility.false_return(data, role)), 402
+    if role.id:
+        role_obj = {
+                    'name': role.name, 'id': role.id, 'type': role.role_type,
+                    'created_date': str(role.create_time)
+        }
+        return jsonify(utility.true_return(role_obj, '角色添加成功！')), 201
+    
+    
+@app.route('/api/roles/delete', methods=['POST'])
+def delete_role():
+    name = request.json.get('name')
+    # org = request.json.get('organization')
+    role = RoleService.delete_role(name)
+    return jsonify(
+        {'username': role.name, 'role_type': role.role_type})
+
+
+@app.route('/api/perms/create', methods=['POST'])
+def perm_add():
+    data = request.json
+    perm = PermissionService.add_permission(data)
+    if type(perm) == str:
+        return jsonify(utility.false_return(data, perm)), 402
+    if perm.id:
+        perm_obj = {
+                    'name': perm.name, 'id': perm.id, 'o_type': perm.o_type,
+                    'created_date': str(perm.create_time)
+        }
+        return jsonify(utility.true_return(perm_obj, '权限添加成功！')), 201

@@ -32,6 +32,8 @@ class UserService(object):
     @classmethod
     def user_add(cls, data):
         user = UserBusiness.create_user(data)
+        if type(user) == str:
+            return user
         name = user.name
         oa = str(user.organization)
         # 同一个应用下，用户名唯一，也即name+org 唯一
