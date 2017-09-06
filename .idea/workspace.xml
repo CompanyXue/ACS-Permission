@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3fd204fd-409f-4aae-9b9a-fb5bfc1ae6b6" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/business/permission_business.py" afterPath="$PROJECT_DIR$/business/permission_business.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/services/permission_service.py" afterPath="$PROJECT_DIR$/services/permission_service.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/services/user_service.py" afterPath="$PROJECT_DIR$/services/user_service.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/views.py" afterPath="$PROJECT_DIR$/views/views.py" />
-    </list>
+    <list default="true" id="3fd204fd-409f-4aae-9b9a-fb5bfc1ae6b6" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,8 +36,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/views/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1074">
-              <caret line="175" column="35" lean-forward="true" selection-start-line="175" selection-start-column="35" selection-end-line="175" selection-end-column="35" />
+            <state relative-caret-position="19">
+              <caret line="110" column="0" lean-forward="true" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
               <folding>
                 <element signature="e#25#85#0" expanded="true" />
               </folding>
@@ -827,8 +821,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/views/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1074">
-          <caret line="175" column="35" lean-forward="true" selection-start-line="175" selection-start-column="35" selection-end-line="175" selection-end-column="35" />
+        <state relative-caret-position="19">
+          <caret line="110" column="0" lean-forward="true" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
           <folding>
             <element signature="e#25#85#0" expanded="true" />
           </folding>
