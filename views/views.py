@@ -82,7 +82,7 @@ def roles_manage():
     return '<h1> Roles Manage! </h1>'
 
 
-@app.route('/user/<int:id>')
+@app.route('/user/user_info/<int:id>')
 @jwt_required
 def get_user(id):
     """
@@ -109,8 +109,18 @@ def get_user(id):
          'created_date': str(user.create_time), 'roles': roles, 'group': group})
 
 
+# update user by id
+@app.route('/user/update_user/<_id>', methods=['PUT'])
+# @auth_decorator.requires_auth
+def update_user(_id):
+    data = request.get_json()
+    update_result = UserService.user_update(_id, data)
+    if update_result:
+        return jsonify({'message': "success"}), 200
+    
+    
 @app.route('/register', methods=['POST'])
-def new_user():
+def register_new_user():
     data = request.json
     print(data)
     user = UserService.user_add(data)
@@ -123,6 +133,7 @@ def new_user():
         }
         return (jsonify(utility.true_return(user_obj, '用户注册成功！')), 201,
                 {'Location': url_for('get_user', id=user.id, _external=True)})
+        # redirect('/login.html'))
 
 
 @app.route('/api/users/delete', methods=['POST'])

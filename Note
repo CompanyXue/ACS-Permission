@@ -139,3 +139,50 @@ class Kls(object):
 类的方法就叫类方法.
 实例的方法就叫实例方法.
 至于静态方法就是写在类里的方法,必须用类来调用(极少数情况下使用,一般都在全局里直接写函数了)
+
+7.Oauth2.0 与 token验证
+My server does not request token and access token. He use just the key and secret.
+How do I implement oAuth connection to this server in python?
+
+[code]
+from requests_oauthlib import OAuth1Session
+test = OAuth1Session('consumer_key',
+                    client_secret='XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+url = 'https://one-legged-ouath.example.com/username/test'
+r = test.get(url)
+print r.content
+[code/]
+
+I know this is an old question, but the accepted answer really doesn't address his question, since as the OP notes, none of the examples pertain to just using the key and secret, sans token.
+
+It sounds as if you're using what I understand is referred to as OAuth 1.0a (One Leg), although some refer to it as OAuth 1.0a Two-legged.
+
+I found a decent write up on it here:
+
+http://oauthbible.com/
+
+I haven't tested this but there appears to be a pretty good example here:
+
+https://github.com/CarmaSys/CarmaLinkAPI/wiki/Authentication-&-Permissions
+
+There is another good example here:
+
+https://stackoverflow.com/a/12710408/2599534
+
+
+OAuth 认证
+
+谈到RESTful认证，通常会提到OAuth协议。
+
+So what is OAuth?
+
+通常是允许一个应用接入到另外一个应用的数据或者服务的验证方法。
+
+举个例子，如果一个网站或者应用问你权限接入你的facebook账号，并且提交一些东西到你的时间轴上面。这个例子，
+你就是资源拥有者（你拥有你的facebook时间轴），第三方应用是消费者，facebook是提供者。
+
+如果你授权接入允许消费者写东西到你的时间轴上面，是不需要提供你的facebook登录信息的。
+
+OAuth并不合适用在client/server的RESTful API上面，一般是用在你的RESTful API允许第三方应用（消费者）去接入。
+
+上面的例子是，客户端/服务器端之间直接通讯并不需要去隐藏认证信息，客户端是直接发送认证请求信息到服务器端的。

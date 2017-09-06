@@ -85,18 +85,20 @@ class UserBusiness(object):
     
     # 传入参数更新用户可更改内容信息
     @classmethod
-    def update_user(cls, name, data):
+    def update_user(cls, id, data):
         # 如果用 update()，则更新的内容必须是 Dict 数据类型.
         # user=db.session.query(User).update({'name': data.name,'sex':data.sex})
-        user = cls.find_user_by_name(name)
+        user = cls.find_user_by_id(id)
         if user:
+            user.name = data.get('name', None)
             user.phone = data.get('phone')
             user.email = data.get('email')
             user.pwd = sha256_crypt.encrypt(data.get('password'))
             user.organization = data.get('organization')
-            user.sex = data.get('sex')
+            user.sex = data.get('sex', None)
+            user.status = data.get('status')
             user.modified_date = date_time
-            user.modified_by = name
+            user.modified_by = user.name
             user.is_deleted = False
             db.session.commit()
 
