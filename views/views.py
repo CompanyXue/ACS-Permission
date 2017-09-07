@@ -67,21 +67,6 @@ def logout():
     return jsonify({"msg": "Successfully logged out"}), 200
 
 
-@app.route('/api/users', methods=['GET'])
-def users_manage():
-    users = UserBusiness.find_all_users()
-    names = ''
-    for i in users:
-        if i is not None:
-            names += i.name + '</br>'
-    return '<h1> Users Manage! </h1> </br> %s' % names
-
-
-@app.route('/api/roles', methods=['GET'])
-def roles_manage():
-    return '<h1> Roles Manage! </h1>'
-
-
 @app.route('/user/user_info/<int:id>')
 @jwt_required
 def get_user(id):
@@ -107,6 +92,16 @@ def get_user(id):
     return jsonify(
         {'username': user.name, 'phone': user.phone, 'email': user.email,
          'created_date': str(user.create_time), 'roles': roles, 'group': group})
+
+
+@app.route('/api/users', methods=['GET'])
+def users_manage():
+    users = UserBusiness.find_all_users()
+    names = ''
+    for i in users:
+        if i is not None:
+            names += i.name + '</br>'
+    return '<h1> Users Manage! </h1> </br> %s' % names
 
 
 # update user by id
@@ -143,6 +138,11 @@ def delete_user():
     UserService.user_delete(name, org)
     return jsonify(
         {'username': name, 'organization': org, 'modified_date': date_time})
+
+
+@app.route('/api/roles', methods=['GET'])
+def roles_manage():
+    return '<h1> Roles Manage! </h1>'
 
 
 @app.route('/api/roles/create', methods=['POST'])
