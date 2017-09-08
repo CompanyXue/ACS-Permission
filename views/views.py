@@ -1,9 +1,10 @@
 # -*- coding: UTF-8 -*-
 
-from flask import abort, request, jsonify, url_for, redirect
+from flask import abort, request, jsonify, url_for, redirect, make_response
 from flask_jwt_extended import (create_access_token, JWTManager, jwt_required,
                                 get_jwt_identity, jwt_refresh_token_required,
-                                create_refresh_token, get_raw_jwt)
+                                create_refresh_token, get_raw_jwt,
+                                set_access_cookies, unset_jwt_cookies)
 from views import utility
 from database.config_setting import app, date_time
 from business.user_business import UserBusiness
@@ -15,7 +16,49 @@ jwt = JWTManager(app)
 JWT_AUTH_URL_RULE = '/login'
 
 
-@app.route('/login', methods=['POST'])
+# def require_auth(func):
+#     """
+#     定义一个装饰器用于装饰需要验证的页面
+#     装饰器必须放在route装饰器下面
+#     """
+#
+#     # 定义包装函数
+#     def wrapper(*args, **kwargs):
+#         try:
+#             # 读取cookie
+#             user = request.COOKIES['user']
+#             opt = request.COOKIES['opt']
+#         except:
+#             # 出现异常则重定向到登录页面
+#             redirect('/login')
+#
+#         # 验证用户数据
+#         if checkShell(user, opt):
+#             # 校验成功则返回函数
+#             return func(**kwargs)
+#         else:
+#             # 否则则重定向到登录页面
+#             redirect('/login')
+#         return wrapper
+
+
+# 装饰器
+def check_login(func):
+    def _check_login(request):
+        print(func)
+        # print(request)
+        try:
+            print(request.session.get('name', False))
+            # 报错name 'request' is not defined，获取不到session
+            # return HttpResponseRedirect('/test')
+        except KeyError:
+            return redirect('/login')  # 跳转至登录页
+            # return HttpResponseRedirect('/')
+    
+    return _check_login
+
+
+@app.route('/login', methods=['POST','GET'])
 def login():
     username = request.json.get('username', None)
     print(username)
@@ -29,6 +72,12 @@ def login():
             ret = {'access_token': create_access_token(username, fresh=True),
                    'refresh_token': create_refresh_token(identity=username)
                    }
+            
+            # Set the JWT cookies in the response
+            resp = jsonify({'login': True})
+            
+            print(ret['access_token'])
+            set_access_cookies(resp, ret['access_token'], 600)
             return jsonify(ret), 200
         return jsonify({"msg": "Bad password"}), 401
     return jsonify({"msg": "Username is not exists!"}), 401
@@ -44,6 +93,7 @@ def refresh():
     ret = {
         'access_token': new_token
     }
+    set_access_cookies({'refresh': True}, new_token)
     return jsonify(ret), 200
 
 
@@ -60,14 +110,15 @@ def protected():
 @app.route('/logout', methods=['DELETE'])
 @jwt_required
 def logout():
-    jti = get_raw_jwt()['jti']
+    # jti = get_raw_jwt()['jti']
     # blacklist.add(jti)
     resp = jsonify({'logout': True})
-    # unset_jwt_cookies(resp)
-    return jsonify({"msg": "Successfully logged out"}), 200
+    unset_jwt_cookies(resp)
+    
+    return make_response(jsonify({"msg": "Successfully logged out"}), 200)
 
 
-@app.route('/user/user_info/<int:id>')
+@app.route('/api/user/<int:id>')
 @jwt_required
 def get_user(id):
     """
@@ -95,6 +146,7 @@ def get_user(id):
 
 
 @app.route('/api/users', methods=['GET'])
+@check_login
 def users_manage():
     users = UserBusiness.find_all_users()
     names = ''
@@ -188,3 +240,19 @@ def delete_permission():
     # org = request.json.get('organization')
     PermissionService.delete_permission_by_name(name)
     return jsonify({'permission_name': name, 'modified_date': str(date_time)})
+
+
+@app.route('/api/users/grant', methods=['POST'])
+def grant_user_role():
+    user_name = request.json.get('user_name')
+    role_name = request.json.get('role_name')
+    RoleService.add_user_by_role_name(user_name, role_name)
+    return jsonify('用户角色添加成功！'), 201
+
+
+@app.route('/api/users/grant', methods=['delete'])
+def delete_user_role():
+    user_name = request.json.get('user_name')
+    role_name = request.json.get('role_name')
+    RoleService.remove_user_by_role_name(user_name, role_name)
+    return jsonify('用户角色移除成功！'), 201

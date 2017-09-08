@@ -66,7 +66,6 @@ class PermissionService(object):
     def add_permission(cls, data):
         temp = PermissionBusiness()
         perm = temp.add_permission(temp.create_permission(data))
-        temp = ""
         return perm
         
     '''
@@ -85,7 +84,6 @@ class PermissionService(object):
     * @param role_name
     * @return role
     '''
-
     @classmethod
     def add_permission_by_role_name(cls, perm_name, role_name):
         perm = PermissionBusiness.find_by_name(perm_name)
@@ -99,9 +97,8 @@ class PermissionService(object):
     '''
     * 根据名稱移除角色的权限
     * @param role_name,perm_name
-    * @return 
+    * @return
     '''
-
     @classmethod
     def remove_permission_by_name(cls, perm_name, role_name):
         perm = PermissionBusiness.find_by_name(perm_name)

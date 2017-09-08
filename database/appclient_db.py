@@ -4,12 +4,12 @@ from sqlalchemy import Column, String, Date, Boolean, DateTime
 from database.config_setting import db, date_time
 
 
-class AppCliet(db.Model):
+class AppClient(db.Model):
     __tablename__ = 'appclient'
 
     # 表的结构:
     client_key = db.Column(db.String(40), primary_key=True)
-    client_secret = db.Column(db.String(55), index=True, unique=True, nullable=False)
+    client_secret = db.Column(db.String(55), index=True, unique=True)
     user = db.relationship('User')
     name = Column(db.String(100), unique=True)
     
@@ -29,6 +29,7 @@ class AppCliet(db.Model):
         if self.is_confidential:
             return 'confidential'
         return 'public'
+    
     @property
     def redirect_uris(self):
         if self._redirect_uris:

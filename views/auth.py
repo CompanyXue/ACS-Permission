@@ -6,6 +6,7 @@ from werkzeug.security import safe_str_cmp
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 
+
 class Auth(object):
     # 自动生成认证 Token
     @classmethod

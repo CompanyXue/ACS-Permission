@@ -153,9 +153,12 @@ r = test.get(url)
 print r.content
 [code/]
 
-I know this is an old question, but the accepted answer really doesn't address his question, since as the OP notes, none of the examples pertain to just using the key and secret, sans token.
+I know this is an old question, but the accepted answer really doesn't address his
+question, since as the OP notes, none of the examples pertain to just using the key and secret, sans token.
 
-It sounds as if you're using what I understand is referred to as OAuth 1.0a (One Leg), although some refer to it as OAuth 1.0a Two-legged.
+It sounds as if you're using what I understand is referred to as OAuth 1.0a (One Leg),
+
+although some refer to it as OAuth 1.0a Two-legged.
 
 I found a decent write up on it here:
 

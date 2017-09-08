@@ -14,6 +14,18 @@ app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy dog'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
 
+# Configure application to store JWTs in cookies
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+
+# Only allow JWT cookies to be sent over https. In production, this
+# should likely be True
+app.config['JWT_COOKIE_SECURE'] = False
+app.config['JWT_ACCESS_COOKIE_PATH'] = '/'
+
+# Enable csrf double submit protection. See this for a thorough
+# explination: http://www.redotheweb.com/2015/11/09/api-security.html
+app.config['JWT_COOKIE_CSRF_PROTECT'] = True
+
 
 db = SQLAlchemy(app)
 
@@ -22,7 +34,7 @@ db = SQLAlchemy(app)
 date_now = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
 # 国际时间
-date_time = datetime.utcnow()
+# date_time = datetime.utcnow()
 
 # 本地时间
 date_time = datetime.now()
@@ -39,5 +51,5 @@ def drop_db():
 
 
 # sqlalchemy.orm.exc.UnmappedInstanceError 异常
-# sqlalchemy.orm.exc.UnmappedInstanceError: Class '__builtin__.instance' is not mapped
+# : Class '__builtin__.instance' is not mapped
 # 'SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead 。。。改为True

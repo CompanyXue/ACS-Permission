@@ -96,3 +96,24 @@ class RoleService(object):
     @classmethod
     def delete_role(cls, role_name):
         RoleBusiness.delete_role_by_name(role_name)
+
+    '''
+    * 根据名稱添加用户的角色
+    * @param role_name
+    * @return role
+    '''
+    @classmethod
+    def add_user_by_role_name(cls, user_name, role_name):
+        user = UserBusiness.find_user_by_name(user_name)
+        RoleBusiness.add_user_by_role_name(user, role_name)
+
+    '''
+    * 根据名稱添加用户的角色
+    * @param role_name
+    * @return role
+    '''
+    @classmethod
+    def remove_user_by_role_name(cls, user_name, role_name):
+        user = UserBusiness.find_user_by_name(user_name)
+        RoleBusiness.add_user_by_role_name(user, role_name)
+

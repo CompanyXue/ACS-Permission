@@ -32,7 +32,7 @@ class UserBusiness(object):
         sex = data.get('sex')
         
         if username is None or password is None or email is None or phone is None:
-            return (u"缺失用户-信息参数")  # missing arguments
+            return "缺失用户-信息参数"  # missing arguments
 
         user = User(name=username, pwd=password, sex=sex, phone=phone,
                     email=email, organization=organization,
@@ -46,14 +46,6 @@ class UserBusiness(object):
         for user in users:
             yield user
         pass
-
-    # 根据用户名或者电话号码、组织来查询用户信息
-    # @return
-    @classmethod
-    def search_user_by_info(cls, name, org):
-        user = db.session.query(User).filter_by(name=name, organization=org).first()
-        if user is not None:
-            return user
 
     # 根据用户id 查询用户信息
     # @return User

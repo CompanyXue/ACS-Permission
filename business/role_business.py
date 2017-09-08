@@ -70,6 +70,29 @@ class RoleBusiness(object):
             print(role + '被删除！')
         pass
 
+    # 添加角色
+    def add_user_by_role_name(cls, user, role_name):
+        role = cls.find_by_role_name(role_name)
+        if role is not None and user is not None:
+            role.users.append(user)
+            print(role.name + '--添加--' + user.name + '--用户成功！')
+            try:
+                db.session.commit()
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                return str(e)
+
+    # 添加角色
+    def remove_user_by_role_name(cls, user, role_name):
+        role = cls.find_by_role_name(role_name)
+        if role is not None and user is not None:
+            role.users.remove(user)
+            print(role.name + '--移除--' + user.name + '--用户成功！')
+            try:
+                db.session.commit()
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                return str(e)
     '''
     * 根据名稱刪除角色
     * @param role_name

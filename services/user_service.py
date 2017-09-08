@@ -28,7 +28,8 @@ class UserService(object):
         # roles = find_all_roles()
         user.roles.append(role)
         pass
-  
+
+    # 用户添加
     @classmethod
     def user_add(cls, data):
         user = UserBusiness.create_user(data)
@@ -37,7 +38,7 @@ class UserService(object):
         name = user.name
         oa = str(user.organization)
         # 同一个应用下，用户名唯一，也即name+org 唯一
-        if UserBusiness.search_user_by_info(name=name, org=oa):
+        if UserBusiness.find_user_by_org_name(oa, name):
             # if UserBusiness.find_user_by_name(username):
             return "用户已存在,请重新输入！"
         else:
@@ -45,6 +46,7 @@ class UserService(object):
             
         return user
 
+    # 用户删除
     @classmethod
     def user_delete(cls, name, org):
         user = UserBusiness.find_user_by_org_name(org, name)
@@ -60,7 +62,6 @@ class UserService(object):
         pass
 
     # 根据用户 - 查询用户组信息
-    
     @classmethod
     def find_groups_by_user_name(cls, org, user_name):
         user = UserBusiness.find_user_by_org_name(org, user_name)
