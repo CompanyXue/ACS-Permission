@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-import database
 from database.config_setting import date_time, app
 from business.user_business import UserBusiness
 from services.permission_service import PermissionService

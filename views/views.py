@@ -44,9 +44,9 @@ JWT_AUTH_URL_RULE = '/login'
 
 # 装饰器
 def check_login(func):
-    def _check_login(request):
+    def _check_login():
         print(func)
-        # print(request)
+        print(request)
         try:
             print(request.session.get('name', False))
             # 报错name 'request' is not defined，获取不到session
@@ -58,7 +58,7 @@ def check_login(func):
     return _check_login
 
 
-@app.route('/login', methods=['POST','GET'])
+@app.route('/login', methods=['POST', 'GET'])
 def login():
     username = request.json.get('username', None)
     print(username)
@@ -77,7 +77,7 @@ def login():
             resp = jsonify({'login': True})
             
             print(ret['access_token'])
-            set_access_cookies(resp, ret['access_token'], 600)
+            set_access_cookies(resp, ret['access_token'], 200)
             return jsonify(ret), 200
         return jsonify({"msg": "Bad password"}), 401
     return jsonify({"msg": "Username is not exists!"}), 401
@@ -103,7 +103,7 @@ def protected():
     # claims = get_jwt_claims()
     # return '%s' % current_identity
     current_user = get_jwt_identity()
-    return jsonify({'hello_from': current_user}), 200
+    return jsonify({'hello_from': '{}'.format(current_user)}), 200
 
 
 # Endpoint for revoking the current users access token
@@ -146,7 +146,6 @@ def get_user(id):
 
 
 @app.route('/api/users', methods=['GET'])
-@check_login
 def users_manage():
     users = UserBusiness.find_all_users()
     names = ''
@@ -158,7 +157,7 @@ def users_manage():
 
 # update user by id
 @app.route('/user/update_user/<_id>', methods=['PUT'])
-# @auth_decorator.requires_auth
+@check_login
 def update_user(_id):
     data = request.get_json()
     update_result = UserService.user_update(_id, data)
