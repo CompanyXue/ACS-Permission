@@ -12,15 +12,17 @@ database = 'mysql+pymysql://root:tomcat@127.0.0.1:3306/acs'
 app.config['SQLALCHEMY_DATABASE_URI'] = database
 app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy dog'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
+# app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
 
 # Configure application to store JWTs in cookies
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 
 # Only allow JWT cookies to be sent over https. In production, this
 # should likely be True
+# app.config['JWT_COOKIE_SECURE'] = True
 app.config['JWT_COOKIE_SECURE'] = False
-app.config['JWT_ACCESS_COOKIE_PATH'] = '/'
+app.config['JWT_ACCESS_COOKIE_PATH'] = '/auth/'
+app.config['JWT_REFRESH_COOKIE_PATH'] = '/api/'
 
 # Enable csrf double submit protection. See this for a thorough
 # explination: http://www.redotheweb.com/2015/11/09/api-security.html
