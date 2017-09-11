@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> Page login</title>
+    <meta name="author" content=""/>
+    <meta http-equiv="X-UA-Compatible" content="IE=7"/>
+    <meta name="keywords" content="SSO"/>
+    <meta name="description" content="SSO"/>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+</head>
+<body>
+    <h1>Hello World</h1>
+    <p>Welcome to my house!</p>
+    <form action="user-center" method="post">
+        <p>
+            <span>username:</span>
+            <br>
+            <input id="name" name="username" type="text">
+        </p>
+        <p>
+            <span>password:</span>
+            <br>
+            <input id="password" name="password" type="password">
+        </p>
+        <p>
+            <span>organization:</span>
+            <br>
+            <input id="organization" name="organization" type="text">
+        </p>
+        <!--<p><input type="submit" value="submit"></p>-->
+        <a href="{{ url_for('doLogin') }}{% if referer %}?referer={{ referer }}
+                {% endif %}">请登录</a>
+    </form>
+</body>
+</html>

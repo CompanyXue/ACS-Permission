@@ -3,7 +3,7 @@
 from flask import abort, request, jsonify, url_for, redirect, make_response
 from flask_jwt_extended import (create_access_token, JWTManager, jwt_required,
                                 get_jwt_identity, jwt_refresh_token_required,
-                                create_refresh_token, get_raw_jwt,
+                                create_refresh_token, set_refresh_cookies,
                                 set_access_cookies, unset_jwt_cookies)
 from views import utility
 from database.config_setting import app, date_time
@@ -58,7 +58,7 @@ def check_login(func):
     return _check_login
 
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/login', methods=['POST'])
 def login():
     username = request.json.get('username', None)
     print(username)
@@ -69,18 +69,26 @@ def login():
         # then verify the user password
         if UserBusiness.verify_password(org, username, password):
             #  user = UserBusiness.find_user_by_name(username)
-            ret = {'access_token': create_access_token(username, fresh=True),
+            ret = {'access_token': create_access_token(identity=username),
                    'refresh_token': create_refresh_token(identity=username)
                    }
+            # Return the double submit values in the resulting JSON
+            # instead of in additional cookies
+            # resp = jsonify({
+            #     'access_csrf' : get_csrf_token(ret['access_token']),
+            #     'refresh_csrf': get_csrf_token(ret['refresh_token'])
+            # })
             
             # Set the JWT cookies in the response
             resp = jsonify({'login': True})
             
             print(ret['access_token'])
-            set_access_cookies(resp, ret['access_token'], 200)
-            return jsonify(ret), 200
-        return jsonify({"msg": "Bad password"}), 401
-    return jsonify({"msg": "Username is not exists!"}), 401
+            set_access_cookies(resp, ret['access_token'])
+            set_refresh_cookies(resp, ret['refresh_token'])
+            print("done")
+            return resp, 200
+        return jsonify({"msg": "Bad password"}), 403
+    return jsonify({"msg": "Username is not exists!"}), 404
 
 
 # This will generate a new access token from
@@ -89,15 +97,15 @@ def login():
 @jwt_refresh_token_required
 def refresh():
     current_user = get_jwt_identity()
-    new_token = create_access_token(identity=current_user.name, fresh=False)
-    ret = {
-        'access_token': new_token
-    }
-    set_access_cookies({'refresh': True}, new_token)
-    return jsonify(ret), 200
+    new_token = create_access_token(identity=current_user)
+    resp = jsonify({
+        'refresh': True
+    })
+    set_access_cookies(resp, new_token)
+    return resp, 200
 
 
-@app.route('/protected')
+@app.route('/api/protected', methods=['GET'])
 @jwt_required
 def protected():
     # claims = get_jwt_claims()
@@ -107,7 +115,7 @@ def protected():
 
 
 # Endpoint for revoking the current users access token
-@app.route('/logout', methods=['DELETE'])
+@app.route('/logout', methods=['POST'])
 @jwt_required
 def logout():
     # jti = get_raw_jwt()['jti']
@@ -115,7 +123,7 @@ def logout():
     resp = jsonify({'logout': True})
     unset_jwt_cookies(resp)
     
-    return make_response(jsonify({"msg": "Successfully logged out"}), 200)
+    return resp, 200
 
 
 @app.route('/api/user/<int:id>')
@@ -255,3 +263,5 @@ def delete_user_role():
     role_name = request.json.get('role_name')
     RoleService.remove_user_by_role_name(user_name, role_name)
     return jsonify('用户角色移除成功！'), 201
+
+

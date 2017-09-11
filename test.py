@@ -1,11 +1,10 @@
 # -*- coding: UTF-8 -*-
 
-from database.config_setting import date_time, app
 from business.user_business import UserBusiness
+from database.config_setting import app, date_time
 from services.permission_service import PermissionService
 from services.role_service import RoleService
 from services.user_group_service import UserGroupService
-from views import views
 
 if __name__ == '__main__':
 
@@ -51,5 +50,5 @@ if __name__ == '__main__':
     for group in groups:
         print(group)
 
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
