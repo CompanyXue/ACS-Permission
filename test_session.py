@@ -2,7 +2,7 @@
 
 from datetime import timedelta
 # from database.config_setting import app
-from flask import Flask, request, jsonify, session, render_template, redirect
+from flask import Flask, request, jsonify, session, render_template, redirect, escape
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity, \
     create_access_token, jwt_refresh_token_required
 import urllib.parse
@@ -13,7 +13,14 @@ app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy dog'
 app.permanent_session_lifetime = timedelta(seconds=24 * 60 * 60)
 jwt = JWTManager(app)
 
+	
+@app.route('/')
+def index():
+    if 'username' in session:
+        return 'Logged in as %s' % escape(session['username'])
+    return 'You are not logged in'
 
+	
 @app.route('/auth/login')
 def login():
     session.permanent = True

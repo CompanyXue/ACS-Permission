@@ -56,40 +56,45 @@ def check_login(func):
             # return HttpResponseRedirect('/')
     
     return _check_login
+	
 
-
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['POST','GET'])
 def login():
-    username = request.json.get('username', None)
-    print(username)
-    password = request.json.get('password', None)
-    org = request.json.get('organization', None)
-    # first verify user in database
-    if username in {u.name: u for u in UserBusiness.find_all_users()}:
-        # then verify the user password
-        if UserBusiness.verify_password(org, username, password):
-            #  user = UserBusiness.find_user_by_name(username)
-            ret = {'access_token': create_access_token(identity=username),
-                   'refresh_token': create_refresh_token(identity=username)
-                   }
-            # Return the double submit values in the resulting JSON
-            # instead of in additional cookies
-            # resp = jsonify({
-            #     'access_csrf' : get_csrf_token(ret['access_token']),
-            #     'refresh_csrf': get_csrf_token(ret['refresh_token'])
-            # })
-            
-            # Set the JWT cookies in the response
-            resp = jsonify({'login': True})
-            
-            print(ret['access_token'])
-            set_access_cookies(resp, ret['access_token'])
-            set_refresh_cookies(resp, ret['refresh_token'])
-            print("done")
-            return resp, 200
-        return jsonify({"msg": "Bad password"}), 403
-    return jsonify({"msg": "Username is not exists!"}), 404
-
+	if request.method == 'POST':
+	    data = request.json
+		# data = request.Form
+		username = data.get('username', None)
+		print(username)
+		password = data.get('password', None)
+		org = data.get('organization', None)
+		# first verify user in database
+		if username in {u.name: u for u in UserBusiness.find_all_users()}:
+			# then verify the user password
+			if UserBusiness.verify_password(org, username, password):
+				#  user = UserBusiness.find_user_by_name(username)
+				ret = {'access_token': create_access_token(identity=username),
+					   'refresh_token': create_refresh_token(identity=username)
+					   }
+				# Return the double submit values in the resulting JSON
+				# instead of in additional cookies
+				# resp = jsonify({
+				#     'access_csrf' : get_csrf_token(ret['access_token']),
+				#     'refresh_csrf': get_csrf_token(ret['refresh_token'])
+				# })
+				
+				# Set the JWT cookies in the response
+				resp = jsonify({'login': True})
+				
+				print(ret['access_token'])
+				set_access_cookies(resp, ret['access_token'])
+				set_refresh_cookies(resp, ret['refresh_token'])
+				print("done")
+				return resp, 200
+			return jsonify({"msg": "Bad password"}), 403
+		return jsonify({"msg": "Username is not exists!"}), 404
+	else 
+		return render_template('login.html', **dict(username=username,\
+			password=password, org=org)
 
 # This will generate a new access token from
 # the refresh token, but will mark that access token as non-fresh

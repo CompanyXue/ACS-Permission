@@ -189,3 +189,11 @@ So what is OAuth?
 OAuth并不合适用在client/server的RESTful API上面，一般是用在你的RESTful API允许第三方应用（消费者）去接入。
 
 上面的例子是，客户端/服务器端之间直接通讯并不需要去隐藏认证信息，客户端是直接发送认证请求信息到服务器端的。
+
+
+8.Django_CAS_CLIENT_SERVER
+
+在用户进行登录时，会调用django-cas的登录函数，函数会用url跳转去CAS服务器上进行用户信息验证在用户进行登录时，
+会调用django-cas的登录函数，函数会用url跳转去CAS服务器上进行用户信息验证
+当验证成功时，会返回用户名，django会根据该用户名去自己的auth_user表中查找用户，若没有用户，则新创建
+当用户再次登录，就不经过CAS了，还是按原django的验证中间件，通过cookie+session判断
